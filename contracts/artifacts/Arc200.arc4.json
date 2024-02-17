@@ -1,0 +1,155 @@
+{
+  "name": "Arc200",
+  "desc": "",
+  "methods": [
+    {
+      "name": "arc200_name",
+      "desc": "Returns the name of the token",
+      "readonly": true,
+      "args": [],
+      "returns": {
+        "type": "string",
+        "desc": "The name of the token"
+      }
+    },
+    {
+      "name": "arc200_symbol",
+      "desc": "Returns the symbol of the token",
+      "readonly": true,
+      "args": [],
+      "returns": {
+        "type": "string",
+        "desc": "The symbol of the token"
+      }
+    },
+    {
+      "name": "arc200_decimals",
+      "desc": "Returns the decimals of the token",
+      "readonly": true,
+      "args": [],
+      "returns": {
+        "type": "uint8",
+        "desc": "The decimals of the token"
+      }
+    },
+    {
+      "name": "arc200_totalSupply",
+      "desc": "Returns the total supply of the token",
+      "readonly": true,
+      "args": [],
+      "returns": {
+        "type": "uint256",
+        "desc": "The total supply of the token"
+      }
+    },
+    {
+      "name": "arc200_balanceOf",
+      "desc": "Returns the current balance of the owner of the token",
+      "readonly": true,
+      "args": [
+        {
+          "name": "owner",
+          "type": "address",
+          "desc": "The address of the owner of the token"
+        }
+      ],
+      "returns": {
+        "type": "uint256",
+        "desc": "The current balance of the holder of the token"
+      }
+    },
+    {
+      "name": "arc200_transfer",
+      "desc": "Transfers tokens",
+      "args": [
+        {
+          "name": "to",
+          "type": "address",
+          "desc": "The destination of the transfer"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "desc": "Amount of tokens to transfer"
+        }
+      ],
+      "returns": {
+        "type": "bool",
+        "desc": "Success"
+      }
+    },
+    {
+      "name": "arc200_transferFrom",
+      "desc": "Transfers tokens from source to destination as approved spender",
+      "args": [
+        {
+          "name": "from",
+          "type": "address",
+          "desc": "The source of the transfer"
+        },
+        {
+          "name": "to",
+          "type": "address",
+          "desc": "The destination of the transfer"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "desc": "Amount of tokens to transfer"
+        }
+      ],
+      "returns": {
+        "type": "bool",
+        "desc": "Success"
+      }
+    },
+    {
+      "name": "arc200_approve",
+      "desc": "Approve spender for a token",
+      "args": [
+        {
+          "name": "spender",
+          "type": "address",
+          "desc": "Who is allowed to take tokens on owner's behalf"
+        },
+        {
+          "name": "value",
+          "type": "uint256",
+          "desc": "Amount of tokens to be taken by spender"
+        }
+      ],
+      "returns": {
+        "type": "bool",
+        "desc": "Success"
+      }
+    },
+    {
+      "name": "arc200_allowance",
+      "desc": "Returns the current allowance of the spender of the tokens of the owner",
+      "readonly": true,
+      "args": [
+        {
+          "name": "owner",
+          "type": "address",
+          "desc": "Owner's account"
+        },
+        {
+          "name": "spender",
+          "type": "address",
+          "desc": "Who is allowed to take tokens on owner's behalf"
+        }
+      ],
+      "returns": {
+        "type": "uint256",
+        "desc": "The remaining allowance"
+      }
+    },
+    {
+      "name": "createApplication",
+      "args": [],
+      "returns": {
+        "type": "void"
+      }
+    }
+  ]
+}
