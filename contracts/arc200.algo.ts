@@ -2,28 +2,20 @@ import {
   arc4,
   assert,
   BoxMap,
-  Bytes,
-  bytes,
   Contract,
   emit,
   Global,
   GlobalState,
-  gtxn,
-  itxn,
-  log,
   op,
   Txn,
-  uint64,
 } from '@algorandfoundation/algorand-typescript';
 
 import {
   Address,
   Bool,
-  Byte,
   DynamicBytes,
   StaticBytes,
   UintN256,
-  UintN64,
   UintN8,
 } from '@algorandfoundation/algorand-typescript/arc4';
 
