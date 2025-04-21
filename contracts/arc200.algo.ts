@@ -65,10 +65,10 @@ export class Arc200 extends Contract {
   @arc4.abimethod()
   public bootstrap(name: DynamicBytes, symbol: DynamicBytes, decimals: UintN8, totalSupply: UintN256): Bool {
     assert(Txn.sender === Global.creatorAddress, 'Only deployer of this smart contract can call bootstrap method');
-    assert(name.length > 0, 'Name of the asset must be longer or equal to 1 character');
-    assert(name.length <= 32, 'Name of the asset must be shorter or equal to 32 characters');
-    assert(symbol.length > 0, 'Symbol of the asset must be longer or equal to 1 character');
-    assert(symbol.length <= 8, 'Symbol of the asset must be shorter or equal to 8 characters');
+    assert(name.native.length > 0, 'Name of the asset must be longer or equal to 1 character');
+    assert(name.native.length <= 32, 'Name of the asset must be shorter or equal to 32 characters');
+    assert(symbol.native.length > 0, 'Symbol of the asset must be longer or equal to 1 character');
+    assert(symbol.native.length <= 8, 'Symbol of the asset must be shorter or equal to 8 characters');
     assert(!this.totalSupply.hasValue, 'This method can be called only once');
 
     this.name.value = name;

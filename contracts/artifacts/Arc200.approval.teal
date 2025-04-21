@@ -3,9 +3,9 @@
 
 // @algorandfoundation/algorand-typescript/arc4/index.d.ts::Contract.approvalProgram() -> uint64:
 main:
-    intcblock 1 0 32 8
+    intcblock 1 32 0 8
     bytecblock 0x151f7c75 "b" "t" 0x80 0x7983c35c 0x0000000000000000000000000000000000000000000000000000000000000000
-    // contracts/arc200.algo.ts:52
+    // contracts/arc200.algo.ts:44
     // export class Arc200 extends Contract {
     txn NumAppArgs
     bz main_bare_routing@15
@@ -14,24 +14,24 @@ main:
     match main_bootstrap_route@3 main_arc200_name_route@4 main_arc200_symbol_route@5 main_arc200_decimals_route@6 main_arc200_totalSupply_route@7 main_arc200_balanceOf_route@8 main_arc200_transfer_route@9 main_arc200_transferFrom_route@10 main_arc200_approve_route@11 main_arc200_allowance_route@12
 
 main_after_if_else@19:
-    // contracts/arc200.algo.ts:52
+    // contracts/arc200.algo.ts:44
     // export class Arc200 extends Contract {
-    intc_1 // 0
+    intc_2 // 0
     return
 
 main_arc200_allowance_route@12:
-    // contracts/arc200.algo.ts:194
+    // contracts/arc200.algo.ts:186
     // @arc4.abimethod({ readonly: true })
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // contracts/arc200.algo.ts:52
+    // contracts/arc200.algo.ts:44
     // export class Arc200 extends Contract {
     txna ApplicationArgs 1
     txna ApplicationArgs 2
-    // contracts/arc200.algo.ts:194
+    // contracts/arc200.algo.ts:186
     // @arc4.abimethod({ readonly: true })
     callsub arc200_allowance
     bytec_0 // 0x151f7c75
@@ -42,18 +42,18 @@ main_arc200_allowance_route@12:
     return
 
 main_arc200_approve_route@11:
-    // contracts/arc200.algo.ts:182
+    // contracts/arc200.algo.ts:174
     // @arc4.abimethod()
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // contracts/arc200.algo.ts:52
+    // contracts/arc200.algo.ts:44
     // export class Arc200 extends Contract {
     txna ApplicationArgs 1
     txna ApplicationArgs 2
-    // contracts/arc200.algo.ts:182
+    // contracts/arc200.algo.ts:174
     // @arc4.abimethod()
     callsub arc200_approve
     bytec_0 // 0x151f7c75
@@ -64,19 +64,19 @@ main_arc200_approve_route@11:
     return
 
 main_arc200_transferFrom_route@10:
-    // contracts/arc200.algo.ts:165
+    // contracts/arc200.algo.ts:157
     // @arc4.abimethod()
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // contracts/arc200.algo.ts:52
+    // contracts/arc200.algo.ts:44
     // export class Arc200 extends Contract {
     txna ApplicationArgs 1
     txna ApplicationArgs 2
     txna ApplicationArgs 3
-    // contracts/arc200.algo.ts:165
+    // contracts/arc200.algo.ts:157
     // @arc4.abimethod()
     callsub arc200_transferFrom
     bytec_0 // 0x151f7c75
@@ -87,18 +87,18 @@ main_arc200_transferFrom_route@10:
     return
 
 main_arc200_transfer_route@9:
-    // contracts/arc200.algo.ts:152
+    // contracts/arc200.algo.ts:144
     // @arc4.abimethod()
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // contracts/arc200.algo.ts:52
+    // contracts/arc200.algo.ts:44
     // export class Arc200 extends Contract {
     txna ApplicationArgs 1
     txna ApplicationArgs 2
-    // contracts/arc200.algo.ts:152
+    // contracts/arc200.algo.ts:144
     // @arc4.abimethod()
     callsub arc200_transfer
     bytec_0 // 0x151f7c75
@@ -109,17 +109,17 @@ main_arc200_transfer_route@9:
     return
 
 main_arc200_balanceOf_route@8:
-    // contracts/arc200.algo.ts:140
+    // contracts/arc200.algo.ts:132
     // @arc4.abimethod({ readonly: true })
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // contracts/arc200.algo.ts:52
+    // contracts/arc200.algo.ts:44
     // export class Arc200 extends Contract {
     txna ApplicationArgs 1
-    // contracts/arc200.algo.ts:140
+    // contracts/arc200.algo.ts:132
     // @arc4.abimethod({ readonly: true })
     callsub arc200_balanceOf
     bytec_0 // 0x151f7c75
@@ -130,7 +130,7 @@ main_arc200_balanceOf_route@8:
     return
 
 main_arc200_totalSupply_route@7:
-    // contracts/arc200.algo.ts:129
+    // contracts/arc200.algo.ts:121
     // @arc4.abimethod({ readonly: true })
     txn OnCompletion
     !
@@ -146,7 +146,7 @@ main_arc200_totalSupply_route@7:
     return
 
 main_arc200_decimals_route@6:
-    // contracts/arc200.algo.ts:119
+    // contracts/arc200.algo.ts:111
     // @arc4.abimethod({ readonly: true })
     txn OnCompletion
     !
@@ -162,7 +162,7 @@ main_arc200_decimals_route@6:
     return
 
 main_arc200_symbol_route@5:
-    // contracts/arc200.algo.ts:109
+    // contracts/arc200.algo.ts:101
     // @arc4.abimethod({ readonly: true })
     txn OnCompletion
     !
@@ -178,7 +178,7 @@ main_arc200_symbol_route@5:
     return
 
 main_arc200_name_route@4:
-    // contracts/arc200.algo.ts:99
+    // contracts/arc200.algo.ts:91
     // @arc4.abimethod({ readonly: true })
     txn OnCompletion
     !
@@ -194,20 +194,20 @@ main_arc200_name_route@4:
     return
 
 main_bootstrap_route@3:
-    // contracts/arc200.algo.ts:73
+    // contracts/arc200.algo.ts:65
     // @arc4.abimethod()
     txn OnCompletion
     !
     assert // OnCompletion is not NoOp
     txn ApplicationID
     assert // can only call when not creating
-    // contracts/arc200.algo.ts:52
+    // contracts/arc200.algo.ts:44
     // export class Arc200 extends Contract {
     txna ApplicationArgs 1
     txna ApplicationArgs 2
     txna ApplicationArgs 3
     txna ApplicationArgs 4
-    // contracts/arc200.algo.ts:73
+    // contracts/arc200.algo.ts:65
     // @arc4.abimethod()
     callsub bootstrap
     bytec_0 // 0x151f7c75
@@ -218,7 +218,7 @@ main_bootstrap_route@3:
     return
 
 main_bare_routing@15:
-    // contracts/arc200.algo.ts:52
+    // contracts/arc200.algo.ts:44
     // export class Arc200 extends Contract {
     txn OnCompletion
     bnz main_after_if_else@19
@@ -231,91 +231,91 @@ main_bare_routing@15:
 
 // contracts/arc200.algo.ts::Arc200.bootstrap(name: bytes, symbol: bytes, decimals: bytes, totalSupply: bytes) -> bytes:
 bootstrap:
-    // contracts/arc200.algo.ts:73-74
+    // contracts/arc200.algo.ts:65-66
     // @arc4.abimethod()
     // public bootstrap(name: DynamicBytes, symbol: DynamicBytes, decimals: UintN8, totalSupply: UintN256): Bool {
     proto 4 1
-    // contracts/arc200.algo.ts:75
+    // contracts/arc200.algo.ts:67
     // assert(Txn.sender === Global.creatorAddress, 'Only deployer of this smart contract can call bootstrap method');
     txn Sender
     global CreatorAddress
     ==
     assert // Only deployer of this smart contract can call bootstrap method
-    // contracts/arc200.algo.ts:76
-    // assert(name.length > 0, 'Name of the asset must be longer or equal to 1 character');
+    // contracts/arc200.algo.ts:68
+    // assert(name.native.length > 0, 'Name of the asset must be longer or equal to 1 character');
     frame_dig -4
-    intc_1 // 0
-    extract_uint16
+    extract 2 0
+    len
     dup
     assert // Name of the asset must be longer or equal to 1 character
-    // contracts/arc200.algo.ts:77
-    // assert(name.length <= 32, 'Name of the asset must be shorter or equal to 32 characters');
-    intc_2 // 32
+    // contracts/arc200.algo.ts:69
+    // assert(name.native.length <= 32, 'Name of the asset must be shorter or equal to 32 characters');
+    intc_1 // 32
     <=
     assert // Name of the asset must be shorter or equal to 32 characters
-    // contracts/arc200.algo.ts:78
-    // assert(symbol.length > 0, 'Symbol of the asset must be longer or equal to 1 character');
+    // contracts/arc200.algo.ts:70
+    // assert(symbol.native.length > 0, 'Symbol of the asset must be longer or equal to 1 character');
     frame_dig -3
-    intc_1 // 0
-    extract_uint16
+    extract 2 0
+    len
     dup
     assert // Symbol of the asset must be longer or equal to 1 character
-    // contracts/arc200.algo.ts:79
-    // assert(symbol.length <= 8, 'Symbol of the asset must be shorter or equal to 8 characters');
+    // contracts/arc200.algo.ts:71
+    // assert(symbol.native.length <= 8, 'Symbol of the asset must be shorter or equal to 8 characters');
     intc_3 // 8
     <=
     assert // Symbol of the asset must be shorter or equal to 8 characters
-    // contracts/arc200.algo.ts:68
+    // contracts/arc200.algo.ts:60
     // public totalSupply = GlobalState<UintN256>({ key: 't' });
-    intc_1 // 0
+    intc_2 // 0
     bytec_2 // "t"
-    // contracts/arc200.algo.ts:80
+    // contracts/arc200.algo.ts:72
     // assert(!this.totalSupply.hasValue, 'This method can be called only once');
     app_global_get_ex
     bury 1
     !
     assert // This method can be called only once
-    // contracts/arc200.algo.ts:56
+    // contracts/arc200.algo.ts:48
     // public name = GlobalState<DynamicBytes>({ key: 'n' });
     pushbytes "n"
-    // contracts/arc200.algo.ts:82
+    // contracts/arc200.algo.ts:74
     // this.name.value = name;
     frame_dig -4
     app_global_put
-    // contracts/arc200.algo.ts:60
+    // contracts/arc200.algo.ts:52
     // public symbol = GlobalState<DynamicBytes>({ key: 's' });
     pushbytes "s"
-    // contracts/arc200.algo.ts:83
+    // contracts/arc200.algo.ts:75
     // this.symbol.value = symbol;
     frame_dig -3
     app_global_put
-    // contracts/arc200.algo.ts:68
+    // contracts/arc200.algo.ts:60
     // public totalSupply = GlobalState<UintN256>({ key: 't' });
     bytec_2 // "t"
-    // contracts/arc200.algo.ts:84
+    // contracts/arc200.algo.ts:76
     // this.totalSupply.value = totalSupply;
     frame_dig -1
     app_global_put
-    // contracts/arc200.algo.ts:64
+    // contracts/arc200.algo.ts:56
     // public decimals = GlobalState<UintN8>({ key: 'd' });
     pushbytes "d"
-    // contracts/arc200.algo.ts:85
+    // contracts/arc200.algo.ts:77
     // this.decimals.value = decimals;
     frame_dig -2
     app_global_put
-    // contracts/arc200.algo.ts:86
+    // contracts/arc200.algo.ts:78
     // const sender = new Address(Txn.sender);
     txn Sender
-    // contracts/arc200.algo.ts:70
+    // contracts/arc200.algo.ts:62
     // public balances = BoxMap<Address, UintN256>({ keyPrefix: 'b' });
     bytec_1 // "b"
     dig 1
     concat
-    // contracts/arc200.algo.ts:88
+    // contracts/arc200.algo.ts:80
     // this.balances(sender).value = totalSupply;
     frame_dig -1
     box_put
-    // contracts/arc200.algo.ts:90
+    // contracts/arc200.algo.ts:82
     // emit(new arc200_Transfer({ from: new Address(Global.zeroAddress), to: sender, value: totalSupply }));
     global ZeroAddress
     swap
@@ -326,7 +326,7 @@ bootstrap:
     swap
     concat
     log
-    // contracts/arc200.algo.ts:91
+    // contracts/arc200.algo.ts:83
     // return new Bool(true);
     bytec_3 // 0x80
     retsub
@@ -334,18 +334,18 @@ bootstrap:
 
 // contracts/arc200.algo.ts::Arc200.arc200_name() -> bytes:
 arc200_name:
-    // contracts/arc200.algo.ts:56
+    // contracts/arc200.algo.ts:48
     // public name = GlobalState<DynamicBytes>({ key: 'n' });
-    intc_1 // 0
+    intc_2 // 0
     pushbytes "n"
     app_global_get_ex
     assert // check GlobalState exists
-    // contracts/arc200.algo.ts:101
+    // contracts/arc200.algo.ts:93
     // return new StaticBytes<32>(this.name.value.native);
     extract 2 0
     dup
     len
-    intc_2 // 32
+    intc_1 // 32
     ==
     assert // invalid size
     retsub
@@ -353,13 +353,13 @@ arc200_name:
 
 // contracts/arc200.algo.ts::Arc200.arc200_symbol() -> bytes:
 arc200_symbol:
-    // contracts/arc200.algo.ts:60
+    // contracts/arc200.algo.ts:52
     // public symbol = GlobalState<DynamicBytes>({ key: 's' });
-    intc_1 // 0
+    intc_2 // 0
     pushbytes "s"
     app_global_get_ex
     assert // check GlobalState exists
-    // contracts/arc200.algo.ts:111
+    // contracts/arc200.algo.ts:103
     // return new StaticBytes<8>(this.symbol.value.native);
     extract 2 0
     dup
@@ -372,37 +372,37 @@ arc200_symbol:
 
 // contracts/arc200.algo.ts::Arc200.arc200_decimals() -> bytes:
 arc200_decimals:
-    // contracts/arc200.algo.ts:64
+    // contracts/arc200.algo.ts:56
     // public decimals = GlobalState<UintN8>({ key: 'd' });
-    intc_1 // 0
+    intc_2 // 0
     pushbytes "d"
     app_global_get_ex
     assert // check GlobalState exists
-    // contracts/arc200.algo.ts:121
+    // contracts/arc200.algo.ts:113
     // return this.decimals.value;
     retsub
 
 
 // contracts/arc200.algo.ts::Arc200.arc200_totalSupply() -> bytes:
 arc200_totalSupply:
-    // contracts/arc200.algo.ts:68
+    // contracts/arc200.algo.ts:60
     // public totalSupply = GlobalState<UintN256>({ key: 't' });
-    intc_1 // 0
+    intc_2 // 0
     bytec_2 // "t"
     app_global_get_ex
     assert // check GlobalState exists
-    // contracts/arc200.algo.ts:131
+    // contracts/arc200.algo.ts:123
     // return this.totalSupply.value;
     retsub
 
 
 // contracts/arc200.algo.ts::Arc200.arc200_balanceOf(owner: bytes) -> bytes:
 arc200_balanceOf:
-    // contracts/arc200.algo.ts:140-141
+    // contracts/arc200.algo.ts:132-133
     // @arc4.abimethod({ readonly: true })
     // public arc200_balanceOf(owner: Address): arc4.UintN256 {
     proto 1 1
-    // contracts/arc200.algo.ts:142
+    // contracts/arc200.algo.ts:134
     // return this._balanceOf(owner);
     frame_dig -1
     callsub _balanceOf
@@ -411,11 +411,11 @@ arc200_balanceOf:
 
 // contracts/arc200.algo.ts::Arc200.arc200_transfer(to: bytes, value: bytes) -> bytes:
 arc200_transfer:
-    // contracts/arc200.algo.ts:152-153
+    // contracts/arc200.algo.ts:144-145
     // @arc4.abimethod()
     // public arc200_transfer(to: Address, value: arc4.UintN256): arc4.Bool {
     proto 2 1
-    // contracts/arc200.algo.ts:154
+    // contracts/arc200.algo.ts:146
     // return this._transfer(new Address(Txn.sender), to, value);
     txn Sender
     frame_dig -2
@@ -426,43 +426,43 @@ arc200_transfer:
 
 // contracts/arc200.algo.ts::Arc200.arc200_transferFrom(from: bytes, to: bytes, value: bytes) -> bytes:
 arc200_transferFrom:
-    // contracts/arc200.algo.ts:165-166
+    // contracts/arc200.algo.ts:157-158
     // @arc4.abimethod()
     // public arc200_transferFrom(from: Address, to: Address, value: arc4.UintN256): arc4.Bool {
     proto 3 1
-    // contracts/arc200.algo.ts:167
+    // contracts/arc200.algo.ts:159
     // const spender = new Address(Txn.sender);
     txn Sender
-    // contracts/arc200.algo.ts:168
+    // contracts/arc200.algo.ts:160
     // const spender_allowance = this._allowance(from, spender);
     frame_dig -3
     dig 1
     callsub _allowance
-    // contracts/arc200.algo.ts:169
+    // contracts/arc200.algo.ts:161
     // assert(spender_allowance.native >= value.native, 'insufficient approval');
     dup
     frame_dig -1
     b>=
     assert // insufficient approval
-    // contracts/arc200.algo.ts:170
+    // contracts/arc200.algo.ts:162
     // const new_spender_allowance = new UintN256(spender_allowance.native - value.native);
     frame_dig -1
     b-
     dup
     len
-    intc_2 // 32
+    intc_1 // 32
     <=
     assert // overflow
-    intc_2 // 32
+    intc_1 // 32
     bzero
     b|
-    // contracts/arc200.algo.ts:171
+    // contracts/arc200.algo.ts:163
     // this._approve(from, spender, new_spender_allowance);
     frame_dig -3
     cover 2
     callsub _approve
     pop
-    // contracts/arc200.algo.ts:172
+    // contracts/arc200.algo.ts:164
     // return this._transfer(from, to, value);
     frame_dig -3
     frame_dig -2
@@ -473,14 +473,14 @@ arc200_transferFrom:
 
 // contracts/arc200.algo.ts::Arc200.arc200_approve(spender: bytes, value: bytes) -> bytes:
 arc200_approve:
-    // contracts/arc200.algo.ts:182-183
+    // contracts/arc200.algo.ts:174-175
     // @arc4.abimethod()
     // public arc200_approve(spender: Address, value: arc4.UintN256): Bool {
     proto 2 1
-    // contracts/arc200.algo.ts:184
+    // contracts/arc200.algo.ts:176
     // const owner = new Address(Txn.sender);
     txn Sender
-    // contracts/arc200.algo.ts:185
+    // contracts/arc200.algo.ts:177
     // return this._approve(owner, spender, value);
     frame_dig -2
     frame_dig -1
@@ -490,11 +490,11 @@ arc200_approve:
 
 // contracts/arc200.algo.ts::Arc200.arc200_allowance(owner: bytes, spender: bytes) -> bytes:
 arc200_allowance:
-    // contracts/arc200.algo.ts:194-195
+    // contracts/arc200.algo.ts:186-187
     // @arc4.abimethod({ readonly: true })
     // public arc200_allowance(owner: Address, spender: Address): arc4.UintN256 {
     proto 2 1
-    // contracts/arc200.algo.ts:196
+    // contracts/arc200.algo.ts:188
     // return this._allowance(owner, spender);
     frame_dig -2
     frame_dig -1
@@ -504,16 +504,16 @@ arc200_allowance:
 
 // contracts/arc200.algo.ts::Arc200._balanceOf(owner: bytes) -> bytes:
 _balanceOf:
-    // contracts/arc200.algo.ts:199
+    // contracts/arc200.algo.ts:191
     // private _balanceOf(owner: Address): UintN256 {
     proto 1 1
-    // contracts/arc200.algo.ts:70
+    // contracts/arc200.algo.ts:62
     // public balances = BoxMap<Address, UintN256>({ keyPrefix: 'b' });
     bytec_1 // "b"
     frame_dig -1
     concat
     dup
-    // contracts/arc200.algo.ts:200
+    // contracts/arc200.algo.ts:192
     // if (!this.balances(owner).exists) return new UintN256(0);
     box_len
     bury 1
@@ -523,7 +523,7 @@ _balanceOf:
     retsub
 
 _balanceOf_after_if_else@2:
-    // contracts/arc200.algo.ts:201
+    // contracts/arc200.algo.ts:193
     // return this.balances(owner).value;
     frame_dig 0
     box_get
@@ -534,64 +534,64 @@ _balanceOf_after_if_else@2:
 
 // contracts/arc200.algo.ts::Arc200._transfer(sender: bytes, recipient: bytes, amount: bytes) -> bytes:
 _transfer:
-    // contracts/arc200.algo.ts:204
+    // contracts/arc200.algo.ts:196
     // private _transfer(sender: Address, recipient: Address, amount: UintN256): Bool {
     proto 3 1
-    // contracts/arc200.algo.ts:205
+    // contracts/arc200.algo.ts:197
     // const sender_balance = this._balanceOf(sender);
     frame_dig -3
     callsub _balanceOf
     dup
-    // contracts/arc200.algo.ts:206
+    // contracts/arc200.algo.ts:198
     // const recipient_balance = this._balanceOf(recipient);
     frame_dig -2
     callsub _balanceOf
     swap
-    // contracts/arc200.algo.ts:207
+    // contracts/arc200.algo.ts:199
     // assert(sender_balance.native >= amount.native, 'Insufficient balance at the sender account');
     frame_dig -1
     b>=
     assert // Insufficient balance at the sender account
-    // contracts/arc200.algo.ts:209
+    // contracts/arc200.algo.ts:201
     // if (sender !== recipient) {
     frame_dig -3
     frame_dig -2
     !=
     bz _transfer_after_if_else@2
-    // contracts/arc200.algo.ts:211
+    // contracts/arc200.algo.ts:203
     // this.balances(sender).value = new UintN256(sender_balance.native - amount.native);
     frame_dig 0
     frame_dig -1
     b-
     dup
     len
-    intc_2 // 32
+    intc_1 // 32
     <=
     assert // overflow
-    intc_2 // 32
+    intc_1 // 32
     bzero
     b|
-    // contracts/arc200.algo.ts:70
+    // contracts/arc200.algo.ts:62
     // public balances = BoxMap<Address, UintN256>({ keyPrefix: 'b' });
     bytec_1 // "b"
     frame_dig -3
     concat
-    // contracts/arc200.algo.ts:211
+    // contracts/arc200.algo.ts:203
     // this.balances(sender).value = new UintN256(sender_balance.native - amount.native);
     swap
     box_put
-    // contracts/arc200.algo.ts:70
+    // contracts/arc200.algo.ts:62
     // public balances = BoxMap<Address, UintN256>({ keyPrefix: 'b' });
     bytec_1 // "b"
     frame_dig -2
     concat
-    // contracts/arc200.algo.ts:212
+    // contracts/arc200.algo.ts:204
     // this.balances(recipient).value = recipient_balance;
     frame_dig 1
     box_put
 
 _transfer_after_if_else@2:
-    // contracts/arc200.algo.ts:220
+    // contracts/arc200.algo.ts:212
     // emit(new arc200_Transfer({ from: sender, to: recipient, value: amount }));
     frame_dig -3
     frame_dig -2
@@ -602,7 +602,7 @@ _transfer_after_if_else@2:
     swap
     concat
     log
-    // contracts/arc200.algo.ts:221
+    // contracts/arc200.algo.ts:213
     // return new Bool(true);
     bytec_3 // 0x80
     frame_bury 0
@@ -611,10 +611,10 @@ _transfer_after_if_else@2:
 
 // contracts/arc200.algo.ts::Arc200._approvalKey(owner: bytes, spender: bytes) -> bytes:
 _approvalKey:
-    // contracts/arc200.algo.ts:223
+    // contracts/arc200.algo.ts:215
     // private _approvalKey(owner: Address, spender: Address): StaticBytes<32> {
     proto 2 1
-    // contracts/arc200.algo.ts:224
+    // contracts/arc200.algo.ts:216
     // return new StaticBytes<32>(op.sha256(op.concat(owner.bytes, spender.bytes)));
     frame_dig -2
     frame_dig -1
@@ -622,7 +622,7 @@ _approvalKey:
     sha256
     dup
     len
-    intc_2 // 32
+    intc_1 // 32
     ==
     assert // invalid size
     retsub
@@ -630,21 +630,21 @@ _approvalKey:
 
 // contracts/arc200.algo.ts::Arc200._allowance(owner: bytes, spender: bytes) -> bytes:
 _allowance:
-    // contracts/arc200.algo.ts:227
+    // contracts/arc200.algo.ts:219
     // private _allowance(owner: Address, spender: Address): UintN256 {
     proto 2 1
-    // contracts/arc200.algo.ts:228
+    // contracts/arc200.algo.ts:220
     // const key = this._approvalKey(owner, spender);
     frame_dig -2
     frame_dig -1
     callsub _approvalKey
-    // contracts/arc200.algo.ts:72
+    // contracts/arc200.algo.ts:64
     // public approvals = BoxMap<StaticBytes<32>, ApprovalStruct>({ keyPrefix: 'a' });
     pushbytes "a"
     swap
     concat
     dup
-    // contracts/arc200.algo.ts:229
+    // contracts/arc200.algo.ts:221
     // if (!this.approvals(key).exists) return new UintN256(0);
     box_len
     bury 1
@@ -654,7 +654,7 @@ _allowance:
     retsub
 
 _allowance_after_if_else@2:
-    // contracts/arc200.algo.ts:230
+    // contracts/arc200.algo.ts:222
     // return this.approvals(key).value.approvalAmount;
     frame_dig 0
     box_get
@@ -666,15 +666,15 @@ _allowance_after_if_else@2:
 
 // contracts/arc200.algo.ts::Arc200._approve(owner: bytes, spender: bytes, amount: bytes) -> bytes:
 _approve:
-    // contracts/arc200.algo.ts:233
+    // contracts/arc200.algo.ts:225
     // private _approve(owner: Address, spender: Address, amount: UintN256): Bool {
     proto 3 1
-    // contracts/arc200.algo.ts:234
+    // contracts/arc200.algo.ts:226
     // const key = this._approvalKey(owner, spender);
     frame_dig -3
     frame_dig -2
     callsub _approvalKey
-    // contracts/arc200.algo.ts:235-239
+    // contracts/arc200.algo.ts:227-231
     // const approvalBox: ApprovalStruct = new ApprovalStruct({
     //   approvalAmount: amount,
     //   owner: owner,
@@ -685,16 +685,16 @@ _approve:
     concat
     frame_dig -2
     concat
-    // contracts/arc200.algo.ts:72
+    // contracts/arc200.algo.ts:64
     // public approvals = BoxMap<StaticBytes<32>, ApprovalStruct>({ keyPrefix: 'a' });
     pushbytes "a"
     uncover 2
     concat
-    // contracts/arc200.algo.ts:240
+    // contracts/arc200.algo.ts:232
     // this.approvals(key).value = approvalBox.copy();
     swap
     box_put
-    // contracts/arc200.algo.ts:241
+    // contracts/arc200.algo.ts:233
     // emit(new arc200_Approval({ owner: owner, spender: spender, value: amount }));
     frame_dig -3
     frame_dig -2
@@ -705,7 +705,7 @@ _approve:
     swap
     concat
     log
-    // contracts/arc200.algo.ts:242
+    // contracts/arc200.algo.ts:234
     // return new Bool(true);
     bytec_3 // 0x80
     retsub
