@@ -570,6 +570,8 @@ _transfer:
     assert // overflow
     intc_1 // 32
     bzero
+    swap
+    dig 1
     b|
     // contracts/arc200.algo.ts:62
     // public balances = BoxMap<Address, UintN256>({ keyPrefix: 'b' });
@@ -580,18 +582,29 @@ _transfer:
     // this.balances(sender).value = new UintN256(sender_balance.native - amount.native);
     swap
     box_put
+    // contracts/arc200.algo.ts:204
+    // this.balances(recipient).value = new UintN256(recipient_balance.native + amount.native)
+    frame_dig 1
+    frame_dig -1
+    b+
+    dup
+    len
+    intc_1 // 32
+    <=
+    assert // overflow
+    b|
     // contracts/arc200.algo.ts:62
     // public balances = BoxMap<Address, UintN256>({ keyPrefix: 'b' });
     bytec_1 // "b"
     frame_dig -2
     concat
     // contracts/arc200.algo.ts:204
-    // this.balances(recipient).value = recipient_balance;
-    frame_dig 1
+    // this.balances(recipient).value = new UintN256(recipient_balance.native + amount.native)
+    swap
     box_put
 
 _transfer_after_if_else@2:
-    // contracts/arc200.algo.ts:212
+    // contracts/arc200.algo.ts:206
     // emit(new arc200_Transfer({ from: sender, to: recipient, value: amount }));
     frame_dig -3
     frame_dig -2
@@ -602,7 +615,7 @@ _transfer_after_if_else@2:
     swap
     concat
     log
-    // contracts/arc200.algo.ts:213
+    // contracts/arc200.algo.ts:207
     // return new Bool(true);
     bytec_3 // 0x80
     frame_bury 0
@@ -611,10 +624,10 @@ _transfer_after_if_else@2:
 
 // contracts/arc200.algo.ts::Arc200._approvalKey(owner: bytes, spender: bytes) -> bytes:
 _approvalKey:
-    // contracts/arc200.algo.ts:215
+    // contracts/arc200.algo.ts:209
     // private _approvalKey(owner: Address, spender: Address): StaticBytes<32> {
     proto 2 1
-    // contracts/arc200.algo.ts:216
+    // contracts/arc200.algo.ts:210
     // return new StaticBytes<32>(op.sha256(op.concat(owner.bytes, spender.bytes)));
     frame_dig -2
     frame_dig -1
@@ -630,10 +643,10 @@ _approvalKey:
 
 // contracts/arc200.algo.ts::Arc200._allowance(owner: bytes, spender: bytes) -> bytes:
 _allowance:
-    // contracts/arc200.algo.ts:219
+    // contracts/arc200.algo.ts:213
     // private _allowance(owner: Address, spender: Address): UintN256 {
     proto 2 1
-    // contracts/arc200.algo.ts:220
+    // contracts/arc200.algo.ts:214
     // const key = this._approvalKey(owner, spender);
     frame_dig -2
     frame_dig -1
@@ -644,7 +657,7 @@ _allowance:
     swap
     concat
     dup
-    // contracts/arc200.algo.ts:221
+    // contracts/arc200.algo.ts:215
     // if (!this.approvals(key).exists) return new UintN256(0);
     box_len
     bury 1
@@ -654,7 +667,7 @@ _allowance:
     retsub
 
 _allowance_after_if_else@2:
-    // contracts/arc200.algo.ts:222
+    // contracts/arc200.algo.ts:216
     // return this.approvals(key).value.approvalAmount;
     frame_dig 0
     box_get
@@ -666,15 +679,15 @@ _allowance_after_if_else@2:
 
 // contracts/arc200.algo.ts::Arc200._approve(owner: bytes, spender: bytes, amount: bytes) -> bytes:
 _approve:
-    // contracts/arc200.algo.ts:225
+    // contracts/arc200.algo.ts:219
     // private _approve(owner: Address, spender: Address, amount: UintN256): Bool {
     proto 3 1
-    // contracts/arc200.algo.ts:226
+    // contracts/arc200.algo.ts:220
     // const key = this._approvalKey(owner, spender);
     frame_dig -3
     frame_dig -2
     callsub _approvalKey
-    // contracts/arc200.algo.ts:227-231
+    // contracts/arc200.algo.ts:221-225
     // const approvalBox: ApprovalStruct = new ApprovalStruct({
     //   approvalAmount: amount,
     //   owner: owner,
@@ -690,11 +703,11 @@ _approve:
     pushbytes "a"
     uncover 2
     concat
-    // contracts/arc200.algo.ts:232
+    // contracts/arc200.algo.ts:226
     // this.approvals(key).value = approvalBox.copy();
     swap
     box_put
-    // contracts/arc200.algo.ts:233
+    // contracts/arc200.algo.ts:227
     // emit(new arc200_Approval({ owner: owner, spender: spender, value: amount }));
     frame_dig -3
     frame_dig -2
@@ -705,7 +718,7 @@ _approve:
     swap
     concat
     log
-    // contracts/arc200.algo.ts:234
+    // contracts/arc200.algo.ts:228
     // return new Bool(true);
     bytec_3 // 0x80
     retsub

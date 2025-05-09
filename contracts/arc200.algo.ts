@@ -201,13 +201,7 @@ export class Arc200 extends Contract {
     if (sender !== recipient) {
       // if sender == recipent, do nothing, just issue event
       this.balances(sender).value = new UintN256(sender_balance.native - amount.native);
-      this.balances(recipient).value = recipient_balance;
-      // if (this.balances(recipient).exists) {
-      //   this.balances(recipient).value = recipient_balance;
-      // } else {
-      //   this.balances(recipient).create();
-      //   this.balances(recipient).value = recipient_balance;
-      // }
+      this.balances(recipient).value = new UintN256(recipient_balance.native + amount.native)
     }
     emit(new arc200_Transfer({ from: sender, to: recipient, value: amount }));
     return new Bool(true);

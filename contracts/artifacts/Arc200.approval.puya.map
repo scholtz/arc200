@@ -3,7 +3,7 @@
   "sources": [
     "C:/Users/ludko/source/repos/scholtz/arc200/arc200/contracts/arc200.algo.ts"
   ],
-  "mappings": "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",
+  "mappings": "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",
   "op_pc_offset": 0,
   "pc_events": {
     "1": {
@@ -2896,47 +2896,79 @@
       ]
     },
     "635": {
+      "op": "swap",
+      "stack_out": [
+        "sender_balance#0",
+        "recipient_balance#0",
+        "bzero%0#0",
+        "to_encode%0#0"
+      ]
+    },
+    "636": {
+      "op": "dig 1",
+      "defined_out": [
+        "bzero%0#0",
+        "bzero%0#0 (copy)",
+        "recipient_balance#0",
+        "sender_balance#0",
+        "to_encode%0#0"
+      ],
+      "stack_out": [
+        "sender_balance#0",
+        "recipient_balance#0",
+        "bzero%0#0",
+        "to_encode%0#0",
+        "bzero%0#0 (copy)"
+      ]
+    },
+    "638": {
       "op": "b|",
       "defined_out": [
         "arc4_encoded%0#0",
+        "bzero%0#0",
         "recipient_balance#0",
         "sender_balance#0"
       ],
       "stack_out": [
         "sender_balance#0",
         "recipient_balance#0",
+        "bzero%0#0",
         "arc4_encoded%0#0"
       ]
     },
-    "636": {
+    "639": {
       "op": "bytec_1 // \"b\"",
       "defined_out": [
         "\"b\"",
         "arc4_encoded%0#0",
+        "bzero%0#0",
         "recipient_balance#0",
         "sender_balance#0"
       ],
       "stack_out": [
         "sender_balance#0",
         "recipient_balance#0",
+        "bzero%0#0",
         "arc4_encoded%0#0",
         "\"b\""
       ]
     },
-    "637": {
+    "640": {
       "op": "frame_dig -3",
       "stack_out": [
         "sender_balance#0",
         "recipient_balance#0",
+        "bzero%0#0",
         "arc4_encoded%0#0",
         "\"b\"",
         "sender#0 (copy)"
       ]
     },
-    "639": {
+    "642": {
       "op": "concat",
       "defined_out": [
         "arc4_encoded%0#0",
+        "bzero%0#0",
         "recipient_balance#0",
         "sender_balance#0",
         "tmp%2#0"
@@ -2944,46 +2976,171 @@
       "stack_out": [
         "sender_balance#0",
         "recipient_balance#0",
+        "bzero%0#0",
         "arc4_encoded%0#0",
         "tmp%2#0"
       ]
     },
-    "640": {
+    "643": {
       "op": "swap",
       "stack_out": [
         "sender_balance#0",
         "recipient_balance#0",
+        "bzero%0#0",
         "tmp%2#0",
         "arc4_encoded%0#0"
       ]
     },
-    "641": {
+    "644": {
       "op": "box_put",
       "stack_out": [
         "sender_balance#0",
+        "recipient_balance#0",
+        "bzero%0#0"
+      ]
+    },
+    "645": {
+      "op": "frame_dig 1",
+      "stack_out": [
+        "sender_balance#0",
+        "recipient_balance#0",
+        "bzero%0#0",
         "recipient_balance#0"
       ]
     },
-    "642": {
+    "647": {
+      "op": "frame_dig -1",
+      "stack_out": [
+        "sender_balance#0",
+        "recipient_balance#0",
+        "bzero%0#0",
+        "recipient_balance#0",
+        "amount#0 (copy)"
+      ]
+    },
+    "649": {
+      "op": "b+",
+      "defined_out": [
+        "bzero%0#0",
+        "recipient_balance#0",
+        "sender_balance#0",
+        "to_encode%1#0"
+      ],
+      "stack_out": [
+        "sender_balance#0",
+        "recipient_balance#0",
+        "bzero%0#0",
+        "to_encode%1#0"
+      ]
+    },
+    "650": {
+      "op": "dup",
+      "defined_out": [
+        "bzero%0#0",
+        "recipient_balance#0",
+        "sender_balance#0",
+        "to_encode%1#0",
+        "to_encode%1#0 (copy)"
+      ],
+      "stack_out": [
+        "sender_balance#0",
+        "recipient_balance#0",
+        "bzero%0#0",
+        "to_encode%1#0",
+        "to_encode%1#0 (copy)"
+      ]
+    },
+    "651": {
+      "op": "len",
+      "defined_out": [
+        "bzero%0#0",
+        "recipient_balance#0",
+        "sender_balance#0",
+        "to_encode%1#0",
+        "value_len%1#0"
+      ],
+      "stack_out": [
+        "sender_balance#0",
+        "recipient_balance#0",
+        "bzero%0#0",
+        "to_encode%1#0",
+        "value_len%1#0"
+      ]
+    },
+    "652": {
+      "op": "intc_1 // 32",
+      "stack_out": [
+        "sender_balance#0",
+        "recipient_balance#0",
+        "bzero%0#0",
+        "to_encode%1#0",
+        "value_len%1#0",
+        "32"
+      ]
+    },
+    "653": {
+      "op": "<=",
+      "defined_out": [
+        "bzero%0#0",
+        "len_ok%1#0",
+        "recipient_balance#0",
+        "sender_balance#0",
+        "to_encode%1#0"
+      ],
+      "stack_out": [
+        "sender_balance#0",
+        "recipient_balance#0",
+        "bzero%0#0",
+        "to_encode%1#0",
+        "len_ok%1#0"
+      ]
+    },
+    "654": {
+      "error": "overflow",
+      "op": "assert // overflow",
+      "stack_out": [
+        "sender_balance#0",
+        "recipient_balance#0",
+        "bzero%0#0",
+        "to_encode%1#0"
+      ]
+    },
+    "655": {
+      "op": "b|",
+      "defined_out": [
+        "arc4_encoded%1#0",
+        "recipient_balance#0",
+        "sender_balance#0"
+      ],
+      "stack_out": [
+        "sender_balance#0",
+        "recipient_balance#0",
+        "arc4_encoded%1#0"
+      ]
+    },
+    "656": {
       "op": "bytec_1 // \"b\"",
       "stack_out": [
         "sender_balance#0",
         "recipient_balance#0",
+        "arc4_encoded%1#0",
         "\"b\""
       ]
     },
-    "643": {
+    "657": {
       "op": "frame_dig -2",
       "stack_out": [
         "sender_balance#0",
         "recipient_balance#0",
+        "arc4_encoded%1#0",
         "\"b\"",
         "recipient#0 (copy)"
       ]
     },
-    "645": {
+    "659": {
       "op": "concat",
       "defined_out": [
+        "arc4_encoded%1#0",
         "recipient_balance#0",
         "sender_balance#0",
         "tmp%3#0"
@@ -2991,26 +3148,27 @@
       "stack_out": [
         "sender_balance#0",
         "recipient_balance#0",
+        "arc4_encoded%1#0",
         "tmp%3#0"
       ]
     },
-    "646": {
-      "op": "frame_dig 1",
+    "660": {
+      "op": "swap",
       "stack_out": [
         "sender_balance#0",
         "recipient_balance#0",
         "tmp%3#0",
-        "recipient_balance#0"
+        "arc4_encoded%1#0"
       ]
     },
-    "648": {
+    "661": {
       "op": "box_put",
       "stack_out": [
         "sender_balance#0",
         "recipient_balance#0"
       ]
     },
-    "649": {
+    "662": {
       "block": "_transfer_after_if_else@2",
       "stack_in": [
         "sender_balance#0",
@@ -3026,7 +3184,7 @@
         "sender#0 (copy)"
       ]
     },
-    "651": {
+    "664": {
       "op": "frame_dig -2",
       "defined_out": [
         "recipient#0 (copy)",
@@ -3039,7 +3197,7 @@
         "recipient#0 (copy)"
       ]
     },
-    "653": {
+    "666": {
       "op": "concat",
       "defined_out": [
         "encoded_tuple_buffer%2#0"
@@ -3050,7 +3208,7 @@
         "encoded_tuple_buffer%2#0"
       ]
     },
-    "654": {
+    "667": {
       "op": "frame_dig -1",
       "defined_out": [
         "amount#0 (copy)",
@@ -3063,7 +3221,7 @@
         "amount#0 (copy)"
       ]
     },
-    "656": {
+    "669": {
       "op": "concat",
       "defined_out": [
         "encoded_tuple_buffer%3#0"
@@ -3074,7 +3232,7 @@
         "encoded_tuple_buffer%3#0"
       ]
     },
-    "657": {
+    "670": {
       "op": "bytec 4 // method \"arc200_Transfer(address,address,uint256)\"",
       "defined_out": [
         "Method(arc200_Transfer(address,address,uint256))",
@@ -3087,7 +3245,7 @@
         "Method(arc200_Transfer(address,address,uint256))"
       ]
     },
-    "659": {
+    "672": {
       "op": "swap",
       "stack_out": [
         "sender_balance#0",
@@ -3096,7 +3254,7 @@
         "encoded_tuple_buffer%3#0"
       ]
     },
-    "660": {
+    "673": {
       "op": "concat",
       "defined_out": [
         "event%0#0"
@@ -3107,14 +3265,14 @@
         "event%0#0"
       ]
     },
-    "661": {
+    "674": {
       "op": "log",
       "stack_out": [
         "sender_balance#0",
         "recipient_balance#0"
       ]
     },
-    "662": {
+    "675": {
       "op": "bytec_3 // 0x80",
       "defined_out": [
         "0x80"
@@ -3125,14 +3283,14 @@
         "0x80"
       ]
     },
-    "663": {
+    "676": {
       "op": "frame_bury 0"
     },
-    "665": {
+    "678": {
       "retsub": true,
       "op": "retsub"
     },
-    "666": {
+    "679": {
       "subroutine": "contracts/arc200.algo.ts::Arc200._approvalKey",
       "params": {
         "owner#0": "bytes",
@@ -3142,7 +3300,7 @@
       "stack_in": [],
       "op": "proto 2 1"
     },
-    "669": {
+    "682": {
       "op": "frame_dig -2",
       "defined_out": [
         "owner#0 (copy)"
@@ -3151,7 +3309,7 @@
         "owner#0 (copy)"
       ]
     },
-    "671": {
+    "684": {
       "op": "frame_dig -1",
       "defined_out": [
         "owner#0 (copy)",
@@ -3162,7 +3320,7 @@
         "spender#0 (copy)"
       ]
     },
-    "673": {
+    "686": {
       "op": "concat",
       "defined_out": [
         "tmp%0#0"
@@ -3171,7 +3329,7 @@
         "tmp%0#0"
       ]
     },
-    "674": {
+    "687": {
       "op": "sha256",
       "defined_out": [
         "to_encode%0#0"
@@ -3180,7 +3338,7 @@
         "to_encode%0#0"
       ]
     },
-    "675": {
+    "688": {
       "op": "dup",
       "defined_out": [
         "to_encode%0#0",
@@ -3191,7 +3349,7 @@
         "to_encode%0#0 (copy)"
       ]
     },
-    "676": {
+    "689": {
       "op": "len",
       "defined_out": [
         "length%0#0",
@@ -3202,7 +3360,7 @@
         "length%0#0"
       ]
     },
-    "677": {
+    "690": {
       "op": "intc_1 // 32",
       "defined_out": [
         "32",
@@ -3215,7 +3373,7 @@
         "32"
       ]
     },
-    "678": {
+    "691": {
       "op": "==",
       "defined_out": [
         "lengths_equal%0#0",
@@ -3226,18 +3384,18 @@
         "lengths_equal%0#0"
       ]
     },
-    "679": {
+    "692": {
       "error": "invalid size",
       "op": "assert // invalid size",
       "stack_out": [
         "to_encode%0#0"
       ]
     },
-    "680": {
+    "693": {
       "retsub": true,
       "op": "retsub"
     },
-    "681": {
+    "694": {
       "subroutine": "contracts/arc200.algo.ts::Arc200._allowance",
       "params": {
         "owner#0": "bytes",
@@ -3247,7 +3405,7 @@
       "stack_in": [],
       "op": "proto 2 1"
     },
-    "684": {
+    "697": {
       "op": "frame_dig -2",
       "defined_out": [
         "owner#0 (copy)"
@@ -3256,7 +3414,7 @@
         "owner#0 (copy)"
       ]
     },
-    "686": {
+    "699": {
       "op": "frame_dig -1",
       "defined_out": [
         "owner#0 (copy)",
@@ -3267,7 +3425,7 @@
         "spender#0 (copy)"
       ]
     },
-    "688": {
+    "701": {
       "callsub": "contracts/arc200.algo.ts::Arc200._approvalKey",
       "op": "callsub _approvalKey",
       "defined_out": [
@@ -3277,7 +3435,7 @@
         "key#0"
       ]
     },
-    "691": {
+    "704": {
       "op": "pushbytes \"a\"",
       "defined_out": [
         "\"a\"",
@@ -3288,14 +3446,14 @@
         "\"a\""
       ]
     },
-    "694": {
+    "707": {
       "op": "swap",
       "stack_out": [
         "\"a\"",
         "key#0"
       ]
     },
-    "695": {
+    "708": {
       "op": "concat",
       "defined_out": [
         "tmp%0#0"
@@ -3304,7 +3462,7 @@
         "tmp%0#0"
       ]
     },
-    "696": {
+    "709": {
       "op": "dup",
       "defined_out": [
         "tmp%0#0"
@@ -3314,7 +3472,7 @@
         "tmp%0#0"
       ]
     },
-    "697": {
+    "710": {
       "op": "box_len",
       "defined_out": [
         "maybe_exists%0#0",
@@ -3327,20 +3485,20 @@
         "maybe_exists%0#0"
       ]
     },
-    "698": {
+    "711": {
       "op": "bury 1",
       "stack_out": [
         "tmp%0#0",
         "maybe_exists%0#0"
       ]
     },
-    "700": {
+    "713": {
       "op": "bnz _allowance_after_if_else@2",
       "stack_out": [
         "tmp%0#0"
       ]
     },
-    "703": {
+    "716": {
       "op": "bytec 5 // 0x0000000000000000000000000000000000000000000000000000000000000000",
       "defined_out": [
         "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -3351,14 +3509,14 @@
         "0x0000000000000000000000000000000000000000000000000000000000000000"
       ]
     },
-    "705": {
+    "718": {
       "op": "swap"
     },
-    "706": {
+    "719": {
       "retsub": true,
       "op": "retsub"
     },
-    "707": {
+    "720": {
       "block": "_allowance_after_if_else@2",
       "stack_in": [
         "tmp%0#0"
@@ -3372,7 +3530,7 @@
         "tmp%0#0"
       ]
     },
-    "709": {
+    "722": {
       "op": "box_get",
       "defined_out": [
         "maybe_exists%1#0",
@@ -3385,7 +3543,7 @@
         "maybe_exists%1#0"
       ]
     },
-    "710": {
+    "723": {
       "error": "Box must have value",
       "op": "assert // Box must have value",
       "stack_out": [
@@ -3393,7 +3551,7 @@
         "maybe_value%1#0"
       ]
     },
-    "711": {
+    "724": {
       "error": "Index access is out of bounds",
       "op": "extract 0 32 // on error: Index access is out of bounds",
       "defined_out": [
@@ -3405,14 +3563,14 @@
         "tmp%2#0"
       ]
     },
-    "714": {
+    "727": {
       "op": "swap"
     },
-    "715": {
+    "728": {
       "retsub": true,
       "op": "retsub"
     },
-    "716": {
+    "729": {
       "subroutine": "contracts/arc200.algo.ts::Arc200._approve",
       "params": {
         "owner#0": "bytes",
@@ -3423,7 +3581,7 @@
       "stack_in": [],
       "op": "proto 3 1"
     },
-    "719": {
+    "732": {
       "op": "frame_dig -3",
       "defined_out": [
         "owner#0 (copy)"
@@ -3432,7 +3590,7 @@
         "owner#0 (copy)"
       ]
     },
-    "721": {
+    "734": {
       "op": "frame_dig -2",
       "defined_out": [
         "owner#0 (copy)",
@@ -3443,7 +3601,7 @@
         "spender#0 (copy)"
       ]
     },
-    "723": {
+    "736": {
       "callsub": "contracts/arc200.algo.ts::Arc200._approvalKey",
       "op": "callsub _approvalKey",
       "defined_out": [
@@ -3453,7 +3611,7 @@
         "key#0"
       ]
     },
-    "726": {
+    "739": {
       "op": "frame_dig -1",
       "defined_out": [
         "amount#0 (copy)",
@@ -3464,7 +3622,7 @@
         "amount#0 (copy)"
       ]
     },
-    "728": {
+    "741": {
       "op": "frame_dig -3",
       "stack_out": [
         "key#0",
@@ -3472,7 +3630,7 @@
         "owner#0 (copy)"
       ]
     },
-    "730": {
+    "743": {
       "op": "concat",
       "defined_out": [
         "encoded_tuple_buffer%2#0",
@@ -3483,7 +3641,7 @@
         "encoded_tuple_buffer%2#0"
       ]
     },
-    "731": {
+    "744": {
       "op": "frame_dig -2",
       "stack_out": [
         "key#0",
@@ -3491,7 +3649,7 @@
         "spender#0 (copy)"
       ]
     },
-    "733": {
+    "746": {
       "op": "concat",
       "defined_out": [
         "approvalBox#0",
@@ -3502,7 +3660,7 @@
         "approvalBox#0"
       ]
     },
-    "734": {
+    "747": {
       "op": "pushbytes \"a\"",
       "defined_out": [
         "\"a\"",
@@ -3515,7 +3673,7 @@
         "\"a\""
       ]
     },
-    "737": {
+    "750": {
       "op": "uncover 2",
       "stack_out": [
         "approvalBox#0",
@@ -3523,7 +3681,7 @@
         "key#0"
       ]
     },
-    "739": {
+    "752": {
       "op": "concat",
       "defined_out": [
         "approvalBox#0",
@@ -3534,31 +3692,31 @@
         "tmp%0#0"
       ]
     },
-    "740": {
+    "753": {
       "op": "swap",
       "stack_out": [
         "tmp%0#0",
         "approvalBox#0"
       ]
     },
-    "741": {
+    "754": {
       "op": "box_put",
       "stack_out": []
     },
-    "742": {
+    "755": {
       "op": "frame_dig -3",
       "stack_out": [
         "owner#0 (copy)"
       ]
     },
-    "744": {
+    "757": {
       "op": "frame_dig -2",
       "stack_out": [
         "owner#0 (copy)",
         "spender#0 (copy)"
       ]
     },
-    "746": {
+    "759": {
       "op": "concat",
       "defined_out": [
         "encoded_tuple_buffer%6#0"
@@ -3567,14 +3725,14 @@
         "encoded_tuple_buffer%6#0"
       ]
     },
-    "747": {
+    "760": {
       "op": "frame_dig -1",
       "stack_out": [
         "encoded_tuple_buffer%6#0",
         "amount#0 (copy)"
       ]
     },
-    "749": {
+    "762": {
       "op": "concat",
       "defined_out": [
         "encoded_tuple_buffer%7#0"
@@ -3583,7 +3741,7 @@
         "encoded_tuple_buffer%7#0"
       ]
     },
-    "750": {
+    "763": {
       "op": "pushbytes 0x1969f865 // method \"arc200_Approval(address,address,uint256)\"",
       "defined_out": [
         "Method(arc200_Approval(address,address,uint256))",
@@ -3594,14 +3752,14 @@
         "Method(arc200_Approval(address,address,uint256))"
       ]
     },
-    "756": {
+    "769": {
       "op": "swap",
       "stack_out": [
         "Method(arc200_Approval(address,address,uint256))",
         "encoded_tuple_buffer%7#0"
       ]
     },
-    "757": {
+    "770": {
       "op": "concat",
       "defined_out": [
         "event%0#0"
@@ -3610,11 +3768,11 @@
         "event%0#0"
       ]
     },
-    "758": {
+    "771": {
       "op": "log",
       "stack_out": []
     },
-    "759": {
+    "772": {
       "op": "bytec_3 // 0x80",
       "defined_out": [
         "0x80"
@@ -3623,7 +3781,7 @@
         "0x80"
       ]
     },
-    "760": {
+    "773": {
       "retsub": true,
       "op": "retsub"
     }

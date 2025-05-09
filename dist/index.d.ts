@@ -14,6 +14,7 @@ import { Address, OnApplicationComplete, Transaction, TransactionSigner, modelsv
 import { AlgorandClient } from '@algorandfoundation/algokit-utils/types/algorand-client';
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName, ResolveAppClientByNetwork, AppClientBareCallParams, AppClientMethodCallParams, CloneAppClientParams, AppClientCompilationParams } from '@algorandfoundation/algokit-utils/types/app-client';
 import { AppFactory, AppFactoryParams, AppFactoryAppClientParams, AppFactoryResolveAppClientByCreatorAndNameParams, AppFactoryDeployParams, CreateSchema } from '@algorandfoundation/algokit-utils/types/app-factory';
+import { SimulateResponse } from 'algosdk/dist/types/client/v2/algod/models/types';
 import { AlgorandClient as AlgorandClient$1 } from '@algorandfoundation/algokit-utils';
 
 /**
@@ -1376,13 +1377,13 @@ type Arc200Composer<TReturns extends [...any[]] = []> = {
      * Simulates the transaction group and returns the result
      */
     simulate(): Promise<Arc200ComposerResults<TReturns> & {
-        simulateResponse: modelsv2.SimulateResponse;
+        simulateResponse: SimulateResponse;
     }>;
     simulate(options: SkipSignaturesSimulateOptions): Promise<Arc200ComposerResults<TReturns> & {
-        simulateResponse: modelsv2.SimulateResponse;
+        simulateResponse: SimulateResponse;
     }>;
     simulate(options: RawSimulateOptions): Promise<Arc200ComposerResults<TReturns> & {
-        simulateResponse: modelsv2.SimulateResponse;
+        simulateResponse: SimulateResponse;
     }>;
     /**
      * Sends the transaction group to the network and returns the results
