@@ -1,10 +1,11 @@
-import { Config } from '@algorandfoundation/algokit-utils'
+import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
 import { registerDebugEventHandlers } from '@algorandfoundation/algokit-utils-debug'
 import { algorandFixture } from '@algorandfoundation/algokit-utils/testing'
 import algosdk, { Address } from 'algosdk'
 import { beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { Arc200Factory } from './artifacts/Arc200Client'
 import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
+import { getArc200Client } from '../src/getArc200Client'
 
 describe('ARC200 contract', () => {
   const localnet = algorandFixture()
@@ -67,5 +68,67 @@ describe('ARC200 contract', () => {
       },
     })
     expect(balance).toBe(1000000n)
+  })
+  test('decode name of UNIT', async () => {
+    const algod = new algosdk.Algodv2('', 'https://mainnet-api.voi.nodely.dev', '')
+    const indexer = new algosdk.Indexer('', 'https://mainnet-idx.voi.nodely.dev', '')
+    var algoClient = AlgorandClient.fromClients({
+      algod,
+      indexer: indexer,
+    });
+    const dummyAddress =
+      "TESTNTTTJDHIF5PJZUBTTDYYSKLCLM6KXCTWIOOTZJX5HO7263DPPMM2SU";
+    const dummyTransactionSigner = async (
+      txnGroup: algosdk.Transaction[],
+      indexesToSign: number[]
+    ): Promise<Uint8Array[]> => {
+      console.log("transactionSigner", txnGroup, indexesToSign);
+      return [] as Uint8Array[];
+    };
+    const client = getArc200Client({
+      algorand: algoClient,
+      appId: 420069n,
+      defaultSender: dummyAddress,
+      defaultSigner: dummyTransactionSigner,
+      appName: "arc200",
+      approvalSourceMap: undefined,
+      clearSourceMap: undefined,
+    });
+
+    const name = await client.arc200Name();
+    const decodedName = Buffer.from(name).toString('ascii').replace(/\0/g, '');
+    expect(decodedName).toBe("UNIT");
+
+  })
+  test('decode name of WAD', async () => {
+    const algod = new algosdk.Algodv2('', 'https://mainnet-api.voi.nodely.dev', '')
+    const indexer = new algosdk.Indexer('', 'https://mainnet-idx.voi.nodely.dev', '')
+    var algoClient = AlgorandClient.fromClients({
+      algod,
+      indexer: indexer,
+    });
+    const dummyAddress =
+      "TESTNTTTJDHIF5PJZUBTTDYYSKLCLM6KXCTWIOOTZJX5HO7263DPPMM2SU";
+    const dummyTransactionSigner = async (
+      txnGroup: algosdk.Transaction[],
+      indexesToSign: number[]
+    ): Promise<Uint8Array[]> => {
+      console.log("transactionSigner", txnGroup, indexesToSign);
+      return [] as Uint8Array[];
+    };
+    const client = getArc200Client({
+      algorand: algoClient,
+      appId: 47138068n,
+      defaultSender: dummyAddress,
+      defaultSigner: dummyTransactionSigner,
+      appName: "arc200",
+      approvalSourceMap: undefined,
+      clearSourceMap: undefined,
+    });
+
+    const name = await client.arc200Name();
+    const decodedName = Buffer.from(name).toString('ascii').replace(/\0/g, '');
+    expect(decodedName).toBe("Whale Asset Dollar");
+
   })
 })
