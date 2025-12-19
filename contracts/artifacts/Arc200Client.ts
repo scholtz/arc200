@@ -4,13 +4,9 @@
  * DO NOT MODIFY IT BY HAND.
  * requires: @algorandfoundation/algokit-utils: ^7
  */
-import { type AlgorandClient } from '@algorandfoundation/algokit-utils/types/algorand-client';
-import { ABIReturn, AppReturn, SendAppTransactionResult } from '@algorandfoundation/algokit-utils/types/app';
-import {
-  Arc56Contract,
-  getArc56ReturnValue,
-  getABIStructFromABITuple,
-} from '@algorandfoundation/algokit-utils/types/app-arc56';
+import { type AlgorandClient } from '@algorandfoundation/algokit-utils/types/algorand-client'
+import { ABIReturn, AppReturn, SendAppTransactionResult } from '@algorandfoundation/algokit-utils/types/app'
+import { Arc56Contract, getArc56ReturnValue, getABIStructFromABITuple } from '@algorandfoundation/algokit-utils/types/app-arc56'
 import {
   AppClient as _AppClient,
   AppClientMethodCallParams,
@@ -21,289 +17,13 @@ import {
   ResolveAppClientByCreatorAndName,
   ResolveAppClientByNetwork,
   CloneAppClientParams,
-} from '@algorandfoundation/algokit-utils/types/app-client';
-import {
-  AppFactory as _AppFactory,
-  AppFactoryAppClientParams,
-  AppFactoryResolveAppClientByCreatorAndNameParams,
-  AppFactoryDeployParams,
-  AppFactoryParams,
-  CreateSchema,
-} from '@algorandfoundation/algokit-utils/types/app-factory';
-import {
-  TransactionComposer,
-  AppCallMethodCall,
-  AppMethodCallTransactionArgument,
-  SimulateOptions,
-  RawSimulateOptions,
-  SkipSignaturesSimulateOptions,
-} from '@algorandfoundation/algokit-utils/types/composer';
-import {
-  SendParams,
-  SendSingleTransactionResult,
-  SendAtomicTransactionComposerResults,
-} from '@algorandfoundation/algokit-utils/types/transaction';
-import { Address, encodeAddress, modelsv2, OnApplicationComplete, Transaction, TransactionSigner } from 'algosdk';
-import { SimulateResponse } from 'algosdk/dist/types/client/v2/algod/models/types';
+} from '@algorandfoundation/algokit-utils/types/app-client'
+import { AppFactory as _AppFactory, AppFactoryAppClientParams, AppFactoryResolveAppClientByCreatorAndNameParams, AppFactoryDeployParams, AppFactoryParams, CreateSchema } from '@algorandfoundation/algokit-utils/types/app-factory'
+import { TransactionComposer, AppCallMethodCall, AppMethodCallTransactionArgument, SimulateOptions, RawSimulateOptions, SkipSignaturesSimulateOptions } from '@algorandfoundation/algokit-utils/types/composer'
+import { SendParams, SendSingleTransactionResult, SendAtomicTransactionComposerResults } from '@algorandfoundation/algokit-utils/types/transaction'
+import { Address, encodeAddress, modelsv2, OnApplicationComplete, Transaction, TransactionSigner } from 'algosdk'
 
-export const APP_SPEC: Arc56Contract = {
-  name: 'Arc200',
-  structs: {
-    ApprovalStruct: [
-      { name: 'approvalAmount', type: 'uint256' },
-      { name: 'owner', type: 'address' },
-      { name: 'spender', type: 'address' },
-    ],
-  },
-  methods: [
-    {
-      name: 'bootstrap',
-      args: [
-        { type: 'byte[]', name: 'name' },
-        { type: 'byte[]', name: 'symbol' },
-        { type: 'uint8', name: 'decimals' },
-        { type: 'uint256', name: 'totalSupply' },
-      ],
-      returns: { type: 'bool' },
-      actions: { create: [], call: ['NoOp'] },
-      readonly: false,
-      events: [
-        {
-          name: 'arc200_Transfer',
-          args: [
-            { type: 'address', name: 'from' },
-            { type: 'address', name: 'to' },
-            { type: 'uint256', name: 'value' },
-          ],
-        },
-      ],
-      recommendations: {},
-    },
-    {
-      name: 'arc200_name',
-      args: [],
-      returns: { type: 'byte[32]', desc: 'The name of the token' },
-      actions: { create: [], call: ['NoOp'] },
-      readonly: true,
-      desc: 'Returns the name of the token',
-      events: [],
-      recommendations: {},
-    },
-    {
-      name: 'arc200_symbol',
-      args: [],
-      returns: { type: 'byte[8]', desc: 'The symbol of the token' },
-      actions: { create: [], call: ['NoOp'] },
-      readonly: true,
-      desc: 'Returns the symbol of the token',
-      events: [],
-      recommendations: {},
-    },
-    {
-      name: 'arc200_decimals',
-      args: [],
-      returns: { type: 'uint8', desc: 'The decimals of the token' },
-      actions: { create: [], call: ['NoOp'] },
-      readonly: true,
-      desc: 'Returns the decimals of the token',
-      events: [],
-      recommendations: {},
-    },
-    {
-      name: 'arc200_totalSupply',
-      args: [],
-      returns: { type: 'uint256', desc: 'The total supply of the token' },
-      actions: { create: [], call: ['NoOp'] },
-      readonly: true,
-      desc: 'Returns the total supply of the token',
-      events: [],
-      recommendations: {},
-    },
-    {
-      name: 'arc200_balanceOf',
-      args: [{ type: 'address', name: 'owner', desc: 'The address of the owner of the token' }],
-      returns: { type: 'uint256', desc: 'The current balance of the holder of the token' },
-      actions: { create: [], call: ['NoOp'] },
-      readonly: true,
-      desc: 'Returns the current balance of the owner of the token',
-      events: [],
-      recommendations: {},
-    },
-    {
-      name: 'arc200_transfer',
-      args: [
-        { type: 'address', name: 'to', desc: 'The destination of the transfer' },
-        { type: 'uint256', name: 'value', desc: 'Amount of tokens to transfer' },
-      ],
-      returns: { type: 'bool', desc: 'Success' },
-      actions: { create: [], call: ['NoOp'] },
-      readonly: false,
-      desc: 'Transfers tokens',
-      events: [
-        {
-          name: 'arc200_Transfer',
-          args: [
-            { type: 'address', name: 'from' },
-            { type: 'address', name: 'to' },
-            { type: 'uint256', name: 'value' },
-          ],
-        },
-      ],
-      recommendations: {},
-    },
-    {
-      name: 'arc200_transferFrom',
-      args: [
-        { type: 'address', name: 'from', desc: 'The source of the transfer' },
-        { type: 'address', name: 'to', desc: 'The destination of the transfer' },
-        { type: 'uint256', name: 'value', desc: 'Amount of tokens to transfer' },
-      ],
-      returns: { type: 'bool', desc: 'Success' },
-      actions: { create: [], call: ['NoOp'] },
-      readonly: false,
-      desc: 'Transfers tokens from source to destination as approved spender',
-      events: [
-        {
-          name: 'arc200_Approval',
-          args: [
-            { type: 'address', name: 'owner' },
-            { type: 'address', name: 'spender' },
-            { type: 'uint256', name: 'value' },
-          ],
-        },
-        {
-          name: 'arc200_Transfer',
-          args: [
-            { type: 'address', name: 'from' },
-            { type: 'address', name: 'to' },
-            { type: 'uint256', name: 'value' },
-          ],
-        },
-      ],
-      recommendations: {},
-    },
-    {
-      name: 'arc200_approve',
-      args: [
-        { type: 'address', name: 'spender', desc: "Who is allowed to take tokens on owner's behalf" },
-        { type: 'uint256', name: 'value', desc: 'Amount of tokens to be taken by spender' },
-      ],
-      returns: { type: 'bool', desc: 'Success' },
-      actions: { create: [], call: ['NoOp'] },
-      readonly: false,
-      desc: 'Approve spender for a token',
-      events: [
-        {
-          name: 'arc200_Approval',
-          args: [
-            { type: 'address', name: 'owner' },
-            { type: 'address', name: 'spender' },
-            { type: 'uint256', name: 'value' },
-          ],
-        },
-      ],
-      recommendations: {},
-    },
-    {
-      name: 'arc200_allowance',
-      args: [
-        { type: 'address', name: 'owner', desc: "Owner's account" },
-        { type: 'address', name: 'spender', desc: "Who is allowed to take tokens on owner's behalf" },
-      ],
-      returns: { type: 'uint256', desc: 'The remaining allowance' },
-      actions: { create: [], call: ['NoOp'] },
-      readonly: true,
-      desc: 'Returns the current allowance of the spender of the tokens of the owner',
-      events: [],
-      recommendations: {},
-    },
-  ],
-  arcs: [22, 28],
-  desc: 'Smart Contract Token Base Interface',
-  networks: {},
-  state: {
-    schema: { global: { ints: 0, bytes: 4 }, local: { ints: 0, bytes: 0 } },
-    keys: {
-      global: {
-        name: { keyType: 'AVMString', valueType: 'byte[]', key: 'bg==', desc: 'Name of the asset. Max 32 bytes' },
-        symbol: { keyType: 'AVMString', valueType: 'byte[]', key: 'cw==', desc: 'Symbol of the asset. Max 8 bytes' },
-        decimals: {
-          keyType: 'AVMString',
-          valueType: 'uint8',
-          key: 'ZA==',
-          desc: 'Decimals of the asset. Recommended is 6 decimal places.',
-        },
-        totalSupply: { keyType: 'AVMString', valueType: 'uint256', key: 'dA==', desc: 'Minted supply' },
-      },
-      local: {},
-      box: {},
-    },
-    maps: {
-      global: {},
-      local: {},
-      box: {
-        balances: { keyType: 'address', valueType: 'uint256', prefix: 'Yg==' },
-        approvals: { keyType: 'byte[32]', valueType: 'ApprovalStruct', prefix: 'YQ==' },
-      },
-    },
-  },
-  bareActions: { create: ['NoOp'], call: [] },
-  sourceInfo: {
-    approval: {
-      sourceInfo: [
-        { pc: [593, 723], errorMessage: 'Box must have value' },
-        { pc: [724], errorMessage: 'Index access is out of bounds' },
-        { pc: [614], errorMessage: 'Insufficient balance at the sender account' },
-        { pc: [371], errorMessage: 'Name of the asset must be longer or equal to 1 character' },
-        { pc: [374], errorMessage: 'Name of the asset must be shorter or equal to 32 characters' },
-        { pc: [145, 167, 189, 214, 236, 255, 271, 287, 303, 319], errorMessage: 'OnCompletion is not NoOp' },
-        { pc: [363], errorMessage: 'Only deployer of this smart contract can call bootstrap method' },
-        { pc: [382], errorMessage: 'Symbol of the asset must be longer or equal to 1 character' },
-        { pc: [385], errorMessage: 'Symbol of the asset must be shorter or equal to 8 characters' },
-        { pc: [392], errorMessage: 'This method can be called only once' },
-        { pc: [352], errorMessage: 'can only call when creating' },
-        { pc: [148, 170, 192, 217, 239, 258, 274, 290, 306, 322], errorMessage: 'can only call when not creating' },
-        { pc: [443, 458, 473, 478], errorMessage: 'check GlobalState exists' },
-        { pc: [518], errorMessage: 'insufficient approval' },
-        { pc: [451, 466, 692], errorMessage: 'invalid size' },
-        { pc: [526, 632, 654], errorMessage: 'overflow' },
-      ],
-      pcOffsetMethod: 'none',
-    },
-    clear: { sourceInfo: [], pcOffsetMethod: 'none' },
-  },
-  source: {
-    approval:
-      'I3ByYWdtYSB2ZXJzaW9uIDEwCiNwcmFnbWEgdHlwZXRyYWNrIGZhbHNlCgovLyBAYWxnb3JhbmRmb3VuZGF0aW9uL2FsZ29yYW5kLXR5cGVzY3JpcHQvYXJjNC9pbmRleC5kLnRzOjpDb250cmFjdC5hcHByb3ZhbFByb2dyYW0oKSAtPiB1aW50NjQ6Cm1haW46CiAgICBpbnRjYmxvY2sgMSAzMiAwIDgKICAgIGJ5dGVjYmxvY2sgMHgxNTFmN2M3NSAiYiIgInQiIDB4ODAgMHg3OTgzYzM1YyAweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo0NAogICAgLy8gZXhwb3J0IGNsYXNzIEFyYzIwMCBleHRlbmRzIENvbnRyYWN0IHsKICAgIHR4biBOdW1BcHBBcmdzCiAgICBieiBtYWluX2JhcmVfcm91dGluZ0AxNQogICAgcHVzaGJ5dGVzcyAweDk3NTM4MmUyIDB4NjU3ZDEzZWMgMHhiNmFlMWEyNSAweDg0ZWMxM2Q1IDB4ZWM5OTYwNDEgMHg4MmU1NzNjNCAweGRhNzAyNWI5IDB4NGE5NjhmOGYgMHhiNTQyMjEyNSAweGJiYjMxOWYzIC8vIG1ldGhvZCAiYm9vdHN0cmFwKGJ5dGVbXSxieXRlW10sdWludDgsdWludDI1Nilib29sIiwgbWV0aG9kICJhcmMyMDBfbmFtZSgpYnl0ZVszMl0iLCBtZXRob2QgImFyYzIwMF9zeW1ib2woKWJ5dGVbOF0iLCBtZXRob2QgImFyYzIwMF9kZWNpbWFscygpdWludDgiLCBtZXRob2QgImFyYzIwMF90b3RhbFN1cHBseSgpdWludDI1NiIsIG1ldGhvZCAiYXJjMjAwX2JhbGFuY2VPZihhZGRyZXNzKXVpbnQyNTYiLCBtZXRob2QgImFyYzIwMF90cmFuc2ZlcihhZGRyZXNzLHVpbnQyNTYpYm9vbCIsIG1ldGhvZCAiYXJjMjAwX3RyYW5zZmVyRnJvbShhZGRyZXNzLGFkZHJlc3MsdWludDI1Nilib29sIiwgbWV0aG9kICJhcmMyMDBfYXBwcm92ZShhZGRyZXNzLHVpbnQyNTYpYm9vbCIsIG1ldGhvZCAiYXJjMjAwX2FsbG93YW5jZShhZGRyZXNzLGFkZHJlc3MpdWludDI1NiIKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDAKICAgIG1hdGNoIG1haW5fYm9vdHN0cmFwX3JvdXRlQDMgbWFpbl9hcmMyMDBfbmFtZV9yb3V0ZUA0IG1haW5fYXJjMjAwX3N5bWJvbF9yb3V0ZUA1IG1haW5fYXJjMjAwX2RlY2ltYWxzX3JvdXRlQDYgbWFpbl9hcmMyMDBfdG90YWxTdXBwbHlfcm91dGVANyBtYWluX2FyYzIwMF9iYWxhbmNlT2Zfcm91dGVAOCBtYWluX2FyYzIwMF90cmFuc2Zlcl9yb3V0ZUA5IG1haW5fYXJjMjAwX3RyYW5zZmVyRnJvbV9yb3V0ZUAxMCBtYWluX2FyYzIwMF9hcHByb3ZlX3JvdXRlQDExIG1haW5fYXJjMjAwX2FsbG93YW5jZV9yb3V0ZUAxMgoKbWFpbl9hZnRlcl9pZl9lbHNlQDE5OgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjQ0CiAgICAvLyBleHBvcnQgY2xhc3MgQXJjMjAwIGV4dGVuZHMgQ29udHJhY3QgewogICAgaW50Y18yIC8vIDAKICAgIHJldHVybgoKbWFpbl9hcmMyMDBfYWxsb3dhbmNlX3JvdXRlQDEyOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE4NgogICAgLy8gQGFyYzQuYWJpbWV0aG9kKHsgcmVhZG9ubHk6IHRydWUgfSkKICAgIHR4biBPbkNvbXBsZXRpb24KICAgICEKICAgIGFzc2VydCAvLyBPbkNvbXBsZXRpb24gaXMgbm90IE5vT3AKICAgIHR4biBBcHBsaWNhdGlvbklECiAgICBhc3NlcnQgLy8gY2FuIG9ubHkgY2FsbCB3aGVuIG5vdCBjcmVhdGluZwogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjQ0CiAgICAvLyBleHBvcnQgY2xhc3MgQXJjMjAwIGV4dGVuZHMgQ29udHJhY3QgewogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMQogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE4NgogICAgLy8gQGFyYzQuYWJpbWV0aG9kKHsgcmVhZG9ubHk6IHRydWUgfSkKICAgIGNhbGxzdWIgYXJjMjAwX2FsbG93YW5jZQogICAgYnl0ZWNfMCAvLyAweDE1MWY3Yzc1CiAgICBzd2FwCiAgICBjb25jYXQKICAgIGxvZwogICAgaW50Y18wIC8vIDEKICAgIHJldHVybgoKbWFpbl9hcmMyMDBfYXBwcm92ZV9yb3V0ZUAxMToKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxNzQKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICB0eG4gT25Db21wbGV0aW9uCiAgICAhCiAgICBhc3NlcnQgLy8gT25Db21wbGV0aW9uIGlzIG5vdCBOb09wCiAgICB0eG4gQXBwbGljYXRpb25JRAogICAgYXNzZXJ0IC8vIGNhbiBvbmx5IGNhbGwgd2hlbiBub3QgY3JlYXRpbmcKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo0NAogICAgLy8gZXhwb3J0IGNsYXNzIEFyYzIwMCBleHRlbmRzIENvbnRyYWN0IHsKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDEKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxNzQKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICBjYWxsc3ViIGFyYzIwMF9hcHByb3ZlCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzAgLy8gMQogICAgcmV0dXJuCgptYWluX2FyYzIwMF90cmFuc2ZlckZyb21fcm91dGVAMTA6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTU3CiAgICAvLyBAYXJjNC5hYmltZXRob2QoKQogICAgdHhuIE9uQ29tcGxldGlvbgogICAgIQogICAgYXNzZXJ0IC8vIE9uQ29tcGxldGlvbiBpcyBub3QgTm9PcAogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgIGFzc2VydCAvLyBjYW4gb25seSBjYWxsIHdoZW4gbm90IGNyZWF0aW5nCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NDQKICAgIC8vIGV4cG9ydCBjbGFzcyBBcmMyMDAgZXh0ZW5kcyBDb250cmFjdCB7CiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAxCiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAyCiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAzCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTU3CiAgICAvLyBAYXJjNC5hYmltZXRob2QoKQogICAgY2FsbHN1YiBhcmMyMDBfdHJhbnNmZXJGcm9tCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzAgLy8gMQogICAgcmV0dXJuCgptYWluX2FyYzIwMF90cmFuc2Zlcl9yb3V0ZUA5OgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE0NAogICAgLy8gQGFyYzQuYWJpbWV0aG9kKCkKICAgIHR4biBPbkNvbXBsZXRpb24KICAgICEKICAgIGFzc2VydCAvLyBPbkNvbXBsZXRpb24gaXMgbm90IE5vT3AKICAgIHR4biBBcHBsaWNhdGlvbklECiAgICBhc3NlcnQgLy8gY2FuIG9ubHkgY2FsbCB3aGVuIG5vdCBjcmVhdGluZwogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjQ0CiAgICAvLyBleHBvcnQgY2xhc3MgQXJjMjAwIGV4dGVuZHMgQ29udHJhY3QgewogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMQogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE0NAogICAgLy8gQGFyYzQuYWJpbWV0aG9kKCkKICAgIGNhbGxzdWIgYXJjMjAwX3RyYW5zZmVyCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzAgLy8gMQogICAgcmV0dXJuCgptYWluX2FyYzIwMF9iYWxhbmNlT2Zfcm91dGVAODoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMzIKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICB0eG4gT25Db21wbGV0aW9uCiAgICAhCiAgICBhc3NlcnQgLy8gT25Db21wbGV0aW9uIGlzIG5vdCBOb09wCiAgICB0eG4gQXBwbGljYXRpb25JRAogICAgYXNzZXJ0IC8vIGNhbiBvbmx5IGNhbGwgd2hlbiBub3QgY3JlYXRpbmcKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo0NAogICAgLy8gZXhwb3J0IGNsYXNzIEFyYzIwMCBleHRlbmRzIENvbnRyYWN0IHsKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDEKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMzIKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICBjYWxsc3ViIGFyYzIwMF9iYWxhbmNlT2YKICAgIGJ5dGVjXzAgLy8gMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIGludGNfMCAvLyAxCiAgICByZXR1cm4KCm1haW5fYXJjMjAwX3RvdGFsU3VwcGx5X3JvdXRlQDc6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTIxCiAgICAvLyBAYXJjNC5hYmltZXRob2QoeyByZWFkb25seTogdHJ1ZSB9KQogICAgdHhuIE9uQ29tcGxldGlvbgogICAgIQogICAgYXNzZXJ0IC8vIE9uQ29tcGxldGlvbiBpcyBub3QgTm9PcAogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgIGFzc2VydCAvLyBjYW4gb25seSBjYWxsIHdoZW4gbm90IGNyZWF0aW5nCiAgICBjYWxsc3ViIGFyYzIwMF90b3RhbFN1cHBseQogICAgYnl0ZWNfMCAvLyAweDE1MWY3Yzc1CiAgICBzd2FwCiAgICBjb25jYXQKICAgIGxvZwogICAgaW50Y18wIC8vIDEKICAgIHJldHVybgoKbWFpbl9hcmMyMDBfZGVjaW1hbHNfcm91dGVANjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMTEKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICB0eG4gT25Db21wbGV0aW9uCiAgICAhCiAgICBhc3NlcnQgLy8gT25Db21wbGV0aW9uIGlzIG5vdCBOb09wCiAgICB0eG4gQXBwbGljYXRpb25JRAogICAgYXNzZXJ0IC8vIGNhbiBvbmx5IGNhbGwgd2hlbiBub3QgY3JlYXRpbmcKICAgIGNhbGxzdWIgYXJjMjAwX2RlY2ltYWxzCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzAgLy8gMQogICAgcmV0dXJuCgptYWluX2FyYzIwMF9zeW1ib2xfcm91dGVANToKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMDEKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICB0eG4gT25Db21wbGV0aW9uCiAgICAhCiAgICBhc3NlcnQgLy8gT25Db21wbGV0aW9uIGlzIG5vdCBOb09wCiAgICB0eG4gQXBwbGljYXRpb25JRAogICAgYXNzZXJ0IC8vIGNhbiBvbmx5IGNhbGwgd2hlbiBub3QgY3JlYXRpbmcKICAgIGNhbGxzdWIgYXJjMjAwX3N5bWJvbAogICAgYnl0ZWNfMCAvLyAweDE1MWY3Yzc1CiAgICBzd2FwCiAgICBjb25jYXQKICAgIGxvZwogICAgaW50Y18wIC8vIDEKICAgIHJldHVybgoKbWFpbl9hcmMyMDBfbmFtZV9yb3V0ZUA0OgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjkxCiAgICAvLyBAYXJjNC5hYmltZXRob2QoeyByZWFkb25seTogdHJ1ZSB9KQogICAgdHhuIE9uQ29tcGxldGlvbgogICAgIQogICAgYXNzZXJ0IC8vIE9uQ29tcGxldGlvbiBpcyBub3QgTm9PcAogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgIGFzc2VydCAvLyBjYW4gb25seSBjYWxsIHdoZW4gbm90IGNyZWF0aW5nCiAgICBjYWxsc3ViIGFyYzIwMF9uYW1lCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzAgLy8gMQogICAgcmV0dXJuCgptYWluX2Jvb3RzdHJhcF9yb3V0ZUAzOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjY1CiAgICAvLyBAYXJjNC5hYmltZXRob2QoKQogICAgdHhuIE9uQ29tcGxldGlvbgogICAgIQogICAgYXNzZXJ0IC8vIE9uQ29tcGxldGlvbiBpcyBub3QgTm9PcAogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgIGFzc2VydCAvLyBjYW4gb25seSBjYWxsIHdoZW4gbm90IGNyZWF0aW5nCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NDQKICAgIC8vIGV4cG9ydCBjbGFzcyBBcmMyMDAgZXh0ZW5kcyBDb250cmFjdCB7CiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAxCiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAyCiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAzCiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyA0CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NjUKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICBjYWxsc3ViIGJvb3RzdHJhcAogICAgYnl0ZWNfMCAvLyAweDE1MWY3Yzc1CiAgICBzd2FwCiAgICBjb25jYXQKICAgIGxvZwogICAgaW50Y18wIC8vIDEKICAgIHJldHVybgoKbWFpbl9iYXJlX3JvdXRpbmdAMTU6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NDQKICAgIC8vIGV4cG9ydCBjbGFzcyBBcmMyMDAgZXh0ZW5kcyBDb250cmFjdCB7CiAgICB0eG4gT25Db21wbGV0aW9uCiAgICBibnogbWFpbl9hZnRlcl9pZl9lbHNlQDE5CiAgICB0eG4gQXBwbGljYXRpb25JRAogICAgIQogICAgYXNzZXJ0IC8vIGNhbiBvbmx5IGNhbGwgd2hlbiBjcmVhdGluZwogICAgaW50Y18wIC8vIDEKICAgIHJldHVybgoKCi8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo6QXJjMjAwLmJvb3RzdHJhcChuYW1lOiBieXRlcywgc3ltYm9sOiBieXRlcywgZGVjaW1hbHM6IGJ5dGVzLCB0b3RhbFN1cHBseTogYnl0ZXMpIC0+IGJ5dGVzOgpib290c3RyYXA6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NjUtNjYKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICAvLyBwdWJsaWMgYm9vdHN0cmFwKG5hbWU6IER5bmFtaWNCeXRlcywgc3ltYm9sOiBEeW5hbWljQnl0ZXMsIGRlY2ltYWxzOiBVaW50TjgsIHRvdGFsU3VwcGx5OiBVaW50TjI1Nik6IEJvb2wgewogICAgcHJvdG8gNCAxCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NjcKICAgIC8vIGFzc2VydChUeG4uc2VuZGVyID09PSBHbG9iYWwuY3JlYXRvckFkZHJlc3MsICdPbmx5IGRlcGxveWVyIG9mIHRoaXMgc21hcnQgY29udHJhY3QgY2FuIGNhbGwgYm9vdHN0cmFwIG1ldGhvZCcpOwogICAgdHhuIFNlbmRlcgogICAgZ2xvYmFsIENyZWF0b3JBZGRyZXNzCiAgICA9PQogICAgYXNzZXJ0IC8vIE9ubHkgZGVwbG95ZXIgb2YgdGhpcyBzbWFydCBjb250cmFjdCBjYW4gY2FsbCBib290c3RyYXAgbWV0aG9kCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NjgKICAgIC8vIGFzc2VydChuYW1lLm5hdGl2ZS5sZW5ndGggPiAwLCAnTmFtZSBvZiB0aGUgYXNzZXQgbXVzdCBiZSBsb25nZXIgb3IgZXF1YWwgdG8gMSBjaGFyYWN0ZXInKTsKICAgIGZyYW1lX2RpZyAtNAogICAgZXh0cmFjdCAyIDAKICAgIGxlbgogICAgZHVwCiAgICBhc3NlcnQgLy8gTmFtZSBvZiB0aGUgYXNzZXQgbXVzdCBiZSBsb25nZXIgb3IgZXF1YWwgdG8gMSBjaGFyYWN0ZXIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo2OQogICAgLy8gYXNzZXJ0KG5hbWUubmF0aXZlLmxlbmd0aCA8PSAzMiwgJ05hbWUgb2YgdGhlIGFzc2V0IG11c3QgYmUgc2hvcnRlciBvciBlcXVhbCB0byAzMiBjaGFyYWN0ZXJzJyk7CiAgICBpbnRjXzEgLy8gMzIKICAgIDw9CiAgICBhc3NlcnQgLy8gTmFtZSBvZiB0aGUgYXNzZXQgbXVzdCBiZSBzaG9ydGVyIG9yIGVxdWFsIHRvIDMyIGNoYXJhY3RlcnMKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo3MAogICAgLy8gYXNzZXJ0KHN5bWJvbC5uYXRpdmUubGVuZ3RoID4gMCwgJ1N5bWJvbCBvZiB0aGUgYXNzZXQgbXVzdCBiZSBsb25nZXIgb3IgZXF1YWwgdG8gMSBjaGFyYWN0ZXInKTsKICAgIGZyYW1lX2RpZyAtMwogICAgZXh0cmFjdCAyIDAKICAgIGxlbgogICAgZHVwCiAgICBhc3NlcnQgLy8gU3ltYm9sIG9mIHRoZSBhc3NldCBtdXN0IGJlIGxvbmdlciBvciBlcXVhbCB0byAxIGNoYXJhY3RlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjcxCiAgICAvLyBhc3NlcnQoc3ltYm9sLm5hdGl2ZS5sZW5ndGggPD0gOCwgJ1N5bWJvbCBvZiB0aGUgYXNzZXQgbXVzdCBiZSBzaG9ydGVyIG9yIGVxdWFsIHRvIDggY2hhcmFjdGVycycpOwogICAgaW50Y18zIC8vIDgKICAgIDw9CiAgICBhc3NlcnQgLy8gU3ltYm9sIG9mIHRoZSBhc3NldCBtdXN0IGJlIHNob3J0ZXIgb3IgZXF1YWwgdG8gOCBjaGFyYWN0ZXJzCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NjAKICAgIC8vIHB1YmxpYyB0b3RhbFN1cHBseSA9IEdsb2JhbFN0YXRlPFVpbnROMjU2Pih7IGtleTogJ3QnIH0pOwogICAgaW50Y18yIC8vIDAKICAgIGJ5dGVjXzIgLy8gInQiCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NzIKICAgIC8vIGFzc2VydCghdGhpcy50b3RhbFN1cHBseS5oYXNWYWx1ZSwgJ1RoaXMgbWV0aG9kIGNhbiBiZSBjYWxsZWQgb25seSBvbmNlJyk7CiAgICBhcHBfZ2xvYmFsX2dldF9leAogICAgYnVyeSAxCiAgICAhCiAgICBhc3NlcnQgLy8gVGhpcyBtZXRob2QgY2FuIGJlIGNhbGxlZCBvbmx5IG9uY2UKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo0OAogICAgLy8gcHVibGljIG5hbWUgPSBHbG9iYWxTdGF0ZTxEeW5hbWljQnl0ZXM+KHsga2V5OiAnbicgfSk7CiAgICBwdXNoYnl0ZXMgIm4iCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NzQKICAgIC8vIHRoaXMubmFtZS52YWx1ZSA9IG5hbWU7CiAgICBmcmFtZV9kaWcgLTQKICAgIGFwcF9nbG9iYWxfcHV0CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NTIKICAgIC8vIHB1YmxpYyBzeW1ib2wgPSBHbG9iYWxTdGF0ZTxEeW5hbWljQnl0ZXM+KHsga2V5OiAncycgfSk7CiAgICBwdXNoYnl0ZXMgInMiCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NzUKICAgIC8vIHRoaXMuc3ltYm9sLnZhbHVlID0gc3ltYm9sOwogICAgZnJhbWVfZGlnIC0zCiAgICBhcHBfZ2xvYmFsX3B1dAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjYwCiAgICAvLyBwdWJsaWMgdG90YWxTdXBwbHkgPSBHbG9iYWxTdGF0ZTxVaW50TjI1Nj4oeyBrZXk6ICd0JyB9KTsKICAgIGJ5dGVjXzIgLy8gInQiCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NzYKICAgIC8vIHRoaXMudG90YWxTdXBwbHkudmFsdWUgPSB0b3RhbFN1cHBseTsKICAgIGZyYW1lX2RpZyAtMQogICAgYXBwX2dsb2JhbF9wdXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo1NgogICAgLy8gcHVibGljIGRlY2ltYWxzID0gR2xvYmFsU3RhdGU8VWludE44Pih7IGtleTogJ2QnIH0pOwogICAgcHVzaGJ5dGVzICJkIgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjc3CiAgICAvLyB0aGlzLmRlY2ltYWxzLnZhbHVlID0gZGVjaW1hbHM7CiAgICBmcmFtZV9kaWcgLTIKICAgIGFwcF9nbG9iYWxfcHV0CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NzgKICAgIC8vIGNvbnN0IHNlbmRlciA9IG5ldyBBZGRyZXNzKFR4bi5zZW5kZXIpOwogICAgdHhuIFNlbmRlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjYyCiAgICAvLyBwdWJsaWMgYmFsYW5jZXMgPSBCb3hNYXA8QWRkcmVzcywgVWludE4yNTY+KHsga2V5UHJlZml4OiAnYicgfSk7CiAgICBieXRlY18xIC8vICJiIgogICAgZGlnIDEKICAgIGNvbmNhdAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjgwCiAgICAvLyB0aGlzLmJhbGFuY2VzKHNlbmRlcikudmFsdWUgPSB0b3RhbFN1cHBseTsKICAgIGZyYW1lX2RpZyAtMQogICAgYm94X3B1dAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjgyCiAgICAvLyBlbWl0KG5ldyBhcmMyMDBfVHJhbnNmZXIoeyBmcm9tOiBuZXcgQWRkcmVzcyhHbG9iYWwuemVyb0FkZHJlc3MpLCB0bzogc2VuZGVyLCB2YWx1ZTogdG90YWxTdXBwbHkgfSkpOwogICAgZ2xvYmFsIFplcm9BZGRyZXNzCiAgICBzd2FwCiAgICBjb25jYXQKICAgIGZyYW1lX2RpZyAtMQogICAgY29uY2F0CiAgICBieXRlYyA0IC8vIG1ldGhvZCAiYXJjMjAwX1RyYW5zZmVyKGFkZHJlc3MsYWRkcmVzcyx1aW50MjU2KSIKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6ODMKICAgIC8vIHJldHVybiBuZXcgQm9vbCh0cnVlKTsKICAgIGJ5dGVjXzMgLy8gMHg4MAogICAgcmV0c3ViCgoKLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjpBcmMyMDAuYXJjMjAwX25hbWUoKSAtPiBieXRlczoKYXJjMjAwX25hbWU6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NDgKICAgIC8vIHB1YmxpYyBuYW1lID0gR2xvYmFsU3RhdGU8RHluYW1pY0J5dGVzPih7IGtleTogJ24nIH0pOwogICAgaW50Y18yIC8vIDAKICAgIHB1c2hieXRlcyAibiIKICAgIGFwcF9nbG9iYWxfZ2V0X2V4CiAgICBhc3NlcnQgLy8gY2hlY2sgR2xvYmFsU3RhdGUgZXhpc3RzCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OTMKICAgIC8vIHJldHVybiBuZXcgU3RhdGljQnl0ZXM8MzI+KHRoaXMubmFtZS52YWx1ZS5uYXRpdmUpOwogICAgZXh0cmFjdCAyIDAKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzEgLy8gMzIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBzaXplCiAgICByZXRzdWIKCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5hcmMyMDBfc3ltYm9sKCkgLT4gYnl0ZXM6CmFyYzIwMF9zeW1ib2w6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NTIKICAgIC8vIHB1YmxpYyBzeW1ib2wgPSBHbG9iYWxTdGF0ZTxEeW5hbWljQnl0ZXM+KHsga2V5OiAncycgfSk7CiAgICBpbnRjXzIgLy8gMAogICAgcHVzaGJ5dGVzICJzIgogICAgYXBwX2dsb2JhbF9nZXRfZXgKICAgIGFzc2VydCAvLyBjaGVjayBHbG9iYWxTdGF0ZSBleGlzdHMKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMDMKICAgIC8vIHJldHVybiBuZXcgU3RhdGljQnl0ZXM8OD4odGhpcy5zeW1ib2wudmFsdWUubmF0aXZlKTsKICAgIGV4dHJhY3QgMiAwCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18zIC8vIDgKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBzaXplCiAgICByZXRzdWIKCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5hcmMyMDBfZGVjaW1hbHMoKSAtPiBieXRlczoKYXJjMjAwX2RlY2ltYWxzOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjU2CiAgICAvLyBwdWJsaWMgZGVjaW1hbHMgPSBHbG9iYWxTdGF0ZTxVaW50Tjg+KHsga2V5OiAnZCcgfSk7CiAgICBpbnRjXzIgLy8gMAogICAgcHVzaGJ5dGVzICJkIgogICAgYXBwX2dsb2JhbF9nZXRfZXgKICAgIGFzc2VydCAvLyBjaGVjayBHbG9iYWxTdGF0ZSBleGlzdHMKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMTMKICAgIC8vIHJldHVybiB0aGlzLmRlY2ltYWxzLnZhbHVlOwogICAgcmV0c3ViCgoKLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjpBcmMyMDAuYXJjMjAwX3RvdGFsU3VwcGx5KCkgLT4gYnl0ZXM6CmFyYzIwMF90b3RhbFN1cHBseToKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo2MAogICAgLy8gcHVibGljIHRvdGFsU3VwcGx5ID0gR2xvYmFsU3RhdGU8VWludE4yNTY+KHsga2V5OiAndCcgfSk7CiAgICBpbnRjXzIgLy8gMAogICAgYnl0ZWNfMiAvLyAidCIKICAgIGFwcF9nbG9iYWxfZ2V0X2V4CiAgICBhc3NlcnQgLy8gY2hlY2sgR2xvYmFsU3RhdGUgZXhpc3RzCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTIzCiAgICAvLyByZXR1cm4gdGhpcy50b3RhbFN1cHBseS52YWx1ZTsKICAgIHJldHN1YgoKCi8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo6QXJjMjAwLmFyYzIwMF9iYWxhbmNlT2Yob3duZXI6IGJ5dGVzKSAtPiBieXRlczoKYXJjMjAwX2JhbGFuY2VPZjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMzItMTMzCiAgICAvLyBAYXJjNC5hYmltZXRob2QoeyByZWFkb25seTogdHJ1ZSB9KQogICAgLy8gcHVibGljIGFyYzIwMF9iYWxhbmNlT2Yob3duZXI6IEFkZHJlc3MpOiBhcmM0LlVpbnROMjU2IHsKICAgIHByb3RvIDEgMQogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjEzNAogICAgLy8gcmV0dXJuIHRoaXMuX2JhbGFuY2VPZihvd25lcik7CiAgICBmcmFtZV9kaWcgLTEKICAgIGNhbGxzdWIgX2JhbGFuY2VPZgogICAgcmV0c3ViCgoKLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjpBcmMyMDAuYXJjMjAwX3RyYW5zZmVyKHRvOiBieXRlcywgdmFsdWU6IGJ5dGVzKSAtPiBieXRlczoKYXJjMjAwX3RyYW5zZmVyOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE0NC0xNDUKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICAvLyBwdWJsaWMgYXJjMjAwX3RyYW5zZmVyKHRvOiBBZGRyZXNzLCB2YWx1ZTogYXJjNC5VaW50TjI1Nik6IGFyYzQuQm9vbCB7CiAgICBwcm90byAyIDEKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxNDYKICAgIC8vIHJldHVybiB0aGlzLl90cmFuc2ZlcihuZXcgQWRkcmVzcyhUeG4uc2VuZGVyKSwgdG8sIHZhbHVlKTsKICAgIHR4biBTZW5kZXIKICAgIGZyYW1lX2RpZyAtMgogICAgZnJhbWVfZGlnIC0xCiAgICBjYWxsc3ViIF90cmFuc2ZlcgogICAgcmV0c3ViCgoKLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjpBcmMyMDAuYXJjMjAwX3RyYW5zZmVyRnJvbShmcm9tOiBieXRlcywgdG86IGJ5dGVzLCB2YWx1ZTogYnl0ZXMpIC0+IGJ5dGVzOgphcmMyMDBfdHJhbnNmZXJGcm9tOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE1Ny0xNTgKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICAvLyBwdWJsaWMgYXJjMjAwX3RyYW5zZmVyRnJvbShmcm9tOiBBZGRyZXNzLCB0bzogQWRkcmVzcywgdmFsdWU6IGFyYzQuVWludE4yNTYpOiBhcmM0LkJvb2wgewogICAgcHJvdG8gMyAxCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTU5CiAgICAvLyBjb25zdCBzcGVuZGVyID0gbmV3IEFkZHJlc3MoVHhuLnNlbmRlcik7CiAgICB0eG4gU2VuZGVyCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTYwCiAgICAvLyBjb25zdCBzcGVuZGVyX2FsbG93YW5jZSA9IHRoaXMuX2FsbG93YW5jZShmcm9tLCBzcGVuZGVyKTsKICAgIGZyYW1lX2RpZyAtMwogICAgZGlnIDEKICAgIGNhbGxzdWIgX2FsbG93YW5jZQogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE2MQogICAgLy8gYXNzZXJ0KHNwZW5kZXJfYWxsb3dhbmNlLm5hdGl2ZSA+PSB2YWx1ZS5uYXRpdmUsICdpbnN1ZmZpY2llbnQgYXBwcm92YWwnKTsKICAgIGR1cAogICAgZnJhbWVfZGlnIC0xCiAgICBiPj0KICAgIGFzc2VydCAvLyBpbnN1ZmZpY2llbnQgYXBwcm92YWwKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxNjIKICAgIC8vIGNvbnN0IG5ld19zcGVuZGVyX2FsbG93YW5jZSA9IG5ldyBVaW50TjI1NihzcGVuZGVyX2FsbG93YW5jZS5uYXRpdmUgLSB2YWx1ZS5uYXRpdmUpOwogICAgZnJhbWVfZGlnIC0xCiAgICBiLQogICAgZHVwCiAgICBsZW4KICAgIGludGNfMSAvLyAzMgogICAgPD0KICAgIGFzc2VydCAvLyBvdmVyZmxvdwogICAgaW50Y18xIC8vIDMyCiAgICBiemVybwogICAgYnwKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxNjMKICAgIC8vIHRoaXMuX2FwcHJvdmUoZnJvbSwgc3BlbmRlciwgbmV3X3NwZW5kZXJfYWxsb3dhbmNlKTsKICAgIGZyYW1lX2RpZyAtMwogICAgY292ZXIgMgogICAgY2FsbHN1YiBfYXBwcm92ZQogICAgcG9wCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTY0CiAgICAvLyByZXR1cm4gdGhpcy5fdHJhbnNmZXIoZnJvbSwgdG8sIHZhbHVlKTsKICAgIGZyYW1lX2RpZyAtMwogICAgZnJhbWVfZGlnIC0yCiAgICBmcmFtZV9kaWcgLTEKICAgIGNhbGxzdWIgX3RyYW5zZmVyCiAgICByZXRzdWIKCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5hcmMyMDBfYXBwcm92ZShzcGVuZGVyOiBieXRlcywgdmFsdWU6IGJ5dGVzKSAtPiBieXRlczoKYXJjMjAwX2FwcHJvdmU6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTc0LTE3NQogICAgLy8gQGFyYzQuYWJpbWV0aG9kKCkKICAgIC8vIHB1YmxpYyBhcmMyMDBfYXBwcm92ZShzcGVuZGVyOiBBZGRyZXNzLCB2YWx1ZTogYXJjNC5VaW50TjI1Nik6IEJvb2wgewogICAgcHJvdG8gMiAxCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTc2CiAgICAvLyBjb25zdCBvd25lciA9IG5ldyBBZGRyZXNzKFR4bi5zZW5kZXIpOwogICAgdHhuIFNlbmRlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE3NwogICAgLy8gcmV0dXJuIHRoaXMuX2FwcHJvdmUob3duZXIsIHNwZW5kZXIsIHZhbHVlKTsKICAgIGZyYW1lX2RpZyAtMgogICAgZnJhbWVfZGlnIC0xCiAgICBjYWxsc3ViIF9hcHByb3ZlCiAgICByZXRzdWIKCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5hcmMyMDBfYWxsb3dhbmNlKG93bmVyOiBieXRlcywgc3BlbmRlcjogYnl0ZXMpIC0+IGJ5dGVzOgphcmMyMDBfYWxsb3dhbmNlOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE4Ni0xODcKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICAvLyBwdWJsaWMgYXJjMjAwX2FsbG93YW5jZShvd25lcjogQWRkcmVzcywgc3BlbmRlcjogQWRkcmVzcyk6IGFyYzQuVWludE4yNTYgewogICAgcHJvdG8gMiAxCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTg4CiAgICAvLyByZXR1cm4gdGhpcy5fYWxsb3dhbmNlKG93bmVyLCBzcGVuZGVyKTsKICAgIGZyYW1lX2RpZyAtMgogICAgZnJhbWVfZGlnIC0xCiAgICBjYWxsc3ViIF9hbGxvd2FuY2UKICAgIHJldHN1YgoKCi8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo6QXJjMjAwLl9iYWxhbmNlT2Yob3duZXI6IGJ5dGVzKSAtPiBieXRlczoKX2JhbGFuY2VPZjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxOTEKICAgIC8vIHByaXZhdGUgX2JhbGFuY2VPZihvd25lcjogQWRkcmVzcyk6IFVpbnROMjU2IHsKICAgIHByb3RvIDEgMQogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjYyCiAgICAvLyBwdWJsaWMgYmFsYW5jZXMgPSBCb3hNYXA8QWRkcmVzcywgVWludE4yNTY+KHsga2V5UHJlZml4OiAnYicgfSk7CiAgICBieXRlY18xIC8vICJiIgogICAgZnJhbWVfZGlnIC0xCiAgICBjb25jYXQKICAgIGR1cAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE5MgogICAgLy8gaWYgKCF0aGlzLmJhbGFuY2VzKG93bmVyKS5leGlzdHMpIHJldHVybiBuZXcgVWludE4yNTYoMCk7CiAgICBib3hfbGVuCiAgICBidXJ5IDEKICAgIGJueiBfYmFsYW5jZU9mX2FmdGVyX2lmX2Vsc2VAMgogICAgYnl0ZWMgNSAvLyAweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAKICAgIHN3YXAKICAgIHJldHN1YgoKX2JhbGFuY2VPZl9hZnRlcl9pZl9lbHNlQDI6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTkzCiAgICAvLyByZXR1cm4gdGhpcy5iYWxhbmNlcyhvd25lcikudmFsdWU7CiAgICBmcmFtZV9kaWcgMAogICAgYm94X2dldAogICAgYXNzZXJ0IC8vIEJveCBtdXN0IGhhdmUgdmFsdWUKICAgIHN3YXAKICAgIHJldHN1YgoKCi8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo6QXJjMjAwLl90cmFuc2ZlcihzZW5kZXI6IGJ5dGVzLCByZWNpcGllbnQ6IGJ5dGVzLCBhbW91bnQ6IGJ5dGVzKSAtPiBieXRlczoKX3RyYW5zZmVyOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE5NgogICAgLy8gcHJpdmF0ZSBfdHJhbnNmZXIoc2VuZGVyOiBBZGRyZXNzLCByZWNpcGllbnQ6IEFkZHJlc3MsIGFtb3VudDogVWludE4yNTYpOiBCb29sIHsKICAgIHByb3RvIDMgMQogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE5NwogICAgLy8gY29uc3Qgc2VuZGVyX2JhbGFuY2UgPSB0aGlzLl9iYWxhbmNlT2Yoc2VuZGVyKTsKICAgIGZyYW1lX2RpZyAtMwogICAgY2FsbHN1YiBfYmFsYW5jZU9mCiAgICBkdXAKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxOTgKICAgIC8vIGNvbnN0IHJlY2lwaWVudF9iYWxhbmNlID0gdGhpcy5fYmFsYW5jZU9mKHJlY2lwaWVudCk7CiAgICBmcmFtZV9kaWcgLTIKICAgIGNhbGxzdWIgX2JhbGFuY2VPZgogICAgc3dhcAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE5OQogICAgLy8gYXNzZXJ0KHNlbmRlcl9iYWxhbmNlLm5hdGl2ZSA+PSBhbW91bnQubmF0aXZlLCAnSW5zdWZmaWNpZW50IGJhbGFuY2UgYXQgdGhlIHNlbmRlciBhY2NvdW50Jyk7CiAgICBmcmFtZV9kaWcgLTEKICAgIGI+PQogICAgYXNzZXJ0IC8vIEluc3VmZmljaWVudCBiYWxhbmNlIGF0IHRoZSBzZW5kZXIgYWNjb3VudAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIwMQogICAgLy8gaWYgKHNlbmRlciAhPT0gcmVjaXBpZW50KSB7CiAgICBmcmFtZV9kaWcgLTMKICAgIGZyYW1lX2RpZyAtMgogICAgIT0KICAgIGJ6IF90cmFuc2Zlcl9hZnRlcl9pZl9lbHNlQDIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMDMKICAgIC8vIHRoaXMuYmFsYW5jZXMoc2VuZGVyKS52YWx1ZSA9IG5ldyBVaW50TjI1NihzZW5kZXJfYmFsYW5jZS5uYXRpdmUgLSBhbW91bnQubmF0aXZlKTsKICAgIGZyYW1lX2RpZyAwCiAgICBmcmFtZV9kaWcgLTEKICAgIGItCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18xIC8vIDMyCiAgICA8PQogICAgYXNzZXJ0IC8vIG92ZXJmbG93CiAgICBpbnRjXzEgLy8gMzIKICAgIGJ6ZXJvCiAgICBzd2FwCiAgICBkaWcgMQogICAgYnwKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo2MgogICAgLy8gcHVibGljIGJhbGFuY2VzID0gQm94TWFwPEFkZHJlc3MsIFVpbnROMjU2Pih7IGtleVByZWZpeDogJ2InIH0pOwogICAgYnl0ZWNfMSAvLyAiYiIKICAgIGZyYW1lX2RpZyAtMwogICAgY29uY2F0CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MjAzCiAgICAvLyB0aGlzLmJhbGFuY2VzKHNlbmRlcikudmFsdWUgPSBuZXcgVWludE4yNTYoc2VuZGVyX2JhbGFuY2UubmF0aXZlIC0gYW1vdW50Lm5hdGl2ZSk7CiAgICBzd2FwCiAgICBib3hfcHV0CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MjA0CiAgICAvLyB0aGlzLmJhbGFuY2VzKHJlY2lwaWVudCkudmFsdWUgPSBuZXcgVWludE4yNTYocmVjaXBpZW50X2JhbGFuY2UubmF0aXZlICsgYW1vdW50Lm5hdGl2ZSkKICAgIGZyYW1lX2RpZyAxCiAgICBmcmFtZV9kaWcgLTEKICAgIGIrCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18xIC8vIDMyCiAgICA8PQogICAgYXNzZXJ0IC8vIG92ZXJmbG93CiAgICBifAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjYyCiAgICAvLyBwdWJsaWMgYmFsYW5jZXMgPSBCb3hNYXA8QWRkcmVzcywgVWludE4yNTY+KHsga2V5UHJlZml4OiAnYicgfSk7CiAgICBieXRlY18xIC8vICJiIgogICAgZnJhbWVfZGlnIC0yCiAgICBjb25jYXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMDQKICAgIC8vIHRoaXMuYmFsYW5jZXMocmVjaXBpZW50KS52YWx1ZSA9IG5ldyBVaW50TjI1NihyZWNpcGllbnRfYmFsYW5jZS5uYXRpdmUgKyBhbW91bnQubmF0aXZlKQogICAgc3dhcAogICAgYm94X3B1dAoKX3RyYW5zZmVyX2FmdGVyX2lmX2Vsc2VAMjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMDYKICAgIC8vIGVtaXQobmV3IGFyYzIwMF9UcmFuc2Zlcih7IGZyb206IHNlbmRlciwgdG86IHJlY2lwaWVudCwgdmFsdWU6IGFtb3VudCB9KSk7CiAgICBmcmFtZV9kaWcgLTMKICAgIGZyYW1lX2RpZyAtMgogICAgY29uY2F0CiAgICBmcmFtZV9kaWcgLTEKICAgIGNvbmNhdAogICAgYnl0ZWMgNCAvLyBtZXRob2QgImFyYzIwMF9UcmFuc2ZlcihhZGRyZXNzLGFkZHJlc3MsdWludDI1NikiCiAgICBzd2FwCiAgICBjb25jYXQKICAgIGxvZwogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIwNwogICAgLy8gcmV0dXJuIG5ldyBCb29sKHRydWUpOwogICAgYnl0ZWNfMyAvLyAweDgwCiAgICBmcmFtZV9idXJ5IDAKICAgIHJldHN1YgoKCi8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo6QXJjMjAwLl9hcHByb3ZhbEtleShvd25lcjogYnl0ZXMsIHNwZW5kZXI6IGJ5dGVzKSAtPiBieXRlczoKX2FwcHJvdmFsS2V5OgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIwOQogICAgLy8gcHJpdmF0ZSBfYXBwcm92YWxLZXkob3duZXI6IEFkZHJlc3MsIHNwZW5kZXI6IEFkZHJlc3MpOiBTdGF0aWNCeXRlczwzMj4gewogICAgcHJvdG8gMiAxCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MjEwCiAgICAvLyByZXR1cm4gbmV3IFN0YXRpY0J5dGVzPDMyPihvcC5zaGEyNTYob3AuY29uY2F0KG93bmVyLmJ5dGVzLCBzcGVuZGVyLmJ5dGVzKSkpOwogICAgZnJhbWVfZGlnIC0yCiAgICBmcmFtZV9kaWcgLTEKICAgIGNvbmNhdAogICAgc2hhMjU2CiAgICBkdXAKICAgIGxlbgogICAgaW50Y18xIC8vIDMyCiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgc2l6ZQogICAgcmV0c3ViCgoKLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjpBcmMyMDAuX2FsbG93YW5jZShvd25lcjogYnl0ZXMsIHNwZW5kZXI6IGJ5dGVzKSAtPiBieXRlczoKX2FsbG93YW5jZToKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMTMKICAgIC8vIHByaXZhdGUgX2FsbG93YW5jZShvd25lcjogQWRkcmVzcywgc3BlbmRlcjogQWRkcmVzcyk6IFVpbnROMjU2IHsKICAgIHByb3RvIDIgMQogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIxNAogICAgLy8gY29uc3Qga2V5ID0gdGhpcy5fYXBwcm92YWxLZXkob3duZXIsIHNwZW5kZXIpOwogICAgZnJhbWVfZGlnIC0yCiAgICBmcmFtZV9kaWcgLTEKICAgIGNhbGxzdWIgX2FwcHJvdmFsS2V5CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NjQKICAgIC8vIHB1YmxpYyBhcHByb3ZhbHMgPSBCb3hNYXA8U3RhdGljQnl0ZXM8MzI+LCBBcHByb3ZhbFN0cnVjdD4oeyBrZXlQcmVmaXg6ICdhJyB9KTsKICAgIHB1c2hieXRlcyAiYSIKICAgIHN3YXAKICAgIGNvbmNhdAogICAgZHVwCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MjE1CiAgICAvLyBpZiAoIXRoaXMuYXBwcm92YWxzKGtleSkuZXhpc3RzKSByZXR1cm4gbmV3IFVpbnROMjU2KDApOwogICAgYm94X2xlbgogICAgYnVyeSAxCiAgICBibnogX2FsbG93YW5jZV9hZnRlcl9pZl9lbHNlQDIKICAgIGJ5dGVjIDUgLy8gMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwCiAgICBzd2FwCiAgICByZXRzdWIKCl9hbGxvd2FuY2VfYWZ0ZXJfaWZfZWxzZUAyOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIxNgogICAgLy8gcmV0dXJuIHRoaXMuYXBwcm92YWxzKGtleSkudmFsdWUuYXBwcm92YWxBbW91bnQ7CiAgICBmcmFtZV9kaWcgMAogICAgYm94X2dldAogICAgYXNzZXJ0IC8vIEJveCBtdXN0IGhhdmUgdmFsdWUKICAgIGV4dHJhY3QgMCAzMiAvLyBvbiBlcnJvcjogSW5kZXggYWNjZXNzIGlzIG91dCBvZiBib3VuZHMKICAgIHN3YXAKICAgIHJldHN1YgoKCi8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo6QXJjMjAwLl9hcHByb3ZlKG93bmVyOiBieXRlcywgc3BlbmRlcjogYnl0ZXMsIGFtb3VudDogYnl0ZXMpIC0+IGJ5dGVzOgpfYXBwcm92ZToKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMTkKICAgIC8vIHByaXZhdGUgX2FwcHJvdmUob3duZXI6IEFkZHJlc3MsIHNwZW5kZXI6IEFkZHJlc3MsIGFtb3VudDogVWludE4yNTYpOiBCb29sIHsKICAgIHByb3RvIDMgMQogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIyMAogICAgLy8gY29uc3Qga2V5ID0gdGhpcy5fYXBwcm92YWxLZXkob3duZXIsIHNwZW5kZXIpOwogICAgZnJhbWVfZGlnIC0zCiAgICBmcmFtZV9kaWcgLTIKICAgIGNhbGxzdWIgX2FwcHJvdmFsS2V5CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MjIxLTIyNQogICAgLy8gY29uc3QgYXBwcm92YWxCb3g6IEFwcHJvdmFsU3RydWN0ID0gbmV3IEFwcHJvdmFsU3RydWN0KHsKICAgIC8vICAgYXBwcm92YWxBbW91bnQ6IGFtb3VudCwKICAgIC8vICAgb3duZXI6IG93bmVyLAogICAgLy8gICBzcGVuZGVyOiBzcGVuZGVyLAogICAgLy8gfSk7CiAgICBmcmFtZV9kaWcgLTEKICAgIGZyYW1lX2RpZyAtMwogICAgY29uY2F0CiAgICBmcmFtZV9kaWcgLTIKICAgIGNvbmNhdAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjY0CiAgICAvLyBwdWJsaWMgYXBwcm92YWxzID0gQm94TWFwPFN0YXRpY0J5dGVzPDMyPiwgQXBwcm92YWxTdHJ1Y3Q+KHsga2V5UHJlZml4OiAnYScgfSk7CiAgICBwdXNoYnl0ZXMgImEiCiAgICB1bmNvdmVyIDIKICAgIGNvbmNhdAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIyNgogICAgLy8gdGhpcy5hcHByb3ZhbHMoa2V5KS52YWx1ZSA9IGFwcHJvdmFsQm94LmNvcHkoKTsKICAgIHN3YXAKICAgIGJveF9wdXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMjcKICAgIC8vIGVtaXQobmV3IGFyYzIwMF9BcHByb3ZhbCh7IG93bmVyOiBvd25lciwgc3BlbmRlcjogc3BlbmRlciwgdmFsdWU6IGFtb3VudCB9KSk7CiAgICBmcmFtZV9kaWcgLTMKICAgIGZyYW1lX2RpZyAtMgogICAgY29uY2F0CiAgICBmcmFtZV9kaWcgLTEKICAgIGNvbmNhdAogICAgcHVzaGJ5dGVzIDB4MTk2OWY4NjUgLy8gbWV0aG9kICJhcmMyMDBfQXBwcm92YWwoYWRkcmVzcyxhZGRyZXNzLHVpbnQyNTYpIgogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMjgKICAgIC8vIHJldHVybiBuZXcgQm9vbCh0cnVlKTsKICAgIGJ5dGVjXzMgLy8gMHg4MAogICAgcmV0c3ViCg==',
-    clear:
-      'I3ByYWdtYSB2ZXJzaW9uIDEwCiNwcmFnbWEgdHlwZXRyYWNrIGZhbHNlCgovLyBAYWxnb3JhbmRmb3VuZGF0aW9uL2FsZ29yYW5kLXR5cGVzY3JpcHQvYmFzZS1jb250cmFjdC5kLnRzOjpCYXNlQ29udHJhY3QuY2xlYXJTdGF0ZVByb2dyYW0oKSAtPiB1aW50NjQ6Cm1haW46CiAgICBwdXNoaW50IDEgLy8gMQogICAgcmV0dXJuCg==',
-  },
-  byteCode: {
-    approval:
-      'CiAEASAACCYGBBUffHUBYgF0AYAEeYPDXCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADEbQQEZggoEl1OC4gRlfRPsBLauGiUEhOwT1QTsmWBBBILlc8QE2nAluQRKlo+PBLVCISUEu7MZ8zYaAI4KALAAoACQAIAAcABdAEcALgAYAAIkQzEZFEQxGEQ2GgE2GgKIAZMoTFCwIkMxGRREMRhENhoBNhoCiAFwKExQsCJDMRkURDEYRDYaATYaAjYaA4gBKShMULAiQzEZFEQxGEQ2GgE2GgKIAQYoTFCwIkMxGRREMRhENhoBiADqKExQsCJDMRkURDEYRIgA1ShMULAiQzEZFEQxGESIAL4oTFCwIkMxGRREMRhEiACfKExQsCJDMRkURDEYRIgAgChMULAiQzEZFEQxGEQ2GgE2GgI2GgM2GgSIABEoTFCwIkMxGUD/LzEYFEQiQ4oEATEAMgkSRIv8VwIAFUlEIw5Ei/1XAgAVSUQlDkQkKmVFARREgAFui/xngAFzi/1nKov/Z4ABZIv+ZzEAKUsBUIv/vzIDTFCL/1AnBExQsCuJJIABbmVEVwIASRUjEkSJJIABc2VEVwIASRUlEkSJJIABZGVEiSQqZUSJigEBi/+IAFSJigIBMQCL/ov/iABfiYoDATEAi/1LAYgAtEmL/6dEi/+hSRUjDkQjr6uL/U4CiADASIv9i/6L/4gAMYmKAgExAIv+i/+IAKmJigIBi/6L/4gAe4mKAQEpi/9QSb1FAUAABCcFTImLAL5ETImKAwGL/Yj/4EmL/oj/2kyL/6dEi/2L/hNBACeLAIv/oUkVIw5EI69MSwGrKYv9UEy/iwGL/6BJFSMORKspi/5QTL+L/Yv+UIv/UCcETFCwK4wAiYoCAYv+i/9QAUkVIxJEiYoCAYv+i/+I/+eAAWFMUEm9RQFAAAQnBUyJiwC+RFcAIEyJigMBi/2L/oj/xIv/i/1Qi/5QgAFhTwJQTL+L/Yv+UIv/UIAEGWn4ZUxQsCuJ',
-    clear: 'CoEBQw==',
-  },
-  compilerInfo: { compiler: 'puya', compilerVersion: { major: 4, minor: 7, patch: 0 } },
-  events: [
-    {
-      name: 'arc200_Transfer',
-      args: [
-        { type: 'address', name: 'from' },
-        { type: 'address', name: 'to' },
-        { type: 'uint256', name: 'value' },
-      ],
-    },
-    {
-      name: 'arc200_Approval',
-      args: [
-        { type: 'address', name: 'owner' },
-        { type: 'address', name: 'spender' },
-        { type: 'uint256', name: 'value' },
-      ],
-    },
-  ],
-  templateVariables: {},
-} as unknown as Arc56Contract;
+export const APP_SPEC: Arc56Contract = {"name":"Arc200","structs":{"ApprovalStruct":[{"name":"approvalAmount","type":"uint256"},{"name":"owner","type":"address"},{"name":"spender","type":"address"}]},"methods":[{"name":"bootstrap","args":[{"type":"byte[]","name":"name"},{"type":"byte[]","name":"symbol"},{"type":"uint8","name":"decimals"},{"type":"uint256","name":"totalSupply"}],"returns":{"type":"bool"},"actions":{"create":[],"call":["NoOp"]},"readonly":false,"events":[{"name":"arc200_Transfer","args":[{"type":"address","name":"from"},{"type":"address","name":"to"},{"type":"uint256","name":"value"}]}],"recommendations":{}},{"name":"arc200_name","args":[],"returns":{"type":"byte[32]","desc":"The name of the token"},"actions":{"create":[],"call":["NoOp"]},"readonly":true,"desc":"Returns the name of the token","events":[],"recommendations":{}},{"name":"arc200_symbol","args":[],"returns":{"type":"byte[8]","desc":"The symbol of the token"},"actions":{"create":[],"call":["NoOp"]},"readonly":true,"desc":"Returns the symbol of the token","events":[],"recommendations":{}},{"name":"arc200_decimals","args":[],"returns":{"type":"uint8","desc":"The decimals of the token"},"actions":{"create":[],"call":["NoOp"]},"readonly":true,"desc":"Returns the decimals of the token","events":[],"recommendations":{}},{"name":"arc200_totalSupply","args":[],"returns":{"type":"uint256","desc":"The total supply of the token"},"actions":{"create":[],"call":["NoOp"]},"readonly":true,"desc":"Returns the total supply of the token","events":[],"recommendations":{}},{"name":"arc200_balanceOf","args":[{"type":"address","name":"owner","desc":"The address of the owner of the token"}],"returns":{"type":"uint256","desc":"The current balance of the holder of the token"},"actions":{"create":[],"call":["NoOp"]},"readonly":true,"desc":"Returns the current balance of the owner of the token","events":[],"recommendations":{}},{"name":"arc200_transfer","args":[{"type":"address","name":"to","desc":"The destination of the transfer"},{"type":"uint256","name":"value","desc":"Amount of tokens to transfer"}],"returns":{"type":"bool","desc":"Success"},"actions":{"create":[],"call":["NoOp"]},"readonly":false,"desc":"Transfers tokens","events":[{"name":"arc200_Transfer","args":[{"type":"address","name":"from"},{"type":"address","name":"to"},{"type":"uint256","name":"value"}]}],"recommendations":{}},{"name":"arc200_transferFrom","args":[{"type":"address","name":"from","desc":"The source of the transfer"},{"type":"address","name":"to","desc":"The destination of the transfer"},{"type":"uint256","name":"value","desc":"Amount of tokens to transfer"}],"returns":{"type":"bool","desc":"Success"},"actions":{"create":[],"call":["NoOp"]},"readonly":false,"desc":"Transfers tokens from source to destination as approved spender","events":[{"name":"arc200_Approval","args":[{"type":"address","name":"owner"},{"type":"address","name":"spender"},{"type":"uint256","name":"value"}]},{"name":"arc200_Transfer","args":[{"type":"address","name":"from"},{"type":"address","name":"to"},{"type":"uint256","name":"value"}]}],"recommendations":{}},{"name":"arc200_approve","args":[{"type":"address","name":"spender","desc":"Who is allowed to take tokens on owner's behalf"},{"type":"uint256","name":"value","desc":"Amount of tokens to be taken by spender"}],"returns":{"type":"bool","desc":"Success"},"actions":{"create":[],"call":["NoOp"]},"readonly":false,"desc":"Approve spender for a token","events":[{"name":"arc200_Approval","args":[{"type":"address","name":"owner"},{"type":"address","name":"spender"},{"type":"uint256","name":"value"}]}],"recommendations":{}},{"name":"arc200_allowance","args":[{"type":"address","name":"owner","desc":"Owner's account"},{"type":"address","name":"spender","desc":"Who is allowed to take tokens on owner's behalf"}],"returns":{"type":"uint256","desc":"The remaining allowance"},"actions":{"create":[],"call":["NoOp"]},"readonly":true,"desc":"Returns the current allowance of the spender of the tokens of the owner","events":[],"recommendations":{}}],"arcs":[22,28],"desc":"Smart Contract Token Base Interface","networks":{},"state":{"schema":{"global":{"ints":0,"bytes":4},"local":{"ints":0,"bytes":0}},"keys":{"global":{"name":{"keyType":"AVMString","valueType":"byte[]","key":"bg==","desc":"Name of the asset. Max 32 bytes"},"symbol":{"keyType":"AVMString","valueType":"byte[]","key":"cw==","desc":"Symbol of the asset. Max 8 bytes"},"decimals":{"keyType":"AVMString","valueType":"uint8","key":"ZA==","desc":"Decimals of the asset. Recommended is 6 decimal places."},"totalSupply":{"keyType":"AVMString","valueType":"uint256","key":"dA==","desc":"Minted supply"}},"local":{},"box":{}},"maps":{"global":{},"local":{},"box":{"balances":{"keyType":"address","valueType":"uint256","prefix":"Yg=="},"approvals":{"keyType":"byte[32]","valueType":"ApprovalStruct","prefix":"YQ=="}}}},"bareActions":{"create":["NoOp"],"call":[]},"sourceInfo":{"approval":{"sourceInfo":[{"pc":[534,650],"errorMessage":"Box must have value"},{"pc":[555],"errorMessage":"Insufficient balance at the sender account"},{"pc":[213],"errorMessage":"Name of the asset must be longer or equal to 1 character"},{"pc":[216],"errorMessage":"Name of the asset must be shorter or equal to 32 characters"},{"pc":[66],"errorMessage":"OnCompletion must be NoOp"},{"pc":[155],"errorMessage":"OnCompletion must be NoOp && can only call when creating"},{"pc":[205],"errorMessage":"Only deployer of this smart contract can call bootstrap method"},{"pc":[224],"errorMessage":"Symbol of the asset must be longer or equal to 1 character"},{"pc":[228],"errorMessage":"Symbol of the asset must be shorter or equal to 8 characters"},{"pc":[235],"errorMessage":"This method can be called only once"},{"pc":[289,309,330,340],"errorMessage":"check GlobalState exists"},{"pc":[430],"errorMessage":"insufficient approval"},{"pc":[163,176],"errorMessage":"invalid array length header"},{"pc":[170,183],"errorMessage":"invalid number of bytes for arc4.dynamic_array<arc4.uint8>"},{"pc":[354,371,400,408,466,495,503],"errorMessage":"invalid number of bytes for arc4.static_array<arc4.uint8, 32>"},{"pc":[199,379,416,474],"errorMessage":"invalid number of bytes for arc4.uint256"},{"pc":[191],"errorMessage":"invalid number of bytes for arc4.uint8"},{"pc":[297,318],"errorMessage":"invalid size"},{"pc":[438,573,595],"errorMessage":"overflow"}],"pcOffsetMethod":"none"},"clear":{"sourceInfo":[],"pcOffsetMethod":"none"}},"source":{"approval":"I3ByYWdtYSB2ZXJzaW9uIDExCiNwcmFnbWEgdHlwZXRyYWNrIGZhbHNlCgovLyBAYWxnb3JhbmRmb3VuZGF0aW9uL2FsZ29yYW5kLXR5cGVzY3JpcHQvYXJjNC9pbmRleC5kLnRzOjpDb250cmFjdC5hcHByb3ZhbFByb2dyYW0oKSAtPiB1aW50NjQ6Cm1haW46CiAgICBpbnRjYmxvY2sgMzIgMSAwIDIKICAgIGJ5dGVjYmxvY2sgMHgxNTFmN2M3NSAiYiIgInQiICJuIiAweDc5ODNjMzVjIDB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjM4CiAgICAvLyBleHBvcnQgY2xhc3MgQXJjMjAwIGV4dGVuZHMgQ29udHJhY3QgewogICAgdHhuIE51bUFwcEFyZ3MKICAgIGJ6IG1haW5fX19hbGdvdHNfXy5kZWZhdWx0Q3JlYXRlQDE3CiAgICB0eG4gT25Db21wbGV0aW9uCiAgICAhCiAgICBhc3NlcnQgLy8gT25Db21wbGV0aW9uIG11c3QgYmUgTm9PcAogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgIGFzc2VydAogICAgcHVzaGJ5dGVzcyAweDk3NTM4MmUyIDB4NjU3ZDEzZWMgMHhiNmFlMWEyNSAweDg0ZWMxM2Q1IDB4ZWM5OTYwNDEgMHg4MmU1NzNjNCAweGRhNzAyNWI5IDB4NGE5NjhmOGYgMHhiNTQyMjEyNSAweGJiYjMxOWYzIC8vIG1ldGhvZCAiYm9vdHN0cmFwKGJ5dGVbXSxieXRlW10sdWludDgsdWludDI1Nilib29sIiwgbWV0aG9kICJhcmMyMDBfbmFtZSgpYnl0ZVszMl0iLCBtZXRob2QgImFyYzIwMF9zeW1ib2woKWJ5dGVbOF0iLCBtZXRob2QgImFyYzIwMF9kZWNpbWFscygpdWludDgiLCBtZXRob2QgImFyYzIwMF90b3RhbFN1cHBseSgpdWludDI1NiIsIG1ldGhvZCAiYXJjMjAwX2JhbGFuY2VPZihhZGRyZXNzKXVpbnQyNTYiLCBtZXRob2QgImFyYzIwMF90cmFuc2ZlcihhZGRyZXNzLHVpbnQyNTYpYm9vbCIsIG1ldGhvZCAiYXJjMjAwX3RyYW5zZmVyRnJvbShhZGRyZXNzLGFkZHJlc3MsdWludDI1Nilib29sIiwgbWV0aG9kICJhcmMyMDBfYXBwcm92ZShhZGRyZXNzLHVpbnQyNTYpYm9vbCIsIG1ldGhvZCAiYXJjMjAwX2FsbG93YW5jZShhZGRyZXNzLGFkZHJlc3MpdWludDI1NiIKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDAKICAgIG1hdGNoIGJvb3RzdHJhcCBhcmMyMDBfbmFtZSBhcmMyMDBfc3ltYm9sIGFyYzIwMF9kZWNpbWFscyBhcmMyMDBfdG90YWxTdXBwbHkgYXJjMjAwX2JhbGFuY2VPZiBhcmMyMDBfdHJhbnNmZXIgYXJjMjAwX3RyYW5zZmVyRnJvbSBhcmMyMDBfYXBwcm92ZSBhcmMyMDBfYWxsb3dhbmNlCiAgICBlcnIKCm1haW5fX19hbGdvdHNfXy5kZWZhdWx0Q3JlYXRlQDE3OgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjM4CiAgICAvLyBleHBvcnQgY2xhc3MgQXJjMjAwIGV4dGVuZHMgQ29udHJhY3QgewogICAgdHhuIE9uQ29tcGxldGlvbgogICAgIQogICAgdHhuIEFwcGxpY2F0aW9uSUQKICAgICEKICAgICYmCiAgICBhc3NlcnQgLy8gT25Db21wbGV0aW9uIG11c3QgYmUgTm9PcCAmJiBjYW4gb25seSBjYWxsIHdoZW4gY3JlYXRpbmcKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5ib290c3RyYXBbcm91dGluZ10oKSAtPiB2b2lkOgpib290c3RyYXA6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NjMKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAxCiAgICBkdXAKICAgIGludGNfMiAvLyAwCiAgICBleHRyYWN0X3VpbnQxNiAvLyBvbiBlcnJvcjogaW52YWxpZCBhcnJheSBsZW5ndGggaGVhZGVyCiAgICBpbnRjXzMgLy8gMgogICAgKwogICAgZGlnIDEKICAgIGxlbgogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIG51bWJlciBvZiBieXRlcyBmb3IgYXJjNC5keW5hbWljX2FycmF5PGFyYzQudWludDg+CiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAyCiAgICBkdXAKICAgIGludGNfMiAvLyAwCiAgICBleHRyYWN0X3VpbnQxNiAvLyBvbiBlcnJvcjogaW52YWxpZCBhcnJheSBsZW5ndGggaGVhZGVyCiAgICBpbnRjXzMgLy8gMgogICAgKwogICAgZGlnIDEKICAgIGxlbgogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIG51bWJlciBvZiBieXRlcyBmb3IgYXJjNC5keW5hbWljX2FycmF5PGFyYzQudWludDg+CiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAzCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18xIC8vIDEKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBudW1iZXIgb2YgYnl0ZXMgZm9yIGFyYzQudWludDgKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDQKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzAgLy8gMzIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBudW1iZXIgb2YgYnl0ZXMgZm9yIGFyYzQudWludDI1NgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjY1CiAgICAvLyBhc3NlcnQoVHhuLnNlbmRlciA9PT0gR2xvYmFsLmNyZWF0b3JBZGRyZXNzLCAnT25seSBkZXBsb3llciBvZiB0aGlzIHNtYXJ0IGNvbnRyYWN0IGNhbiBjYWxsIGJvb3RzdHJhcCBtZXRob2QnKQogICAgdHhuIFNlbmRlcgogICAgZ2xvYmFsIENyZWF0b3JBZGRyZXNzCiAgICA9PQogICAgYXNzZXJ0IC8vIE9ubHkgZGVwbG95ZXIgb2YgdGhpcyBzbWFydCBjb250cmFjdCBjYW4gY2FsbCBib290c3RyYXAgbWV0aG9kCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NjYKICAgIC8vIGFzc2VydChuYW1lLm5hdGl2ZS5sZW5ndGggPiAwLCAnTmFtZSBvZiB0aGUgYXNzZXQgbXVzdCBiZSBsb25nZXIgb3IgZXF1YWwgdG8gMSBjaGFyYWN0ZXInKQogICAgZGlnIDMKICAgIGV4dHJhY3QgMiAwCiAgICBsZW4KICAgIGR1cAogICAgYXNzZXJ0IC8vIE5hbWUgb2YgdGhlIGFzc2V0IG11c3QgYmUgbG9uZ2VyIG9yIGVxdWFsIHRvIDEgY2hhcmFjdGVyCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NjcKICAgIC8vIGFzc2VydChuYW1lLm5hdGl2ZS5sZW5ndGggPD0gMzIsICdOYW1lIG9mIHRoZSBhc3NldCBtdXN0IGJlIHNob3J0ZXIgb3IgZXF1YWwgdG8gMzIgY2hhcmFjdGVycycpCiAgICBpbnRjXzAgLy8gMzIKICAgIDw9CiAgICBhc3NlcnQgLy8gTmFtZSBvZiB0aGUgYXNzZXQgbXVzdCBiZSBzaG9ydGVyIG9yIGVxdWFsIHRvIDMyIGNoYXJhY3RlcnMKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo2OAogICAgLy8gYXNzZXJ0KHN5bWJvbC5uYXRpdmUubGVuZ3RoID4gMCwgJ1N5bWJvbCBvZiB0aGUgYXNzZXQgbXVzdCBiZSBsb25nZXIgb3IgZXF1YWwgdG8gMSBjaGFyYWN0ZXInKQogICAgZGlnIDIKICAgIGV4dHJhY3QgMiAwCiAgICBsZW4KICAgIGR1cAogICAgYXNzZXJ0IC8vIFN5bWJvbCBvZiB0aGUgYXNzZXQgbXVzdCBiZSBsb25nZXIgb3IgZXF1YWwgdG8gMSBjaGFyYWN0ZXIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo2OQogICAgLy8gYXNzZXJ0KHN5bWJvbC5uYXRpdmUubGVuZ3RoIDw9IDgsICdTeW1ib2wgb2YgdGhlIGFzc2V0IG11c3QgYmUgc2hvcnRlciBvciBlcXVhbCB0byA4IGNoYXJhY3RlcnMnKQogICAgcHVzaGludCA4IC8vIDgKICAgIDw9CiAgICBhc3NlcnQgLy8gU3ltYm9sIG9mIHRoZSBhc3NldCBtdXN0IGJlIHNob3J0ZXIgb3IgZXF1YWwgdG8gOCBjaGFyYWN0ZXJzCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NzAKICAgIC8vIGFzc2VydCghdGhpcy50b3RhbFN1cHBseS5oYXNWYWx1ZSwgJ1RoaXMgbWV0aG9kIGNhbiBiZSBjYWxsZWQgb25seSBvbmNlJykKICAgIGludGNfMiAvLyAwCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NTcKICAgIC8vIHB1YmxpYyB0b3RhbFN1cHBseSA9IEdsb2JhbFN0YXRlPFVpbnQyNTY+KHsga2V5OiAndCcgfSkKICAgIGJ5dGVjXzIgLy8gInQiCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NzAKICAgIC8vIGFzc2VydCghdGhpcy50b3RhbFN1cHBseS5oYXNWYWx1ZSwgJ1RoaXMgbWV0aG9kIGNhbiBiZSBjYWxsZWQgb25seSBvbmNlJykKICAgIGFwcF9nbG9iYWxfZ2V0X2V4CiAgICBidXJ5IDEKICAgICEKICAgIGFzc2VydCAvLyBUaGlzIG1ldGhvZCBjYW4gYmUgY2FsbGVkIG9ubHkgb25jZQogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjQyCiAgICAvLyBwdWJsaWMgbmFtZSA9IEdsb2JhbFN0YXRlPER5bmFtaWNCeXRlcz4oeyBrZXk6ICduJyB9KQogICAgYnl0ZWNfMyAvLyAibiIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo3MgogICAgLy8gdGhpcy5uYW1lLnZhbHVlID0gbmFtZQogICAgdW5jb3ZlciA0CiAgICBhcHBfZ2xvYmFsX3B1dAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjQ3CiAgICAvLyBwdWJsaWMgc3ltYm9sID0gR2xvYmFsU3RhdGU8RHluYW1pY0J5dGVzPih7IGtleTogJ3MnIH0pCiAgICBwdXNoYnl0ZXMgInMiCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NzMKICAgIC8vIHRoaXMuc3ltYm9sLnZhbHVlID0gc3ltYm9sCiAgICB1bmNvdmVyIDMKICAgIGFwcF9nbG9iYWxfcHV0CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NTcKICAgIC8vIHB1YmxpYyB0b3RhbFN1cHBseSA9IEdsb2JhbFN0YXRlPFVpbnQyNTY+KHsga2V5OiAndCcgfSkKICAgIGJ5dGVjXzIgLy8gInQiCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NzQKICAgIC8vIHRoaXMudG90YWxTdXBwbHkudmFsdWUgPSB0b3RhbFN1cHBseQogICAgZGlnIDEKICAgIGFwcF9nbG9iYWxfcHV0CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NTIKICAgIC8vIHB1YmxpYyBkZWNpbWFscyA9IEdsb2JhbFN0YXRlPFVpbnQ4Pih7IGtleTogJ2QnIH0pCiAgICBwdXNoYnl0ZXMgImQiCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NzUKICAgIC8vIHRoaXMuZGVjaW1hbHMudmFsdWUgPSBkZWNpbWFscwogICAgdW5jb3ZlciAyCiAgICBhcHBfZ2xvYmFsX3B1dAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjc2CiAgICAvLyBjb25zdCBzZW5kZXIgPSBuZXcgQWRkcmVzcyhUeG4uc2VuZGVyKQogICAgdHhuIFNlbmRlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjU5CiAgICAvLyBwdWJsaWMgYmFsYW5jZXMgPSBCb3hNYXA8QWRkcmVzcywgVWludDI1Nj4oeyBrZXlQcmVmaXg6ICdiJyB9KQogICAgYnl0ZWNfMSAvLyAiYiIKICAgIGRpZyAxCiAgICBjb25jYXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo3OAogICAgLy8gdGhpcy5iYWxhbmNlcyhzZW5kZXIpLnZhbHVlID0gdG90YWxTdXBwbHkKICAgIGRpZyAyCiAgICBib3hfcHV0CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6ODAKICAgIC8vIGVtaXQobmV3IGFyYzIwMF9UcmFuc2Zlcih7IGZyb206IG5ldyBBZGRyZXNzKEdsb2JhbC56ZXJvQWRkcmVzcyksIHRvOiBzZW5kZXIsIHZhbHVlOiB0b3RhbFN1cHBseSB9KSkKICAgIGdsb2JhbCBaZXJvQWRkcmVzcwogICAgc3dhcAogICAgY29uY2F0CiAgICBzd2FwCiAgICBjb25jYXQKICAgIGJ5dGVjIDQgLy8gbWV0aG9kICJhcmMyMDBfVHJhbnNmZXIoYWRkcmVzcyxhZGRyZXNzLHVpbnQyNTYpIgogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo2MwogICAgLy8gQGFyYzQuYWJpbWV0aG9kKCkKICAgIHB1c2hieXRlcyAweDE1MWY3Yzc1ODAKICAgIGxvZwogICAgaW50Y18xIC8vIDEKICAgIHJldHVybgoKCi8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo6QXJjMjAwLmFyYzIwMF9uYW1lW3JvdXRpbmddKCkgLT4gdm9pZDoKYXJjMjAwX25hbWU6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OTEKICAgIC8vIHJldHVybiBuZXcgU3RhdGljQnl0ZXM8MzI+KHRoaXMubmFtZS52YWx1ZS5uYXRpdmUpCiAgICBpbnRjXzIgLy8gMAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjQyCiAgICAvLyBwdWJsaWMgbmFtZSA9IEdsb2JhbFN0YXRlPER5bmFtaWNCeXRlcz4oeyBrZXk6ICduJyB9KQogICAgYnl0ZWNfMyAvLyAibiIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo5MQogICAgLy8gcmV0dXJuIG5ldyBTdGF0aWNCeXRlczwzMj4odGhpcy5uYW1lLnZhbHVlLm5hdGl2ZSkKICAgIGFwcF9nbG9iYWxfZ2V0X2V4CiAgICBhc3NlcnQgLy8gY2hlY2sgR2xvYmFsU3RhdGUgZXhpc3RzCiAgICBleHRyYWN0IDIgMAogICAgZHVwCiAgICBsZW4KICAgIGludGNfMCAvLyAzMgogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIHNpemUKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo4OQogICAgLy8gQGFyYzQuYWJpbWV0aG9kKHsgcmVhZG9ubHk6IHRydWUgfSkKICAgIGJ5dGVjXzAgLy8gMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5hcmMyMDBfc3ltYm9sW3JvdXRpbmddKCkgLT4gdm9pZDoKYXJjMjAwX3N5bWJvbDoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMDEKICAgIC8vIHJldHVybiBuZXcgU3RhdGljQnl0ZXM8OD4odGhpcy5zeW1ib2wudmFsdWUubmF0aXZlKQogICAgaW50Y18yIC8vIDAKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo0NwogICAgLy8gcHVibGljIHN5bWJvbCA9IEdsb2JhbFN0YXRlPER5bmFtaWNCeXRlcz4oeyBrZXk6ICdzJyB9KQogICAgcHVzaGJ5dGVzICJzIgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjEwMQogICAgLy8gcmV0dXJuIG5ldyBTdGF0aWNCeXRlczw4Pih0aGlzLnN5bWJvbC52YWx1ZS5uYXRpdmUpCiAgICBhcHBfZ2xvYmFsX2dldF9leAogICAgYXNzZXJ0IC8vIGNoZWNrIEdsb2JhbFN0YXRlIGV4aXN0cwogICAgZXh0cmFjdCAyIDAKICAgIGR1cAogICAgbGVuCiAgICBwdXNoaW50IDggLy8gOAogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIHNpemUKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo5OQogICAgLy8gQGFyYzQuYWJpbWV0aG9kKHsgcmVhZG9ubHk6IHRydWUgfSkKICAgIGJ5dGVjXzAgLy8gMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5hcmMyMDBfZGVjaW1hbHNbcm91dGluZ10oKSAtPiB2b2lkOgphcmMyMDBfZGVjaW1hbHM6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTExCiAgICAvLyByZXR1cm4gdGhpcy5kZWNpbWFscy52YWx1ZQogICAgaW50Y18yIC8vIDAKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo1MgogICAgLy8gcHVibGljIGRlY2ltYWxzID0gR2xvYmFsU3RhdGU8VWludDg+KHsga2V5OiAnZCcgfSkKICAgIHB1c2hieXRlcyAiZCIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMTEKICAgIC8vIHJldHVybiB0aGlzLmRlY2ltYWxzLnZhbHVlCiAgICBhcHBfZ2xvYmFsX2dldF9leAogICAgYXNzZXJ0IC8vIGNoZWNrIEdsb2JhbFN0YXRlIGV4aXN0cwogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjEwOQogICAgLy8gQGFyYzQuYWJpbWV0aG9kKHsgcmVhZG9ubHk6IHRydWUgfSkKICAgIGJ5dGVjXzAgLy8gMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5hcmMyMDBfdG90YWxTdXBwbHlbcm91dGluZ10oKSAtPiB2b2lkOgphcmMyMDBfdG90YWxTdXBwbHk6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTIxCiAgICAvLyByZXR1cm4gdGhpcy50b3RhbFN1cHBseS52YWx1ZQogICAgaW50Y18yIC8vIDAKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo1NwogICAgLy8gcHVibGljIHRvdGFsU3VwcGx5ID0gR2xvYmFsU3RhdGU8VWludDI1Nj4oeyBrZXk6ICd0JyB9KQogICAgYnl0ZWNfMiAvLyAidCIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMjEKICAgIC8vIHJldHVybiB0aGlzLnRvdGFsU3VwcGx5LnZhbHVlCiAgICBhcHBfZ2xvYmFsX2dldF9leAogICAgYXNzZXJ0IC8vIGNoZWNrIEdsb2JhbFN0YXRlIGV4aXN0cwogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjExOQogICAgLy8gQGFyYzQuYWJpbWV0aG9kKHsgcmVhZG9ubHk6IHRydWUgfSkKICAgIGJ5dGVjXzAgLy8gMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5hcmMyMDBfYmFsYW5jZU9mW3JvdXRpbmddKCkgLT4gdm9pZDoKYXJjMjAwX2JhbGFuY2VPZjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMzAKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAxCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgbnVtYmVyIG9mIGJ5dGVzIGZvciBhcmM0LnN0YXRpY19hcnJheTxhcmM0LnVpbnQ4LCAzMj4KICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMzIKICAgIC8vIHJldHVybiB0aGlzLl9iYWxhbmNlT2Yob3duZXIpCiAgICBjYWxsc3ViIF9iYWxhbmNlT2YKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxMzAKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzEgLy8gMQogICAgcmV0dXJuCgoKLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjpBcmMyMDAuYXJjMjAwX3RyYW5zZmVyW3JvdXRpbmddKCkgLT4gdm9pZDoKYXJjMjAwX3RyYW5zZmVyOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE0MgogICAgLy8gQGFyYzQuYWJpbWV0aG9kKCkKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDEKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzAgLy8gMzIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBudW1iZXIgb2YgYnl0ZXMgZm9yIGFyYzQuc3RhdGljX2FycmF5PGFyYzQudWludDgsIDMyPgogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMgogICAgZHVwCiAgICBsZW4KICAgIGludGNfMCAvLyAzMgogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIG51bWJlciBvZiBieXRlcyBmb3IgYXJjNC51aW50MjU2CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTQ0CiAgICAvLyByZXR1cm4gdGhpcy5fdHJhbnNmZXIobmV3IEFkZHJlc3MoVHhuLnNlbmRlciksIHRvLCB2YWx1ZSkKICAgIHR4biBTZW5kZXIKICAgIGNvdmVyIDIKICAgIGNhbGxzdWIgX3RyYW5zZmVyCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTQyCiAgICAvLyBAYXJjNC5hYmltZXRob2QoKQogICAgYnl0ZWNfMCAvLyAweDE1MWY3Yzc1CiAgICBzd2FwCiAgICBjb25jYXQKICAgIGxvZwogICAgaW50Y18xIC8vIDEKICAgIHJldHVybgoKCi8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo6QXJjMjAwLmFyYzIwMF90cmFuc2ZlckZyb21bcm91dGluZ10oKSAtPiB2b2lkOgphcmMyMDBfdHJhbnNmZXJGcm9tOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE1NQogICAgLy8gQGFyYzQuYWJpbWV0aG9kKCkKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDEKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzAgLy8gMzIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBudW1iZXIgb2YgYnl0ZXMgZm9yIGFyYzQuc3RhdGljX2FycmF5PGFyYzQudWludDgsIDMyPgogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMgogICAgZHVwCiAgICBsZW4KICAgIGludGNfMCAvLyAzMgogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIG51bWJlciBvZiBieXRlcyBmb3IgYXJjNC5zdGF0aWNfYXJyYXk8YXJjNC51aW50OCwgMzI+CiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAzCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgbnVtYmVyIG9mIGJ5dGVzIGZvciBhcmM0LnVpbnQyNTYKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxNTcKICAgIC8vIGNvbnN0IHNwZW5kZXIgPSBuZXcgQWRkcmVzcyhUeG4uc2VuZGVyKQogICAgdHhuIFNlbmRlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE1OAogICAgLy8gY29uc3Qgc3BlbmRlcl9hbGxvd2FuY2UgPSB0aGlzLl9hbGxvd2FuY2UoZnJvbSwgc3BlbmRlcikKICAgIGRpZyAzCiAgICBkaWcgMQogICAgY2FsbHN1YiBfYWxsb3dhbmNlCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTU5CiAgICAvLyBhc3NlcnQoc3BlbmRlcl9hbGxvd2FuY2UuYXNCaWdVaW50KCkgPj0gdmFsdWUuYXNCaWdVaW50KCksICdpbnN1ZmZpY2llbnQgYXBwcm92YWwnKQogICAgZHVwCiAgICBkaWcgMwogICAgYj49CiAgICBhc3NlcnQgLy8gaW5zdWZmaWNpZW50IGFwcHJvdmFsCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTYwCiAgICAvLyBjb25zdCBuZXdfc3BlbmRlcl9hbGxvd2FuY2UgPSBuZXcgVWludDI1NihzcGVuZGVyX2FsbG93YW5jZS5hc0JpZ1VpbnQoKSAtIHZhbHVlLmFzQmlnVWludCgpKQogICAgZGlnIDIKICAgIGItCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA8PQogICAgYXNzZXJ0IC8vIG92ZXJmbG93CiAgICBpbnRjXzAgLy8gMzIKICAgIGJ6ZXJvCiAgICBifAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE2MQogICAgLy8gdGhpcy5fYXBwcm92ZShmcm9tLCBzcGVuZGVyLCBuZXdfc3BlbmRlcl9hbGxvd2FuY2UpCiAgICBkaWcgNAogICAgY292ZXIgMgogICAgY2FsbHN1YiBfYXBwcm92ZQogICAgcG9wCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTYyCiAgICAvLyByZXR1cm4gdGhpcy5fdHJhbnNmZXIoZnJvbSwgdG8sIHZhbHVlKQogICAgY2FsbHN1YiBfdHJhbnNmZXIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxNTUKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzEgLy8gMQogICAgcmV0dXJuCgoKLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjpBcmMyMDAuYXJjMjAwX2FwcHJvdmVbcm91dGluZ10oKSAtPiB2b2lkOgphcmMyMDBfYXBwcm92ZToKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxNzIKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAxCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgbnVtYmVyIG9mIGJ5dGVzIGZvciBhcmM0LnN0YXRpY19hcnJheTxhcmM0LnVpbnQ4LCAzMj4KICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDIKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzAgLy8gMzIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBudW1iZXIgb2YgYnl0ZXMgZm9yIGFyYzQudWludDI1NgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE3NAogICAgLy8gY29uc3Qgb3duZXIgPSBuZXcgQWRkcmVzcyhUeG4uc2VuZGVyKQogICAgdHhuIFNlbmRlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE3NQogICAgLy8gcmV0dXJuIHRoaXMuX2FwcHJvdmUob3duZXIsIHNwZW5kZXIsIHZhbHVlKQogICAgY292ZXIgMgogICAgY2FsbHN1YiBfYXBwcm92ZQogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE3MgogICAgLy8gQGFyYzQuYWJpbWV0aG9kKCkKICAgIGJ5dGVjXzAgLy8gMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5hcmMyMDBfYWxsb3dhbmNlW3JvdXRpbmddKCkgLT4gdm9pZDoKYXJjMjAwX2FsbG93YW5jZToKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxODUKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAxCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgbnVtYmVyIG9mIGJ5dGVzIGZvciBhcmM0LnN0YXRpY19hcnJheTxhcmM0LnVpbnQ4LCAzMj4KICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDIKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzAgLy8gMzIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBudW1iZXIgb2YgYnl0ZXMgZm9yIGFyYzQuc3RhdGljX2FycmF5PGFyYzQudWludDgsIDMyPgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE4NwogICAgLy8gcmV0dXJuIHRoaXMuX2FsbG93YW5jZShvd25lciwgc3BlbmRlcikKICAgIGNhbGxzdWIgX2FsbG93YW5jZQogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE4NQogICAgLy8gQGFyYzQuYWJpbWV0aG9kKHsgcmVhZG9ubHk6IHRydWUgfSkKICAgIGJ5dGVjXzAgLy8gMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5fYmFsYW5jZU9mKG93bmVyOiBieXRlcykgLT4gYnl0ZXM6Cl9iYWxhbmNlT2Y6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MTkwCiAgICAvLyBwcml2YXRlIF9iYWxhbmNlT2Yob3duZXI6IEFkZHJlc3MpOiBVaW50MjU2IHsKICAgIHByb3RvIDEgMQogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjU5CiAgICAvLyBwdWJsaWMgYmFsYW5jZXMgPSBCb3hNYXA8QWRkcmVzcywgVWludDI1Nj4oeyBrZXlQcmVmaXg6ICdiJyB9KQogICAgYnl0ZWNfMSAvLyAiYiIKICAgIGZyYW1lX2RpZyAtMQogICAgY29uY2F0CiAgICBkdXAKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxOTEKICAgIC8vIGlmICghdGhpcy5iYWxhbmNlcyhvd25lcikuZXhpc3RzKSByZXR1cm4gbmV3IFVpbnQyNTYoMCkKICAgIGJveF9sZW4KICAgIGJ1cnkgMQogICAgYm56IF9iYWxhbmNlT2ZfYWZ0ZXJfaWZfZWxzZUAyCiAgICBieXRlYyA1IC8vIDB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAogICAgc3dhcAogICAgcmV0c3ViCgpfYmFsYW5jZU9mX2FmdGVyX2lmX2Vsc2VAMjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxOTIKICAgIC8vIHJldHVybiB0aGlzLmJhbGFuY2VzKG93bmVyKS52YWx1ZQogICAgZnJhbWVfZGlnIDAKICAgIGJveF9nZXQKICAgIGFzc2VydCAvLyBCb3ggbXVzdCBoYXZlIHZhbHVlCiAgICBzd2FwCiAgICByZXRzdWIKCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5fdHJhbnNmZXIoc2VuZGVyOiBieXRlcywgcmVjaXBpZW50OiBieXRlcywgYW1vdW50OiBieXRlcykgLT4gYnl0ZXM6Cl90cmFuc2ZlcjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxOTUKICAgIC8vIHByaXZhdGUgX3RyYW5zZmVyKHNlbmRlcjogQWRkcmVzcywgcmVjaXBpZW50OiBBZGRyZXNzLCBhbW91bnQ6IFVpbnQyNTYpOiBCb29sIHsKICAgIHByb3RvIDMgMQogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE5NgogICAgLy8gY29uc3Qgc2VuZGVyX2JhbGFuY2UgPSB0aGlzLl9iYWxhbmNlT2Yoc2VuZGVyKQogICAgZnJhbWVfZGlnIC0zCiAgICBjYWxsc3ViIF9iYWxhbmNlT2YKICAgIGR1cAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjE5NwogICAgLy8gY29uc3QgcmVjaXBpZW50X2JhbGFuY2UgPSB0aGlzLl9iYWxhbmNlT2YocmVjaXBpZW50KQogICAgZnJhbWVfZGlnIC0yCiAgICBjYWxsc3ViIF9iYWxhbmNlT2YKICAgIHN3YXAKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoxOTgKICAgIC8vIGFzc2VydChzZW5kZXJfYmFsYW5jZS5hc0JpZ1VpbnQoKSA+PSBhbW91bnQuYXNCaWdVaW50KCksICdJbnN1ZmZpY2llbnQgYmFsYW5jZSBhdCB0aGUgc2VuZGVyIGFjY291bnQnKQogICAgZnJhbWVfZGlnIC0xCiAgICBiPj0KICAgIGFzc2VydCAvLyBJbnN1ZmZpY2llbnQgYmFsYW5jZSBhdCB0aGUgc2VuZGVyIGFjY291bnQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMDAKICAgIC8vIGlmIChzZW5kZXIgIT09IHJlY2lwaWVudCkgewogICAgZnJhbWVfZGlnIC0zCiAgICBmcmFtZV9kaWcgLTIKICAgICE9CiAgICBieiBfdHJhbnNmZXJfYWZ0ZXJfaWZfZWxzZUAyCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MjAyCiAgICAvLyB0aGlzLmJhbGFuY2VzKHNlbmRlcikudmFsdWUgPSBuZXcgVWludDI1NihzZW5kZXJfYmFsYW5jZS5hc0JpZ1VpbnQoKSAtIGFtb3VudC5hc0JpZ1VpbnQoKSkKICAgIGZyYW1lX2RpZyAwCiAgICBmcmFtZV9kaWcgLTEKICAgIGItCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA8PQogICAgYXNzZXJ0IC8vIG92ZXJmbG93CiAgICBpbnRjXzAgLy8gMzIKICAgIGJ6ZXJvCiAgICBzd2FwCiAgICBkaWcgMQogICAgYnwKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czo1OQogICAgLy8gcHVibGljIGJhbGFuY2VzID0gQm94TWFwPEFkZHJlc3MsIFVpbnQyNTY+KHsga2V5UHJlZml4OiAnYicgfSkKICAgIGJ5dGVjXzEgLy8gImIiCiAgICBmcmFtZV9kaWcgLTMKICAgIGNvbmNhdAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIwMgogICAgLy8gdGhpcy5iYWxhbmNlcyhzZW5kZXIpLnZhbHVlID0gbmV3IFVpbnQyNTYoc2VuZGVyX2JhbGFuY2UuYXNCaWdVaW50KCkgLSBhbW91bnQuYXNCaWdVaW50KCkpCiAgICBzd2FwCiAgICBib3hfcHV0CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MjAzCiAgICAvLyB0aGlzLmJhbGFuY2VzKHJlY2lwaWVudCkudmFsdWUgPSBuZXcgVWludDI1NihyZWNpcGllbnRfYmFsYW5jZS5hc0JpZ1VpbnQoKSArIGFtb3VudC5hc0JpZ1VpbnQoKSkKICAgIGZyYW1lX2RpZyAxCiAgICBmcmFtZV9kaWcgLTEKICAgIGIrCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA8PQogICAgYXNzZXJ0IC8vIG92ZXJmbG93CiAgICBifAogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjU5CiAgICAvLyBwdWJsaWMgYmFsYW5jZXMgPSBCb3hNYXA8QWRkcmVzcywgVWludDI1Nj4oeyBrZXlQcmVmaXg6ICdiJyB9KQogICAgYnl0ZWNfMSAvLyAiYiIKICAgIGZyYW1lX2RpZyAtMgogICAgY29uY2F0CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MjAzCiAgICAvLyB0aGlzLmJhbGFuY2VzKHJlY2lwaWVudCkudmFsdWUgPSBuZXcgVWludDI1NihyZWNpcGllbnRfYmFsYW5jZS5hc0JpZ1VpbnQoKSArIGFtb3VudC5hc0JpZ1VpbnQoKSkKICAgIHN3YXAKICAgIGJveF9wdXQKCl90cmFuc2Zlcl9hZnRlcl9pZl9lbHNlQDI6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MjA1CiAgICAvLyBlbWl0KG5ldyBhcmMyMDBfVHJhbnNmZXIoeyBmcm9tOiBzZW5kZXIsIHRvOiByZWNpcGllbnQsIHZhbHVlOiBhbW91bnQgfSkpCiAgICBmcmFtZV9kaWcgLTMKICAgIGZyYW1lX2RpZyAtMgogICAgY29uY2F0CiAgICBmcmFtZV9kaWcgLTEKICAgIGNvbmNhdAogICAgYnl0ZWMgNCAvLyBtZXRob2QgImFyYzIwMF9UcmFuc2ZlcihhZGRyZXNzLGFkZHJlc3MsdWludDI1NikiCiAgICBzd2FwCiAgICBjb25jYXQKICAgIGxvZwogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIwNgogICAgLy8gcmV0dXJuIG5ldyBCb29sKHRydWUpCiAgICBwdXNoYnl0ZXMgMHg4MAogICAgZnJhbWVfYnVyeSAwCiAgICByZXRzdWIKCgovLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6OkFyYzIwMC5fYWxsb3dhbmNlKG93bmVyOiBieXRlcywgc3BlbmRlcjogYnl0ZXMpIC0+IGJ5dGVzOgpfYWxsb3dhbmNlOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIxMwogICAgLy8gcHJpdmF0ZSBfYWxsb3dhbmNlKG93bmVyOiBBZGRyZXNzLCBzcGVuZGVyOiBBZGRyZXNzKTogVWludDI1NiB7CiAgICBwcm90byAyIDEKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMTAKICAgIC8vIHJldHVybiBuZXcgU3RhdGljQnl0ZXM8MzI+KG9wLnNoYTI1NihvcC5jb25jYXQob3duZXIuYnl0ZXMsIHNwZW5kZXIuYnl0ZXMpKSkKICAgIGZyYW1lX2RpZyAtMgogICAgZnJhbWVfZGlnIC0xCiAgICBjb25jYXQKICAgIHNoYTI1NgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjYxCiAgICAvLyBwdWJsaWMgYXBwcm92YWxzID0gQm94TWFwPFN0YXRpY0J5dGVzPDMyPiwgQXBwcm92YWxTdHJ1Y3Q+KHsga2V5UHJlZml4OiAnYScgfSkKICAgIHB1c2hieXRlcyAiYSIKICAgIHN3YXAKICAgIGNvbmNhdAogICAgZHVwCiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MjE1CiAgICAvLyBpZiAoIXRoaXMuYXBwcm92YWxzKGtleSkuZXhpc3RzKSByZXR1cm4gbmV3IFVpbnQyNTYoMCkKICAgIGJveF9sZW4KICAgIGJ1cnkgMQogICAgYm56IF9hbGxvd2FuY2VfYWZ0ZXJfaWZfZWxzZUAyCiAgICBieXRlYyA1IC8vIDB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAogICAgc3dhcAogICAgcmV0c3ViCgpfYWxsb3dhbmNlX2FmdGVyX2lmX2Vsc2VAMjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMTYKICAgIC8vIHJldHVybiB0aGlzLmFwcHJvdmFscyhrZXkpLnZhbHVlLmFwcHJvdmFsQW1vdW50CiAgICBmcmFtZV9kaWcgMAogICAgYm94X2dldAogICAgYXNzZXJ0IC8vIEJveCBtdXN0IGhhdmUgdmFsdWUKICAgIGV4dHJhY3QgMCAzMgogICAgc3dhcAogICAgcmV0c3ViCgoKLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjpBcmMyMDAuX2FwcHJvdmUob3duZXI6IGJ5dGVzLCBzcGVuZGVyOiBieXRlcywgYW1vdW50OiBieXRlcykgLT4gYnl0ZXM6Cl9hcHByb3ZlOgogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIxOQogICAgLy8gcHJpdmF0ZSBfYXBwcm92ZShvd25lcjogQWRkcmVzcywgc3BlbmRlcjogQWRkcmVzcywgYW1vdW50OiBVaW50MjU2KTogQm9vbCB7CiAgICBwcm90byAzIDEKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMTAKICAgIC8vIHJldHVybiBuZXcgU3RhdGljQnl0ZXM8MzI+KG9wLnNoYTI1NihvcC5jb25jYXQob3duZXIuYnl0ZXMsIHNwZW5kZXIuYnl0ZXMpKSkKICAgIGZyYW1lX2RpZyAtMwogICAgZnJhbWVfZGlnIC0yCiAgICBjb25jYXQKICAgIGR1cAogICAgc2hhMjU2CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6MjIxLTIyNQogICAgLy8gY29uc3QgYXBwcm92YWxCb3g6IEFwcHJvdmFsU3RydWN0ID0gbmV3IEFwcHJvdmFsU3RydWN0KHsKICAgIC8vICAgYXBwcm92YWxBbW91bnQ6IGFtb3VudCwKICAgIC8vICAgb3duZXI6IG93bmVyLAogICAgLy8gICBzcGVuZGVyOiBzcGVuZGVyLAogICAgLy8gfSkKICAgIGZyYW1lX2RpZyAtMQogICAgZnJhbWVfZGlnIC0zCiAgICBjb25jYXQKICAgIGZyYW1lX2RpZyAtMgogICAgY29uY2F0CiAgICAvLyBjb250cmFjdHMvYXJjMjAwLmFsZ28udHM6NjEKICAgIC8vIHB1YmxpYyBhcHByb3ZhbHMgPSBCb3hNYXA8U3RhdGljQnl0ZXM8MzI+LCBBcHByb3ZhbFN0cnVjdD4oeyBrZXlQcmVmaXg6ICdhJyB9KQogICAgcHVzaGJ5dGVzICJhIgogICAgdW5jb3ZlciAyCiAgICBjb25jYXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMjYKICAgIC8vIHRoaXMuYXBwcm92YWxzKGtleSkudmFsdWUgPSBjbG9uZShhcHByb3ZhbEJveCkKICAgIHN3YXAKICAgIGJveF9wdXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDAuYWxnby50czoyMjcKICAgIC8vIGVtaXQobmV3IGFyYzIwMF9BcHByb3ZhbCh7IG93bmVyOiBvd25lciwgc3BlbmRlcjogc3BlbmRlciwgdmFsdWU6IGFtb3VudCB9KSkKICAgIGZyYW1lX2RpZyAtMQogICAgY29uY2F0CiAgICBwdXNoYnl0ZXMgMHgxOTY5Zjg2NSAvLyBtZXRob2QgImFyYzIwMF9BcHByb3ZhbChhZGRyZXNzLGFkZHJlc3MsdWludDI1NikiCiAgICBzd2FwCiAgICBjb25jYXQKICAgIGxvZwogICAgLy8gY29udHJhY3RzL2FyYzIwMC5hbGdvLnRzOjIyOAogICAgLy8gcmV0dXJuIG5ldyBCb29sKHRydWUpCiAgICBwdXNoYnl0ZXMgMHg4MAogICAgcmV0c3ViCg==","clear":"I3ByYWdtYSB2ZXJzaW9uIDExCiNwcmFnbWEgdHlwZXRyYWNrIGZhbHNlCgovLyBAYWxnb3JhbmRmb3VuZGF0aW9uL2FsZ29yYW5kLXR5cGVzY3JpcHQvYmFzZS1jb250cmFjdC5kLnRzOjpCYXNlQ29udHJhY3QuY2xlYXJTdGF0ZVByb2dyYW0oKSAtPiB1aW50NjQ6Cm1haW46CiAgICBwdXNoaW50IDEgLy8gMQogICAgcmV0dXJuCg=="},"byteCode":{"approval":"CyAEIAEAAiYGBBUffHUBYgF0AW4EeYPDXCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADEbQQBVMRkURDEYRIIKBJdTguIEZX0T7AS2rholBITsE9UE7JlgQQSC5XPEBNpwJbkESpaPjwS1QiElBLuzGfM2GgCOCgALAIsAnQCyAL4AyADZAPYBOAFVADEZFDEYFBBEI0M2GgFJJFklCEsBFRJENhoCSSRZJQhLARUSRDYaA0kVIxJENhoESRUiEkQxADIJEkRLA1cCABVJRCIOREsCVwIAFUlEgQgORCQqZUUBFEQrTwRngAFzTwNnKksBZ4ABZE8CZzEAKUsBUEsCvzIDTFBMUCcETFCwgAUVH3x1gLAjQyQrZURXAgBJFSISRChMULAjQySAAXNlRFcCAEkVgQgSRChMULAjQySAAWRlRChMULAjQyQqZUQoTFCwI0M2GgFJFSISRIgAmyhMULAjQzYaAUkVIhJENhoCSRUiEkQxAE4CiACWKExQsCNDNhoBSRUiEkQ2GgJJFSISRDYaA0kVIhJEMQBLA0sBiADESUsDp0RLAqFJFSIORCKvq0sETgKIAM9IiABUKExQsCNDNhoBSRUiEkQ2GgJJFSISRDEATgKIAK4oTFCwI0M2GgFJFSISRDYaAkkVIhJEiABzKExQsCNDigEBKYv/UEm9RQFAAAQnBUyJiwC+REyJigMBi/2I/+BJi/6I/9pMi/+nRIv9i/4TQQAniwCL/6FJFSIORCKvTEsBqymL/VBMv4sBi/+gSRUiDkSrKYv+UEy/i/2L/lCL/1AnBExQsIABgIwAiYoCAYv+i/9QAYABYUxQSb1FAUAABCcFTImLAL5EVwAgTImKAwGL/Yv+UEkBi/+L/VCL/lCAAWFPAlBMv4v/UIAEGWn4ZUxQsIABgIk=","clear":"C4EBQw=="},"events":[{"name":"arc200_Transfer","args":[{"type":"address","name":"from"},{"type":"address","name":"to"},{"type":"uint256","name":"value"}]},{"name":"arc200_Approval","args":[{"type":"address","name":"owner"},{"type":"address","name":"spender"},{"type":"uint256","name":"value"}]}],"templateVariables":{}} as unknown as Arc56Contract
 
 /**
  * A state record containing binary data
@@ -312,22 +32,22 @@ export interface BinaryState {
   /**
    * Gets the state value as a Uint8Array
    */
-  asByteArray(): Uint8Array | undefined;
+  asByteArray(): Uint8Array | undefined
   /**
    * Gets the state value as a string
    */
-  asString(): string | undefined;
+  asString(): string | undefined
 }
 
 class BinaryStateValue implements BinaryState {
   constructor(private value: Uint8Array | undefined) {}
 
   asByteArray(): Uint8Array | undefined {
-    return this.value;
+    return this.value
   }
 
   asString(): string | undefined {
-    return this.value !== undefined ? Buffer.from(this.value).toString('utf-8') : undefined;
+    return this.value !== undefined ? Buffer.from(this.value).toString('utf-8') : undefined
   }
 }
 
@@ -339,21 +59,23 @@ export type Expand<T> = T extends (...args: infer A) => infer R
   ? (...args: Expand<A>) => Expand<R>
   : T extends infer O
     ? { [K in keyof O]: O[K] }
-    : never;
+    : never
+
 
 // Type definitions for ARC-56 structs
 
 export type ApprovalStruct = {
-  approvalAmount: bigint;
-  owner: string;
-  spender: string;
-};
+  approvalAmount: bigint,
+  owner: string,
+  spender: string
+}
+
 
 /**
  * Converts the ABI tuple representation of a ApprovalStruct to the struct representation
  */
 export function ApprovalStructFromTuple(abiTuple: [bigint, string, string]) {
-  return getABIStructFromABITuple(abiTuple, APP_SPEC.structs.ApprovalStruct, APP_SPEC.structs) as ApprovalStruct;
+  return getABIStructFromABITuple(abiTuple, APP_SPEC.structs.ApprovalStruct, APP_SPEC.structs) as ApprovalStruct
 }
 
 /**
@@ -365,103 +87,98 @@ export type Arc200Args = {
    */
   obj: {
     'bootstrap(byte[],byte[],uint8,uint256)bool': {
-      name: Uint8Array;
-      symbol: Uint8Array;
-      decimals: bigint | number;
-      totalSupply: bigint | number;
-    };
-    'arc200_name()byte[32]': Record<string, never>;
-    'arc200_symbol()byte[8]': Record<string, never>;
-    'arc200_decimals()uint8': Record<string, never>;
-    'arc200_totalSupply()uint256': Record<string, never>;
+      name: Uint8Array
+      symbol: Uint8Array
+      decimals: bigint | number
+      totalSupply: bigint | number
+    }
+    'arc200_name()byte[32]': Record<string, never>
+    'arc200_symbol()byte[8]': Record<string, never>
+    'arc200_decimals()uint8': Record<string, never>
+    'arc200_totalSupply()uint256': Record<string, never>
     'arc200_balanceOf(address)uint256': {
       /**
        * The address of the owner of the token
        */
-      owner: string;
-    };
+      owner: string
+    }
     'arc200_transfer(address,uint256)bool': {
       /**
        * The destination of the transfer
        */
-      to: string;
+      to: string
       /**
        * Amount of tokens to transfer
        */
-      value: bigint | number;
-    };
+      value: bigint | number
+    }
     'arc200_transferFrom(address,address,uint256)bool': {
       /**
        * The source of the transfer
        */
-      from: string;
+      from: string
       /**
        * The destination of the transfer
        */
-      to: string;
+      to: string
       /**
        * Amount of tokens to transfer
        */
-      value: bigint | number;
-    };
+      value: bigint | number
+    }
     'arc200_approve(address,uint256)bool': {
       /**
        * Who is allowed to take tokens on owner's behalf
        */
-      spender: string;
+      spender: string
       /**
        * Amount of tokens to be taken by spender
        */
-      value: bigint | number;
-    };
+      value: bigint | number
+    }
     'arc200_allowance(address,address)uint256': {
       /**
        * Owner's account
        */
-      owner: string;
+      owner: string
       /**
        * Who is allowed to take tokens on owner's behalf
        */
-      spender: string;
-    };
-  };
+      spender: string
+    }
+  }
   /**
    * The tuple representation of the arguments for each method
    */
   tuple: {
-    'bootstrap(byte[],byte[],uint8,uint256)bool': [
-      name: Uint8Array,
-      symbol: Uint8Array,
-      decimals: bigint | number,
-      totalSupply: bigint | number,
-    ];
-    'arc200_name()byte[32]': [];
-    'arc200_symbol()byte[8]': [];
-    'arc200_decimals()uint8': [];
-    'arc200_totalSupply()uint256': [];
-    'arc200_balanceOf(address)uint256': [owner: string];
-    'arc200_transfer(address,uint256)bool': [to: string, value: bigint | number];
-    'arc200_transferFrom(address,address,uint256)bool': [from: string, to: string, value: bigint | number];
-    'arc200_approve(address,uint256)bool': [spender: string, value: bigint | number];
-    'arc200_allowance(address,address)uint256': [owner: string, spender: string];
-  };
-};
+    'bootstrap(byte[],byte[],uint8,uint256)bool': [name: Uint8Array, symbol: Uint8Array, decimals: bigint | number, totalSupply: bigint | number]
+    'arc200_name()byte[32]': []
+    'arc200_symbol()byte[8]': []
+    'arc200_decimals()uint8': []
+    'arc200_totalSupply()uint256': []
+    'arc200_balanceOf(address)uint256': [owner: string]
+    'arc200_transfer(address,uint256)bool': [to: string, value: bigint | number]
+    'arc200_transferFrom(address,address,uint256)bool': [from: string, to: string, value: bigint | number]
+    'arc200_approve(address,uint256)bool': [spender: string, value: bigint | number]
+    'arc200_allowance(address,address)uint256': [owner: string, spender: string]
+  }
+}
 
 /**
  * The return type for each method
  */
 export type Arc200Returns = {
-  'bootstrap(byte[],byte[],uint8,uint256)bool': boolean;
-  'arc200_name()byte[32]': Uint8Array;
-  'arc200_symbol()byte[8]': Uint8Array;
-  'arc200_decimals()uint8': number;
-  'arc200_totalSupply()uint256': bigint;
-  'arc200_balanceOf(address)uint256': bigint;
-  'arc200_transfer(address,uint256)bool': boolean;
-  'arc200_transferFrom(address,address,uint256)bool': boolean;
-  'arc200_approve(address,uint256)bool': boolean;
-  'arc200_allowance(address,address)uint256': bigint;
-};
+  'bootstrap(byte[],byte[],uint8,uint256)bool': boolean
+  'arc200_name()byte[32]': Uint8Array
+  'arc200_symbol()byte[8]': Uint8Array
+  'arc200_decimals()uint8': number
+  'arc200_totalSupply()uint256': bigint
+  'arc200_balanceOf(address)uint256': bigint
+  'arc200_transfer(address,uint256)bool': boolean
+  'arc200_transferFrom(address,address,uint256)bool': boolean
+  'arc200_approve(address,uint256)bool': boolean
+  'arc200_allowance(address,address)uint256': bigint
+}
 
 /**
  * Defines the types of available calls and state of the Arc200 smart contract.
@@ -470,113 +187,84 @@ export type Arc200Types = {
   /**
    * Maps method signatures / names to their argument and return types.
    */
-  methods: Record<
-    'bootstrap(byte[],byte[],uint8,uint256)bool' | 'bootstrap',
-    {
-      argsObj: Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool'];
-      argsTuple: Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool'];
-      returns: Arc200Returns['bootstrap(byte[],byte[],uint8,uint256)bool'];
-    }
-  > &
-    Record<
-      'arc200_name()byte[32]' | 'arc200_name',
-      {
-        argsObj: Arc200Args['obj']['arc200_name()byte[32]'];
-        argsTuple: Arc200Args['tuple']['arc200_name()byte[32]'];
-        /**
-         * The name of the token
-         */
-        returns: Arc200Returns['arc200_name()byte[32]'];
-      }
-    > &
-    Record<
-      'arc200_symbol()byte[8]' | 'arc200_symbol',
-      {
-        argsObj: Arc200Args['obj']['arc200_symbol()byte[8]'];
-        argsTuple: Arc200Args['tuple']['arc200_symbol()byte[8]'];
-        /**
-         * The symbol of the token
-         */
-        returns: Arc200Returns['arc200_symbol()byte[8]'];
-      }
-    > &
-    Record<
-      'arc200_decimals()uint8' | 'arc200_decimals',
-      {
-        argsObj: Arc200Args['obj']['arc200_decimals()uint8'];
-        argsTuple: Arc200Args['tuple']['arc200_decimals()uint8'];
-        /**
-         * The decimals of the token
-         */
-        returns: Arc200Returns['arc200_decimals()uint8'];
-      }
-    > &
-    Record<
-      'arc200_totalSupply()uint256' | 'arc200_totalSupply',
-      {
-        argsObj: Arc200Args['obj']['arc200_totalSupply()uint256'];
-        argsTuple: Arc200Args['tuple']['arc200_totalSupply()uint256'];
-        /**
-         * The total supply of the token
-         */
-        returns: Arc200Returns['arc200_totalSupply()uint256'];
-      }
-    > &
-    Record<
-      'arc200_balanceOf(address)uint256' | 'arc200_balanceOf',
-      {
-        argsObj: Arc200Args['obj']['arc200_balanceOf(address)uint256'];
-        argsTuple: Arc200Args['tuple']['arc200_balanceOf(address)uint256'];
-        /**
-         * The current balance of the holder of the token
-         */
-        returns: Arc200Returns['arc200_balanceOf(address)uint256'];
-      }
-    > &
-    Record<
-      'arc200_transfer(address,uint256)bool' | 'arc200_transfer',
-      {
-        argsObj: Arc200Args['obj']['arc200_transfer(address,uint256)bool'];
-        argsTuple: Arc200Args['tuple']['arc200_transfer(address,uint256)bool'];
-        /**
-         * Success
-         */
-        returns: Arc200Returns['arc200_transfer(address,uint256)bool'];
-      }
-    > &
-    Record<
-      'arc200_transferFrom(address,address,uint256)bool' | 'arc200_transferFrom',
-      {
-        argsObj: Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool'];
-        argsTuple: Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool'];
-        /**
-         * Success
-         */
-        returns: Arc200Returns['arc200_transferFrom(address,address,uint256)bool'];
-      }
-    > &
-    Record<
-      'arc200_approve(address,uint256)bool' | 'arc200_approve',
-      {
-        argsObj: Arc200Args['obj']['arc200_approve(address,uint256)bool'];
-        argsTuple: Arc200Args['tuple']['arc200_approve(address,uint256)bool'];
-        /**
-         * Success
-         */
-        returns: Arc200Returns['arc200_approve(address,uint256)bool'];
-      }
-    > &
-    Record<
-      'arc200_allowance(address,address)uint256' | 'arc200_allowance',
-      {
-        argsObj: Arc200Args['obj']['arc200_allowance(address,address)uint256'];
-        argsTuple: Arc200Args['tuple']['arc200_allowance(address,address)uint256'];
-        /**
-         * The remaining allowance
-         */
-        returns: Arc200Returns['arc200_allowance(address,address)uint256'];
-      }
-    >;
+  methods:
+    & Record<'bootstrap(byte[],byte[],uint8,uint256)bool' | 'bootstrap', {
+      argsObj: Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool']
+      argsTuple: Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']
+      returns: Arc200Returns['bootstrap(byte[],byte[],uint8,uint256)bool']
+    }>
+    & Record<'arc200_name()byte[32]' | 'arc200_name', {
+      argsObj: Arc200Args['obj']['arc200_name()byte[32]']
+      argsTuple: Arc200Args['tuple']['arc200_name()byte[32]']
+      /**
+       * The name of the token
+       */
+      returns: Arc200Returns['arc200_name()byte[32]']
+    }>
+    & Record<'arc200_symbol()byte[8]' | 'arc200_symbol', {
+      argsObj: Arc200Args['obj']['arc200_symbol()byte[8]']
+      argsTuple: Arc200Args['tuple']['arc200_symbol()byte[8]']
+      /**
+       * The symbol of the token
+       */
+      returns: Arc200Returns['arc200_symbol()byte[8]']
+    }>
+    & Record<'arc200_decimals()uint8' | 'arc200_decimals', {
+      argsObj: Arc200Args['obj']['arc200_decimals()uint8']
+      argsTuple: Arc200Args['tuple']['arc200_decimals()uint8']
+      /**
+       * The decimals of the token
+       */
+      returns: Arc200Returns['arc200_decimals()uint8']
+    }>
+    & Record<'arc200_totalSupply()uint256' | 'arc200_totalSupply', {
+      argsObj: Arc200Args['obj']['arc200_totalSupply()uint256']
+      argsTuple: Arc200Args['tuple']['arc200_totalSupply()uint256']
+      /**
+       * The total supply of the token
+       */
+      returns: Arc200Returns['arc200_totalSupply()uint256']
+    }>
+    & Record<'arc200_balanceOf(address)uint256' | 'arc200_balanceOf', {
+      argsObj: Arc200Args['obj']['arc200_balanceOf(address)uint256']
+      argsTuple: Arc200Args['tuple']['arc200_balanceOf(address)uint256']
+      /**
+       * The current balance of the holder of the token
+       */
+      returns: Arc200Returns['arc200_balanceOf(address)uint256']
+    }>
+    & Record<'arc200_transfer(address,uint256)bool' | 'arc200_transfer', {
+      argsObj: Arc200Args['obj']['arc200_transfer(address,uint256)bool']
+      argsTuple: Arc200Args['tuple']['arc200_transfer(address,uint256)bool']
+      /**
+       * Success
+       */
+      returns: Arc200Returns['arc200_transfer(address,uint256)bool']
+    }>
+    & Record<'arc200_transferFrom(address,address,uint256)bool' | 'arc200_transferFrom', {
+      argsObj: Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool']
+      argsTuple: Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']
+      /**
+       * Success
+       */
+      returns: Arc200Returns['arc200_transferFrom(address,address,uint256)bool']
+    }>
+    & Record<'arc200_approve(address,uint256)bool' | 'arc200_approve', {
+      argsObj: Arc200Args['obj']['arc200_approve(address,uint256)bool']
+      argsTuple: Arc200Args['tuple']['arc200_approve(address,uint256)bool']
+      /**
+       * Success
+       */
+      returns: Arc200Returns['arc200_approve(address,uint256)bool']
+    }>
+    & Record<'arc200_allowance(address,address)uint256' | 'arc200_allowance', {
+      argsObj: Arc200Args['obj']['arc200_allowance(address,address)uint256']
+      argsTuple: Arc200Args['tuple']['arc200_allowance(address,address)uint256']
+      /**
+       * The remaining allowance
+       */
+      returns: Arc200Returns['arc200_allowance(address,address)uint256']
+    }>
   /**
    * Defines the shape of the state of the application.
    */
@@ -586,93 +274,85 @@ export type Arc200Types = {
         /**
          * Name of the asset. Max 32 bytes
          */
-        name: Uint8Array;
+        name: Uint8Array
         /**
          * Symbol of the asset. Max 8 bytes
          */
-        symbol: Uint8Array;
+        symbol: Uint8Array
         /**
          * Decimals of the asset. Recommended is 6 decimal places.
          */
-        decimals: number;
+        decimals: number
         /**
          * Minted supply
          */
-        totalSupply: bigint;
-      };
-      maps: {};
-    };
+        totalSupply: bigint
+      }
+      maps: {}
+    }
     box: {
-      keys: {};
+      keys: {}
       maps: {
-        balances: Map<string, bigint>;
-        approvals: Map<Uint8Array, ApprovalStruct>;
-      };
-    };
-  };
-};
+        balances: Map<string, bigint>
+        approvals: Map<Uint8Array, ApprovalStruct>
+      }
+    }
+  }
+}
 
 /**
  * Defines the possible abi call signatures.
  */
-export type Arc200Signatures = keyof Arc200Types['methods'];
+export type Arc200Signatures = keyof Arc200Types['methods']
 /**
  * Defines the possible abi call signatures for methods that return a non-void value.
  */
-export type Arc200NonVoidMethodSignatures = keyof Arc200Types['methods'] extends infer T
-  ? T extends keyof Arc200Types['methods']
-    ? MethodReturn<T> extends void
-      ? never
-      : T
-    : never
-  : never;
+export type Arc200NonVoidMethodSignatures = keyof Arc200Types['methods'] extends infer T ? T extends keyof Arc200Types['methods'] ? MethodReturn<T> extends void ? never : T  : never : never
 /**
  * Defines an object containing all relevant parameters for a single call to the contract.
  */
 export type CallParams<TArgs> = Expand<
-  Omit<AppClientMethodCallParams, 'method' | 'args' | 'onComplete'> & {
-    /** The args for the ABI method call, either as an ordered array or an object */
-    args: Expand<TArgs>;
-  }
->;
+  Omit<AppClientMethodCallParams, 'method' | 'args' | 'onComplete'> &
+    {
+      /** The args for the ABI method call, either as an ordered array or an object */
+      args: Expand<TArgs>
+    }
+>
 /**
  * Maps a method signature from the Arc200 smart contract to the method's arguments in either tuple or struct form
  */
-export type MethodArgs<TSignature extends Arc200Signatures> = Arc200Types['methods'][TSignature][
-  | 'argsObj'
-  | 'argsTuple'];
+export type MethodArgs<TSignature extends Arc200Signatures> = Arc200Types['methods'][TSignature]['argsObj' | 'argsTuple']
 /**
  * Maps a method signature from the Arc200 smart contract to the method's return type
  */
-export type MethodReturn<TSignature extends Arc200Signatures> = Arc200Types['methods'][TSignature]['returns'];
+export type MethodReturn<TSignature extends Arc200Signatures> = Arc200Types['methods'][TSignature]['returns']
 
 /**
  * Defines the shape of the keyed global state of the application.
  */
-export type GlobalKeysState = Arc200Types['state']['global']['keys'];
+export type GlobalKeysState = Arc200Types['state']['global']['keys']
 
 /**
  * Defines the shape of the keyed box state of the application.
  */
-export type BoxKeysState = Arc200Types['state']['box']['keys'];
+export type BoxKeysState = Arc200Types['state']['box']['keys']
+
 
 /**
  * Defines supported create method params for this smart contract
  */
-export type Arc200CreateCallParams = Expand<
-  AppClientBareCallParams & { method?: never } & { onComplete?: OnApplicationComplete.NoOpOC } & CreateSchema
->;
+export type Arc200CreateCallParams =
+  | Expand<AppClientBareCallParams & {method?: never} & {onComplete?: OnApplicationComplete.NoOpOC} & CreateSchema>
 /**
  * Defines arguments required for the deploy method.
  */
-export type Arc200DeployParams = Expand<
-  Omit<AppFactoryDeployParams, 'createParams' | 'updateParams' | 'deleteParams'> & {
-    /**
-     * Create transaction parameters to use if a create needs to be issued as part of deployment; use `method` to define ABI call (if available) or leave out for a bare call (if available)
-     */
-    createParams?: Arc200CreateCallParams;
-  }
->;
+export type Arc200DeployParams = Expand<Omit<AppFactoryDeployParams, 'createParams' | 'updateParams' | 'deleteParams'> & {
+  /**
+   * Create transaction parameters to use if a create needs to be issued as part of deployment; use `method` to define ABI call (if available) or leave out for a bare call (if available)
+   */
+  createParams?: Arc200CreateCallParams
+}>
+
 
 /**
  * Exposes methods for constructing `AppClient` params objects for ABI calls to the Arc200 smart contract
@@ -684,20 +364,12 @@ export abstract class Arc200ParamsFactory {
    * @param params Parameters for the call
    * @returns An `AppClientMethodCallParams` object for the call
    */
-  static bootstrap(
-    params: CallParams<
-      | Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool']
-      | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']
-    > &
-      CallOnComplete
-  ): AppClientMethodCallParams & CallOnComplete {
+  static bootstrap(params: CallParams<Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool'] | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete {
     return {
       ...params,
       method: 'bootstrap(byte[],byte[],uint8,uint256)bool' as const,
-      args: Array.isArray(params.args)
-        ? params.args
-        : [params.args.name, params.args.symbol, params.args.decimals, params.args.totalSupply],
-    };
+      args: Array.isArray(params.args) ? params.args : [params.args.name, params.args.symbol, params.args.decimals, params.args.totalSupply],
+    }
   }
   /**
    * Constructs a no op call for the arc200_name()byte[32] ABI method
@@ -707,15 +379,12 @@ export abstract class Arc200ParamsFactory {
    * @param params Parameters for the call
    * @returns An `AppClientMethodCallParams` object for the call
    */
-  static arc200Name(
-    params: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> &
-      CallOnComplete
-  ): AppClientMethodCallParams & CallOnComplete {
+  static arc200Name(params: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete {
     return {
       ...params,
       method: 'arc200_name()byte[32]' as const,
       args: Array.isArray(params.args) ? params.args : [],
-    };
+    }
   }
   /**
    * Constructs a no op call for the arc200_symbol()byte[8] ABI method
@@ -725,15 +394,12 @@ export abstract class Arc200ParamsFactory {
    * @param params Parameters for the call
    * @returns An `AppClientMethodCallParams` object for the call
    */
-  static arc200Symbol(
-    params: CallParams<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']> &
-      CallOnComplete
-  ): AppClientMethodCallParams & CallOnComplete {
+  static arc200Symbol(params: CallParams<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete {
     return {
       ...params,
       method: 'arc200_symbol()byte[8]' as const,
       args: Array.isArray(params.args) ? params.args : [],
-    };
+    }
   }
   /**
    * Constructs a no op call for the arc200_decimals()uint8 ABI method
@@ -743,15 +409,12 @@ export abstract class Arc200ParamsFactory {
    * @param params Parameters for the call
    * @returns An `AppClientMethodCallParams` object for the call
    */
-  static arc200Decimals(
-    params: CallParams<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']> &
-      CallOnComplete
-  ): AppClientMethodCallParams & CallOnComplete {
+  static arc200Decimals(params: CallParams<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete {
     return {
       ...params,
       method: 'arc200_decimals()uint8' as const,
       args: Array.isArray(params.args) ? params.args : [],
-    };
+    }
   }
   /**
    * Constructs a no op call for the arc200_totalSupply()uint256 ABI method
@@ -761,17 +424,12 @@ export abstract class Arc200ParamsFactory {
    * @param params Parameters for the call
    * @returns An `AppClientMethodCallParams` object for the call
    */
-  static arc200TotalSupply(
-    params: CallParams<
-      Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']
-    > &
-      CallOnComplete
-  ): AppClientMethodCallParams & CallOnComplete {
+  static arc200TotalSupply(params: CallParams<Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete {
     return {
       ...params,
       method: 'arc200_totalSupply()uint256' as const,
       args: Array.isArray(params.args) ? params.args : [],
-    };
+    }
   }
   /**
    * Constructs a no op call for the arc200_balanceOf(address)uint256 ABI method
@@ -781,17 +439,12 @@ export abstract class Arc200ParamsFactory {
    * @param params Parameters for the call
    * @returns An `AppClientMethodCallParams` object for the call
    */
-  static arc200BalanceOf(
-    params: CallParams<
-      Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']
-    > &
-      CallOnComplete
-  ): AppClientMethodCallParams & CallOnComplete {
+  static arc200BalanceOf(params: CallParams<Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete {
     return {
       ...params,
       method: 'arc200_balanceOf(address)uint256' as const,
       args: Array.isArray(params.args) ? params.args : [params.args.owner],
-    };
+    }
   }
   /**
    * Constructs a no op call for the arc200_transfer(address,uint256)bool ABI method
@@ -801,18 +454,12 @@ export abstract class Arc200ParamsFactory {
    * @param params Parameters for the call
    * @returns An `AppClientMethodCallParams` object for the call
    */
-  static arc200Transfer(
-    params: CallParams<
-      | Arc200Args['obj']['arc200_transfer(address,uint256)bool']
-      | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']
-    > &
-      CallOnComplete
-  ): AppClientMethodCallParams & CallOnComplete {
+  static arc200Transfer(params: CallParams<Arc200Args['obj']['arc200_transfer(address,uint256)bool'] | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete {
     return {
       ...params,
       method: 'arc200_transfer(address,uint256)bool' as const,
       args: Array.isArray(params.args) ? params.args : [params.args.to, params.args.value],
-    };
+    }
   }
   /**
    * Constructs a no op call for the arc200_transferFrom(address,address,uint256)bool ABI method
@@ -822,18 +469,12 @@ export abstract class Arc200ParamsFactory {
    * @param params Parameters for the call
    * @returns An `AppClientMethodCallParams` object for the call
    */
-  static arc200TransferFrom(
-    params: CallParams<
-      | Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool']
-      | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']
-    > &
-      CallOnComplete
-  ): AppClientMethodCallParams & CallOnComplete {
+  static arc200TransferFrom(params: CallParams<Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool'] | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete {
     return {
       ...params,
       method: 'arc200_transferFrom(address,address,uint256)bool' as const,
       args: Array.isArray(params.args) ? params.args : [params.args.from, params.args.to, params.args.value],
-    };
+    }
   }
   /**
    * Constructs a no op call for the arc200_approve(address,uint256)bool ABI method
@@ -843,18 +484,12 @@ export abstract class Arc200ParamsFactory {
    * @param params Parameters for the call
    * @returns An `AppClientMethodCallParams` object for the call
    */
-  static arc200Approve(
-    params: CallParams<
-      | Arc200Args['obj']['arc200_approve(address,uint256)bool']
-      | Arc200Args['tuple']['arc200_approve(address,uint256)bool']
-    > &
-      CallOnComplete
-  ): AppClientMethodCallParams & CallOnComplete {
+  static arc200Approve(params: CallParams<Arc200Args['obj']['arc200_approve(address,uint256)bool'] | Arc200Args['tuple']['arc200_approve(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete {
     return {
       ...params,
       method: 'arc200_approve(address,uint256)bool' as const,
       args: Array.isArray(params.args) ? params.args : [params.args.spender, params.args.value],
-    };
+    }
   }
   /**
    * Constructs a no op call for the arc200_allowance(address,address)uint256 ABI method
@@ -864,18 +499,12 @@ export abstract class Arc200ParamsFactory {
    * @param params Parameters for the call
    * @returns An `AppClientMethodCallParams` object for the call
    */
-  static arc200Allowance(
-    params: CallParams<
-      | Arc200Args['obj']['arc200_allowance(address,address)uint256']
-      | Arc200Args['tuple']['arc200_allowance(address,address)uint256']
-    > &
-      CallOnComplete
-  ): AppClientMethodCallParams & CallOnComplete {
+  static arc200Allowance(params: CallParams<Arc200Args['obj']['arc200_allowance(address,address)uint256'] | Arc200Args['tuple']['arc200_allowance(address,address)uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete {
     return {
       ...params,
       method: 'arc200_allowance(address,address)uint256' as const,
       args: Array.isArray(params.args) ? params.args : [params.args.owner, params.args.spender],
-    };
+    }
   }
 }
 
@@ -886,7 +515,7 @@ export class Arc200Factory {
   /**
    * The underlying `AppFactory` for when you want to have more flexibility
    */
-  public readonly appFactory: _AppFactory;
+  public readonly appFactory: _AppFactory
 
   /**
    * Creates a new instance of `Arc200Factory`
@@ -897,24 +526,24 @@ export class Arc200Factory {
     this.appFactory = new _AppFactory({
       ...params,
       appSpec: APP_SPEC,
-    });
+    })
   }
-
+  
   /** The name of the app (from the ARC-32 / ARC-56 app spec or override). */
   public get appName() {
-    return this.appFactory.appName;
+    return this.appFactory.appName
   }
-
+  
   /** The ARC-56 app spec being used */
   get appSpec() {
-    return APP_SPEC;
+    return APP_SPEC
   }
-
+  
   /** A reference to the underlying `AlgorandClient` this app factory is using. */
   public get algorand(): AlgorandClient {
-    return this.appFactory.algorand;
+    return this.appFactory.algorand
   }
-
+  
   /**
    * Returns a new `AppClient` client for an app instance of the given ID.
    *
@@ -924,9 +553,9 @@ export class Arc200Factory {
    * @returns The `AppClient`
    */
   public getAppClientById(params: AppFactoryAppClientParams) {
-    return new Arc200Client(this.appFactory.getAppClientById(params));
+    return new Arc200Client(this.appFactory.getAppClientById(params))
   }
-
+  
   /**
    * Returns a new `AppClient` client, resolving the app by creator address and name
    * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
@@ -936,8 +565,10 @@ export class Arc200Factory {
    * @param params The parameters to create the app client
    * @returns The `AppClient`
    */
-  public async getAppClientByCreatorAndName(params: AppFactoryResolveAppClientByCreatorAndNameParams) {
-    return new Arc200Client(await this.appFactory.getAppClientByCreatorAndName(params));
+  public async getAppClientByCreatorAndName(
+    params: AppFactoryResolveAppClientByCreatorAndNameParams,
+  ) {
+    return new Arc200Client(await this.appFactory.getAppClientByCreatorAndName(params))
   }
 
   /**
@@ -949,8 +580,8 @@ export class Arc200Factory {
   public async deploy(params: Arc200DeployParams = {}) {
     const result = await this.appFactory.deploy({
       ...params,
-    });
-    return { result: result.result, appClient: new Arc200Client(result.appClient) };
+    })
+    return { result: result.result, appClient: new Arc200Client(result.appClient) }
   }
 
   /**
@@ -967,17 +598,12 @@ export class Arc200Factory {
        * @param params The params for the bare (raw) call
        * @returns The params for a create call
        */
-      bare: (
-        params?: Expand<
-          AppClientBareCallParams &
-            AppClientCompilationParams &
-            CreateSchema & { onComplete?: OnApplicationComplete.NoOpOC }
-        >
-      ) => {
-        return this.appFactory.params.bare.create(params);
+      bare: (params?: Expand<AppClientBareCallParams & AppClientCompilationParams & CreateSchema & {onComplete?: OnApplicationComplete.NoOpOC}>) => {
+        return this.appFactory.params.bare.create(params)
       },
     },
-  };
+
+  }
 
   /**
    * Create transactions for the current app
@@ -993,17 +619,12 @@ export class Arc200Factory {
        * @param params The params for the bare (raw) call
        * @returns The transaction for a create call
        */
-      bare: (
-        params?: Expand<
-          AppClientBareCallParams &
-            AppClientCompilationParams &
-            CreateSchema & { onComplete?: OnApplicationComplete.NoOpOC }
-        >
-      ) => {
-        return this.appFactory.createTransaction.bare.create(params);
+      bare: (params?: Expand<AppClientBareCallParams & AppClientCompilationParams & CreateSchema & {onComplete?: OnApplicationComplete.NoOpOC}>) => {
+        return this.appFactory.createTransaction.bare.create(params)
       },
     },
-  };
+
+  }
 
   /**
    * Send calls to the current app
@@ -1019,19 +640,14 @@ export class Arc200Factory {
        * @param params The params for the bare (raw) call
        * @returns The create result
        */
-      bare: async (
-        params?: Expand<
-          AppClientBareCallParams &
-            AppClientCompilationParams &
-            CreateSchema &
-            SendParams & { onComplete?: OnApplicationComplete.NoOpOC }
-        >
-      ) => {
-        const result = await this.appFactory.send.bare.create(params);
-        return { result: result.result, appClient: new Arc200Client(result.appClient) };
+      bare: async (params?: Expand<AppClientBareCallParams & AppClientCompilationParams & CreateSchema & SendParams & {onComplete?: OnApplicationComplete.NoOpOC}>) => {
+        const result = await this.appFactory.send.bare.create(params)
+        return { result: result.result, appClient: new Arc200Client(result.appClient) }
       },
     },
-  };
+
+  }
+
 }
 /**
  * A client to make calls to the Arc200 smart contract
@@ -1040,45 +656,33 @@ export class Arc200Client {
   /**
    * The underlying `AppClient` for when you want to have more flexibility
    */
-  public readonly appClient: _AppClient;
+  public readonly appClient: _AppClient
 
   /**
    * Creates a new instance of `Arc200Client`
    *
    * @param appClient An `AppClient` instance which has been created with the Arc200 app spec
    */
-  constructor(appClient: _AppClient);
+  constructor(appClient: _AppClient)
   /**
    * Creates a new instance of `Arc200Client`
    *
    * @param params The parameters to initialise the app client with
    */
-  constructor(params: Omit<AppClientParams, 'appSpec'>);
+  constructor(params: Omit<AppClientParams, 'appSpec'>)
   constructor(appClientOrParams: _AppClient | Omit<AppClientParams, 'appSpec'>) {
-    this.appClient =
-      appClientOrParams instanceof _AppClient
-        ? appClientOrParams
-        : new _AppClient({
-            ...appClientOrParams,
-            appSpec: APP_SPEC,
-          });
+    this.appClient = appClientOrParams instanceof _AppClient ? appClientOrParams : new _AppClient({
+      ...appClientOrParams,
+      appSpec: APP_SPEC,
+    })
   }
 
   /**
    * Checks for decode errors on the given return value and maps the return value to the return type for the given method
    * @returns The typed return value or undefined if there was no value
    */
-  decodeReturnValue<TSignature extends Arc200NonVoidMethodSignatures>(
-    method: TSignature,
-    returnValue: ABIReturn | undefined
-  ) {
-    return returnValue !== undefined
-      ? getArc56ReturnValue<MethodReturn<TSignature>>(
-          returnValue,
-          this.appClient.getABIMethod(method),
-          APP_SPEC.structs
-        )
-      : undefined;
+  decodeReturnValue<TSignature extends Arc200NonVoidMethodSignatures>(method: TSignature, returnValue: ABIReturn | undefined) {
+    return returnValue !== undefined ? getArc56ReturnValue<MethodReturn<TSignature>>(returnValue, this.appClient.getABIMethod(method), APP_SPEC.structs) : undefined
   }
 
   /**
@@ -1086,12 +690,10 @@ export class Arc200Client {
    * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
    * @param params The parameters to create the app client
    */
-  public static async fromCreatorAndName(
-    params: Omit<ResolveAppClientByCreatorAndName, 'appSpec'>
-  ): Promise<Arc200Client> {
-    return new Arc200Client(await _AppClient.fromCreatorAndName({ ...params, appSpec: APP_SPEC }));
+  public static async fromCreatorAndName(params: Omit<ResolveAppClientByCreatorAndName, 'appSpec'>): Promise<Arc200Client> {
+    return new Arc200Client(await _AppClient.fromCreatorAndName({...params, appSpec: APP_SPEC}))
   }
-
+  
   /**
    * Returns an `Arc200Client` instance for the current network based on
    * pre-determined network-specific app IDs specified in the ARC-56 app spec.
@@ -1099,33 +701,35 @@ export class Arc200Client {
    * If no IDs are in the app spec or the network isn't recognised, an error is thrown.
    * @param params The parameters to create the app client
    */
-  static async fromNetwork(params: Omit<ResolveAppClientByNetwork, 'appSpec'>): Promise<Arc200Client> {
-    return new Arc200Client(await _AppClient.fromNetwork({ ...params, appSpec: APP_SPEC }));
+  static async fromNetwork(
+    params: Omit<ResolveAppClientByNetwork, 'appSpec'>
+  ): Promise<Arc200Client> {
+    return new Arc200Client(await _AppClient.fromNetwork({...params, appSpec: APP_SPEC}))
   }
-
+  
   /** The ID of the app instance this client is linked to. */
   public get appId() {
-    return this.appClient.appId;
+    return this.appClient.appId
   }
-
+  
   /** The app address of the app instance this client is linked to. */
   public get appAddress() {
-    return this.appClient.appAddress;
+    return this.appClient.appAddress
   }
-
+  
   /** The name of the app. */
   public get appName() {
-    return this.appClient.appName;
+    return this.appClient.appName
   }
-
+  
   /** The ARC-56 app spec being used */
   public get appSpec() {
-    return this.appClient.appSpec;
+    return this.appClient.appSpec
   }
-
+  
   /** A reference to the underlying `AlgorandClient` this app client is using. */
   public get algorand(): AlgorandClient {
-    return this.appClient.algorand;
+    return this.appClient.algorand
   }
 
   /**
@@ -1139,7 +743,7 @@ export class Arc200Client {
      * @returns The clearState result
      */
     clearState: (params?: Expand<AppClientBareCallParams>) => {
-      return this.appClient.params.bare.clearState(params);
+      return this.appClient.params.bare.clearState(params)
     },
 
     /**
@@ -1148,18 +752,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call params
      */
-    bootstrap: (
-      params: CallParams<
-        | Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool']
-        | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.params.call(Arc200ParamsFactory.bootstrap(params));
+    bootstrap: (params: CallParams<Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool'] | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.params.call(Arc200ParamsFactory.bootstrap(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_name()byte[32]` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the name of the token
@@ -1167,17 +766,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call params: The name of the token
      */
-    arc200Name: (
-      params: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> & {
-        onComplete?: OnApplicationComplete.NoOpOC;
-      } = { args: [] }
-    ) => {
-      return this.appClient.params.call(Arc200ParamsFactory.arc200Name(params));
+    arc200Name: (params: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      return this.appClient.params.call(Arc200ParamsFactory.arc200Name(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_symbol()byte[8]` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the symbol of the token
@@ -1185,17 +780,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call params: The symbol of the token
      */
-    arc200Symbol: (
-      params: CallParams<
-        Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']
-      > & { onComplete?: OnApplicationComplete.NoOpOC } = { args: [] }
-    ) => {
-      return this.appClient.params.call(Arc200ParamsFactory.arc200Symbol(params));
+    arc200Symbol: (params: CallParams<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']> & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      return this.appClient.params.call(Arc200ParamsFactory.arc200Symbol(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_decimals()uint8` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the decimals of the token
@@ -1203,17 +794,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call params: The decimals of the token
      */
-    arc200Decimals: (
-      params: CallParams<
-        Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']
-      > & { onComplete?: OnApplicationComplete.NoOpOC } = { args: [] }
-    ) => {
-      return this.appClient.params.call(Arc200ParamsFactory.arc200Decimals(params));
+    arc200Decimals: (params: CallParams<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']> & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      return this.appClient.params.call(Arc200ParamsFactory.arc200Decimals(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_totalSupply()uint256` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the total supply of the token
@@ -1221,17 +808,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call params: The total supply of the token
      */
-    arc200TotalSupply: (
-      params: CallParams<
-        Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']
-      > & { onComplete?: OnApplicationComplete.NoOpOC } = { args: [] }
-    ) => {
-      return this.appClient.params.call(Arc200ParamsFactory.arc200TotalSupply(params));
+    arc200TotalSupply: (params: CallParams<Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']> & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      return this.appClient.params.call(Arc200ParamsFactory.arc200TotalSupply(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_balanceOf(address)uint256` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the current balance of the owner of the token
@@ -1239,12 +822,8 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call params: The current balance of the holder of the token
      */
-    arc200BalanceOf: (
-      params: CallParams<
-        Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.params.call(Arc200ParamsFactory.arc200BalanceOf(params));
+    arc200BalanceOf: (params: CallParams<Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.params.call(Arc200ParamsFactory.arc200BalanceOf(params))
     },
 
     /**
@@ -1255,13 +834,8 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call params: Success
      */
-    arc200Transfer: (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_transfer(address,uint256)bool']
-        | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.params.call(Arc200ParamsFactory.arc200Transfer(params));
+    arc200Transfer: (params: CallParams<Arc200Args['obj']['arc200_transfer(address,uint256)bool'] | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.params.call(Arc200ParamsFactory.arc200Transfer(params))
     },
 
     /**
@@ -1272,13 +846,8 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call params: Success
      */
-    arc200TransferFrom: (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool']
-        | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.params.call(Arc200ParamsFactory.arc200TransferFrom(params));
+    arc200TransferFrom: (params: CallParams<Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool'] | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.params.call(Arc200ParamsFactory.arc200TransferFrom(params))
     },
 
     /**
@@ -1289,18 +858,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call params: Success
      */
-    arc200Approve: (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_approve(address,uint256)bool']
-        | Arc200Args['tuple']['arc200_approve(address,uint256)bool']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.params.call(Arc200ParamsFactory.arc200Approve(params));
+    arc200Approve: (params: CallParams<Arc200Args['obj']['arc200_approve(address,uint256)bool'] | Arc200Args['tuple']['arc200_approve(address,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.params.call(Arc200ParamsFactory.arc200Approve(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_allowance(address,address)uint256` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the current allowance of the spender of the tokens of the owner
@@ -1308,15 +872,11 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call params: The remaining allowance
      */
-    arc200Allowance: (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_allowance(address,address)uint256']
-        | Arc200Args['tuple']['arc200_allowance(address,address)uint256']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.params.call(Arc200ParamsFactory.arc200Allowance(params));
+    arc200Allowance: (params: CallParams<Arc200Args['obj']['arc200_allowance(address,address)uint256'] | Arc200Args['tuple']['arc200_allowance(address,address)uint256']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.params.call(Arc200ParamsFactory.arc200Allowance(params))
     },
-  };
+
+  }
 
   /**
    * Create transactions for the current app
@@ -1329,7 +889,7 @@ export class Arc200Client {
      * @returns The clearState result
      */
     clearState: (params?: Expand<AppClientBareCallParams>) => {
-      return this.appClient.createTransaction.bare.clearState(params);
+      return this.appClient.createTransaction.bare.clearState(params)
     },
 
     /**
@@ -1338,18 +898,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call transaction
      */
-    bootstrap: (
-      params: CallParams<
-        | Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool']
-        | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.createTransaction.call(Arc200ParamsFactory.bootstrap(params));
+    bootstrap: (params: CallParams<Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool'] | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.createTransaction.call(Arc200ParamsFactory.bootstrap(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_name()byte[32]` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the name of the token
@@ -1357,17 +912,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call transaction: The name of the token
      */
-    arc200Name: (
-      params: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> & {
-        onComplete?: OnApplicationComplete.NoOpOC;
-      } = { args: [] }
-    ) => {
-      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Name(params));
+    arc200Name: (params: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Name(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_symbol()byte[8]` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the symbol of the token
@@ -1375,17 +926,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call transaction: The symbol of the token
      */
-    arc200Symbol: (
-      params: CallParams<
-        Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']
-      > & { onComplete?: OnApplicationComplete.NoOpOC } = { args: [] }
-    ) => {
-      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Symbol(params));
+    arc200Symbol: (params: CallParams<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']> & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Symbol(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_decimals()uint8` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the decimals of the token
@@ -1393,17 +940,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call transaction: The decimals of the token
      */
-    arc200Decimals: (
-      params: CallParams<
-        Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']
-      > & { onComplete?: OnApplicationComplete.NoOpOC } = { args: [] }
-    ) => {
-      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Decimals(params));
+    arc200Decimals: (params: CallParams<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']> & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Decimals(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_totalSupply()uint256` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the total supply of the token
@@ -1411,17 +954,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call transaction: The total supply of the token
      */
-    arc200TotalSupply: (
-      params: CallParams<
-        Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']
-      > & { onComplete?: OnApplicationComplete.NoOpOC } = { args: [] }
-    ) => {
-      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200TotalSupply(params));
+    arc200TotalSupply: (params: CallParams<Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']> & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200TotalSupply(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_balanceOf(address)uint256` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the current balance of the owner of the token
@@ -1429,12 +968,8 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call transaction: The current balance of the holder of the token
      */
-    arc200BalanceOf: (
-      params: CallParams<
-        Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200BalanceOf(params));
+    arc200BalanceOf: (params: CallParams<Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200BalanceOf(params))
     },
 
     /**
@@ -1445,13 +980,8 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call transaction: Success
      */
-    arc200Transfer: (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_transfer(address,uint256)bool']
-        | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Transfer(params));
+    arc200Transfer: (params: CallParams<Arc200Args['obj']['arc200_transfer(address,uint256)bool'] | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Transfer(params))
     },
 
     /**
@@ -1462,13 +992,8 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call transaction: Success
      */
-    arc200TransferFrom: (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool']
-        | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200TransferFrom(params));
+    arc200TransferFrom: (params: CallParams<Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool'] | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200TransferFrom(params))
     },
 
     /**
@@ -1479,18 +1004,13 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call transaction: Success
      */
-    arc200Approve: (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_approve(address,uint256)bool']
-        | Arc200Args['tuple']['arc200_approve(address,uint256)bool']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Approve(params));
+    arc200Approve: (params: CallParams<Arc200Args['obj']['arc200_approve(address,uint256)bool'] | Arc200Args['tuple']['arc200_approve(address,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Approve(params))
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_allowance(address,address)uint256` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the current allowance of the spender of the tokens of the owner
@@ -1498,15 +1018,11 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call transaction: The remaining allowance
      */
-    arc200Allowance: (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_allowance(address,address)uint256']
-        | Arc200Args['tuple']['arc200_allowance(address,address)uint256']
-      > & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Allowance(params));
+    arc200Allowance: (params: CallParams<Arc200Args['obj']['arc200_allowance(address,address)uint256'] | Arc200Args['tuple']['arc200_allowance(address,address)uint256']> & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      return this.appClient.createTransaction.call(Arc200ParamsFactory.arc200Allowance(params))
     },
-  };
+
+  }
 
   /**
    * Send calls to the current app
@@ -1519,7 +1035,7 @@ export class Arc200Client {
      * @returns The clearState result
      */
     clearState: (params?: Expand<AppClientBareCallParams & SendParams>) => {
-      return this.appClient.send.bare.clearState(params);
+      return this.appClient.send.bare.clearState(params)
     },
 
     /**
@@ -1528,23 +1044,14 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call result
      */
-    bootstrap: async (
-      params: CallParams<
-        | Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool']
-        | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']
-      > &
-        SendParams & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      const result = await this.appClient.send.call(Arc200ParamsFactory.bootstrap(params));
-      return {
-        ...result,
-        return: result.return as unknown as undefined | Arc200Returns['bootstrap(byte[],byte[],uint8,uint256)bool'],
-      };
+    bootstrap: async (params: CallParams<Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool'] | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']> & SendParams & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      const result = await this.appClient.send.call(Arc200ParamsFactory.bootstrap(params))
+      return {...result, return: result.return as unknown as (undefined | Arc200Returns['bootstrap(byte[],byte[],uint8,uint256)bool'])}
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_name()byte[32]` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the name of the token
@@ -1552,17 +1059,14 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call result: The name of the token
      */
-    arc200Name: async (
-      params: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> &
-        SendParams & { onComplete?: OnApplicationComplete.NoOpOC } = { args: [] }
-    ) => {
-      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Name(params));
-      return { ...result, return: result.return as unknown as undefined | Arc200Returns['arc200_name()byte[32]'] };
+    arc200Name: async (params: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> & SendParams & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Name(params))
+      return {...result, return: result.return as unknown as (undefined | Arc200Returns['arc200_name()byte[32]'])}
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_symbol()byte[8]` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the symbol of the token
@@ -1570,17 +1074,14 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call result: The symbol of the token
      */
-    arc200Symbol: async (
-      params: CallParams<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']> &
-        SendParams & { onComplete?: OnApplicationComplete.NoOpOC } = { args: [] }
-    ) => {
-      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Symbol(params));
-      return { ...result, return: result.return as unknown as undefined | Arc200Returns['arc200_symbol()byte[8]'] };
+    arc200Symbol: async (params: CallParams<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']> & SendParams & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Symbol(params))
+      return {...result, return: result.return as unknown as (undefined | Arc200Returns['arc200_symbol()byte[8]'])}
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_decimals()uint8` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the decimals of the token
@@ -1588,17 +1089,14 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call result: The decimals of the token
      */
-    arc200Decimals: async (
-      params: CallParams<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']> &
-        SendParams & { onComplete?: OnApplicationComplete.NoOpOC } = { args: [] }
-    ) => {
-      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Decimals(params));
-      return { ...result, return: result.return as unknown as undefined | Arc200Returns['arc200_decimals()uint8'] };
+    arc200Decimals: async (params: CallParams<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']> & SendParams & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Decimals(params))
+      return {...result, return: result.return as unknown as (undefined | Arc200Returns['arc200_decimals()uint8'])}
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_totalSupply()uint256` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the total supply of the token
@@ -1606,22 +1104,14 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call result: The total supply of the token
      */
-    arc200TotalSupply: async (
-      params: CallParams<
-        Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']
-      > &
-        SendParams & { onComplete?: OnApplicationComplete.NoOpOC } = { args: [] }
-    ) => {
-      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200TotalSupply(params));
-      return {
-        ...result,
-        return: result.return as unknown as undefined | Arc200Returns['arc200_totalSupply()uint256'],
-      };
+    arc200TotalSupply: async (params: CallParams<Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']> & SendParams & {onComplete?: OnApplicationComplete.NoOpOC} = {args: []}) => {
+      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200TotalSupply(params))
+      return {...result, return: result.return as unknown as (undefined | Arc200Returns['arc200_totalSupply()uint256'])}
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_balanceOf(address)uint256` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the current balance of the owner of the token
@@ -1629,17 +1119,9 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call result: The current balance of the holder of the token
      */
-    arc200BalanceOf: async (
-      params: CallParams<
-        Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']
-      > &
-        SendParams & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200BalanceOf(params));
-      return {
-        ...result,
-        return: result.return as unknown as undefined | Arc200Returns['arc200_balanceOf(address)uint256'],
-      };
+    arc200BalanceOf: async (params: CallParams<Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']> & SendParams & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200BalanceOf(params))
+      return {...result, return: result.return as unknown as (undefined | Arc200Returns['arc200_balanceOf(address)uint256'])}
     },
 
     /**
@@ -1650,18 +1132,9 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call result: Success
      */
-    arc200Transfer: async (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_transfer(address,uint256)bool']
-        | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']
-      > &
-        SendParams & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Transfer(params));
-      return {
-        ...result,
-        return: result.return as unknown as undefined | Arc200Returns['arc200_transfer(address,uint256)bool'],
-      };
+    arc200Transfer: async (params: CallParams<Arc200Args['obj']['arc200_transfer(address,uint256)bool'] | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']> & SendParams & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Transfer(params))
+      return {...result, return: result.return as unknown as (undefined | Arc200Returns['arc200_transfer(address,uint256)bool'])}
     },
 
     /**
@@ -1672,20 +1145,9 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call result: Success
      */
-    arc200TransferFrom: async (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool']
-        | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']
-      > &
-        SendParams & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200TransferFrom(params));
-      return {
-        ...result,
-        return: result.return as unknown as
-          | undefined
-          | Arc200Returns['arc200_transferFrom(address,address,uint256)bool'],
-      };
+    arc200TransferFrom: async (params: CallParams<Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool'] | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']> & SendParams & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200TransferFrom(params))
+      return {...result, return: result.return as unknown as (undefined | Arc200Returns['arc200_transferFrom(address,address,uint256)bool'])}
     },
 
     /**
@@ -1696,23 +1158,14 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call result: Success
      */
-    arc200Approve: async (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_approve(address,uint256)bool']
-        | Arc200Args['tuple']['arc200_approve(address,uint256)bool']
-      > &
-        SendParams & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Approve(params));
-      return {
-        ...result,
-        return: result.return as unknown as undefined | Arc200Returns['arc200_approve(address,uint256)bool'],
-      };
+    arc200Approve: async (params: CallParams<Arc200Args['obj']['arc200_approve(address,uint256)bool'] | Arc200Args['tuple']['arc200_approve(address,uint256)bool']> & SendParams & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Approve(params))
+      return {...result, return: result.return as unknown as (undefined | Arc200Returns['arc200_approve(address,uint256)bool'])}
     },
 
     /**
      * Makes a call to the Arc200 smart contract using the `arc200_allowance(address,address)uint256` ABI method.
-     *
+     * 
      * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
      *
      * Returns the current allowance of the spender of the tokens of the owner
@@ -1720,20 +1173,12 @@ export class Arc200Client {
      * @param params The params for the smart contract call
      * @returns The call result: The remaining allowance
      */
-    arc200Allowance: async (
-      params: CallParams<
-        | Arc200Args['obj']['arc200_allowance(address,address)uint256']
-        | Arc200Args['tuple']['arc200_allowance(address,address)uint256']
-      > &
-        SendParams & { onComplete?: OnApplicationComplete.NoOpOC }
-    ) => {
-      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Allowance(params));
-      return {
-        ...result,
-        return: result.return as unknown as undefined | Arc200Returns['arc200_allowance(address,address)uint256'],
-      };
+    arc200Allowance: async (params: CallParams<Arc200Args['obj']['arc200_allowance(address,address)uint256'] | Arc200Args['tuple']['arc200_allowance(address,address)uint256']> & SendParams & {onComplete?: OnApplicationComplete.NoOpOC}) => {
+      const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Allowance(params))
+      return {...result, return: result.return as unknown as (undefined | Arc200Returns['arc200_allowance(address,address)uint256'])}
     },
-  };
+
+  }
 
   /**
    * Clone this app client with different params
@@ -1742,12 +1187,12 @@ export class Arc200Client {
    * @returns A new app client with the altered params
    */
   public clone(params: CloneAppClientParams) {
-    return new Arc200Client(this.appClient.clone(params));
+    return new Arc200Client(this.appClient.clone(params))
   }
 
   /**
    * Makes a readonly (simulated) call to the Arc200 smart contract using the `arc200_name()byte[32]` ABI method.
-   *
+   * 
    * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
    *
    * Returns the name of the token
@@ -1755,18 +1200,14 @@ export class Arc200Client {
    * @param params The params for the smart contract call
    * @returns The call result: The name of the token
    */
-  async arc200Name(
-    params: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> = {
-      args: [],
-    }
-  ) {
-    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Name(params));
-    return result.return as unknown as Arc200Returns['arc200_name()byte[32]'];
+  async arc200Name(params: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> = {args: []}) {
+    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Name(params))
+    return result.return as unknown as Arc200Returns['arc200_name()byte[32]']
   }
 
   /**
    * Makes a readonly (simulated) call to the Arc200 smart contract using the `arc200_symbol()byte[8]` ABI method.
-   *
+   * 
    * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
    *
    * Returns the symbol of the token
@@ -1774,18 +1215,14 @@ export class Arc200Client {
    * @param params The params for the smart contract call
    * @returns The call result: The symbol of the token
    */
-  async arc200Symbol(
-    params: CallParams<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']> = {
-      args: [],
-    }
-  ) {
-    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Symbol(params));
-    return result.return as unknown as Arc200Returns['arc200_symbol()byte[8]'];
+  async arc200Symbol(params: CallParams<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']> = {args: []}) {
+    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Symbol(params))
+    return result.return as unknown as Arc200Returns['arc200_symbol()byte[8]']
   }
 
   /**
    * Makes a readonly (simulated) call to the Arc200 smart contract using the `arc200_decimals()uint8` ABI method.
-   *
+   * 
    * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
    *
    * Returns the decimals of the token
@@ -1793,18 +1230,14 @@ export class Arc200Client {
    * @param params The params for the smart contract call
    * @returns The call result: The decimals of the token
    */
-  async arc200Decimals(
-    params: CallParams<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']> = {
-      args: [],
-    }
-  ) {
-    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Decimals(params));
-    return result.return as unknown as Arc200Returns['arc200_decimals()uint8'];
+  async arc200Decimals(params: CallParams<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']> = {args: []}) {
+    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Decimals(params))
+    return result.return as unknown as Arc200Returns['arc200_decimals()uint8']
   }
 
   /**
    * Makes a readonly (simulated) call to the Arc200 smart contract using the `arc200_totalSupply()uint256` ABI method.
-   *
+   * 
    * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
    *
    * Returns the total supply of the token
@@ -1812,18 +1245,14 @@ export class Arc200Client {
    * @param params The params for the smart contract call
    * @returns The call result: The total supply of the token
    */
-  async arc200TotalSupply(
-    params: CallParams<
-      Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']
-    > = { args: [] }
-  ) {
-    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200TotalSupply(params));
-    return result.return as unknown as Arc200Returns['arc200_totalSupply()uint256'];
+  async arc200TotalSupply(params: CallParams<Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']> = {args: []}) {
+    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200TotalSupply(params))
+    return result.return as unknown as Arc200Returns['arc200_totalSupply()uint256']
   }
 
   /**
    * Makes a readonly (simulated) call to the Arc200 smart contract using the `arc200_balanceOf(address)uint256` ABI method.
-   *
+   * 
    * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
    *
    * Returns the current balance of the owner of the token
@@ -1831,18 +1260,14 @@ export class Arc200Client {
    * @param params The params for the smart contract call
    * @returns The call result: The current balance of the holder of the token
    */
-  async arc200BalanceOf(
-    params: CallParams<
-      Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']
-    >
-  ) {
-    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200BalanceOf(params));
-    return result.return as unknown as Arc200Returns['arc200_balanceOf(address)uint256'];
+  async arc200BalanceOf(params: CallParams<Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']>) {
+    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200BalanceOf(params))
+    return result.return as unknown as Arc200Returns['arc200_balanceOf(address)uint256']
   }
 
   /**
    * Makes a readonly (simulated) call to the Arc200 smart contract using the `arc200_allowance(address,address)uint256` ABI method.
-   *
+   * 
    * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
    *
    * Returns the current allowance of the spender of the tokens of the owner
@@ -1850,14 +1275,9 @@ export class Arc200Client {
    * @param params The params for the smart contract call
    * @returns The call result: The remaining allowance
    */
-  async arc200Allowance(
-    params: CallParams<
-      | Arc200Args['obj']['arc200_allowance(address,address)uint256']
-      | Arc200Args['tuple']['arc200_allowance(address,address)uint256']
-    >
-  ) {
-    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Allowance(params));
-    return result.return as unknown as Arc200Returns['arc200_allowance(address,address)uint256'];
+  async arc200Allowance(params: CallParams<Arc200Args['obj']['arc200_allowance(address,address)uint256'] | Arc200Args['tuple']['arc200_allowance(address,address)uint256']>) {
+    const result = await this.appClient.send.call(Arc200ParamsFactory.arc200Allowance(params))
+    return result.return as unknown as Arc200Returns['arc200_allowance(address,address)uint256']
   }
 
   /**
@@ -1872,38 +1292,30 @@ export class Arc200Client {
        * Get all current keyed values from global state
        */
       getAll: async (): Promise<Partial<Expand<GlobalKeysState>>> => {
-        const result = await this.appClient.state.global.getAll();
+        const result = await this.appClient.state.global.getAll()
         return {
           name: result.name,
           symbol: result.symbol,
           decimals: result.decimals,
           totalSupply: result.totalSupply,
-        };
+        }
       },
       /**
        * Get the current value of the name key in global state
        */
-      name: async (): Promise<Uint8Array | undefined> => {
-        return (await this.appClient.state.global.getValue('name')) as Uint8Array | undefined;
-      },
+      name: async (): Promise<Uint8Array | undefined> => { return (await this.appClient.state.global.getValue("name")) as Uint8Array | undefined },
       /**
        * Get the current value of the symbol key in global state
        */
-      symbol: async (): Promise<Uint8Array | undefined> => {
-        return (await this.appClient.state.global.getValue('symbol')) as Uint8Array | undefined;
-      },
+      symbol: async (): Promise<Uint8Array | undefined> => { return (await this.appClient.state.global.getValue("symbol")) as Uint8Array | undefined },
       /**
        * Get the current value of the decimals key in global state
        */
-      decimals: async (): Promise<number | undefined> => {
-        return (await this.appClient.state.global.getValue('decimals')) as number | undefined;
-      },
+      decimals: async (): Promise<number | undefined> => { return (await this.appClient.state.global.getValue("decimals")) as number | undefined },
       /**
        * Get the current value of the totalSupply key in global state
        */
-      totalSupply: async (): Promise<bigint | undefined> => {
-        return (await this.appClient.state.global.getValue('totalSupply')) as bigint | undefined;
-      },
+      totalSupply: async (): Promise<bigint | undefined> => { return (await this.appClient.state.global.getValue("totalSupply")) as bigint | undefined },
     },
     /**
      * Methods to access box state for the current Arc200 app
@@ -1913,8 +1325,9 @@ export class Arc200Client {
        * Get all current keyed values from box state
        */
       getAll: async (): Promise<Partial<Expand<BoxKeysState>>> => {
-        const result = await this.appClient.state.box.getAll();
-        return {};
+        const result = await this.appClient.state.box.getAll()
+        return {
+        }
       },
       /**
        * Get values from the balances map in box state
@@ -1923,15 +1336,11 @@ export class Arc200Client {
         /**
          * Get all current values of the balances map in box state
          */
-        getMap: async (): Promise<Map<string, bigint>> => {
-          return (await this.appClient.state.box.getMap('balances')) as Map<string, bigint>;
-        },
+        getMap: async (): Promise<Map<string, bigint>> => { return (await this.appClient.state.box.getMap("balances")) as Map<string, bigint> },
         /**
          * Get a current value of the balances map by key from box state
          */
-        value: async (key: string): Promise<bigint | undefined> => {
-          return (await this.appClient.state.box.getMapValue('balances', key)) as bigint | undefined;
-        },
+        value: async (key: string): Promise<bigint | undefined> => { return await this.appClient.state.box.getMapValue("balances", key) as bigint | undefined },
       },
       /**
        * Get values from the approvals map in box state
@@ -1940,207 +1349,133 @@ export class Arc200Client {
         /**
          * Get all current values of the approvals map in box state
          */
-        getMap: async (): Promise<Map<Uint8Array, ApprovalStruct>> => {
-          return (await this.appClient.state.box.getMap('approvals')) as Map<Uint8Array, ApprovalStruct>;
-        },
+        getMap: async (): Promise<Map<Uint8Array, ApprovalStruct>> => { return (await this.appClient.state.box.getMap("approvals")) as Map<Uint8Array, ApprovalStruct> },
         /**
          * Get a current value of the approvals map by key from box state
          */
-        value: async (key: Uint8Array): Promise<ApprovalStruct | undefined> => {
-          return (await this.appClient.state.box.getMapValue('approvals', key)) as ApprovalStruct | undefined;
-        },
+        value: async (key: Uint8Array): Promise<ApprovalStruct | undefined> => { return await this.appClient.state.box.getMapValue("approvals", key) as ApprovalStruct | undefined },
       },
     },
-  };
+  }
 
   public newGroup(): Arc200Composer {
-    const client = this;
-    const composer = this.algorand.newGroup();
-    let promiseChain: Promise<unknown> = Promise.resolve();
-    const resultMappers: Array<undefined | ((x: ABIReturn | undefined) => any)> = [];
+    const client = this
+    const composer = this.algorand.newGroup()
+    let promiseChain:Promise<unknown> = Promise.resolve()
+    const resultMappers: Array<undefined | ((x: ABIReturn | undefined) => any)> = []
     return {
       /**
        * Add a bootstrap(byte[],byte[],uint8,uint256)bool method call against the Arc200 contract
        */
-      bootstrap(
-        params: CallParams<
-          | Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool']
-          | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']
-        > & { onComplete?: OnApplicationComplete.NoOpOC }
-      ) {
-        promiseChain = promiseChain.then(async () =>
-          composer.addAppCallMethodCall(await client.params.bootstrap(params))
-        );
-        resultMappers.push((v) => client.decodeReturnValue('bootstrap(byte[],byte[],uint8,uint256)bool', v));
-        return this;
+      bootstrap(params: CallParams<Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool'] | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) {
+        promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.bootstrap(params)))
+        resultMappers.push((v) => client.decodeReturnValue('bootstrap(byte[],byte[],uint8,uint256)bool', v))
+        return this
       },
       /**
        * Add a arc200_name()byte[32] method call against the Arc200 contract
        */
-      arc200Name(
-        params: CallParams<
-          Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']
-        > & { onComplete?: OnApplicationComplete.NoOpOC }
-      ) {
-        promiseChain = promiseChain.then(async () =>
-          composer.addAppCallMethodCall(await client.params.arc200Name(params))
-        );
-        resultMappers.push((v) => client.decodeReturnValue('arc200_name()byte[32]', v));
-        return this;
+      arc200Name(params: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> & {onComplete?: OnApplicationComplete.NoOpOC}) {
+        promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.arc200Name(params)))
+        resultMappers.push((v) => client.decodeReturnValue('arc200_name()byte[32]', v))
+        return this
       },
       /**
        * Add a arc200_symbol()byte[8] method call against the Arc200 contract
        */
-      arc200Symbol(
-        params: CallParams<
-          Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']
-        > & { onComplete?: OnApplicationComplete.NoOpOC }
-      ) {
-        promiseChain = promiseChain.then(async () =>
-          composer.addAppCallMethodCall(await client.params.arc200Symbol(params))
-        );
-        resultMappers.push((v) => client.decodeReturnValue('arc200_symbol()byte[8]', v));
-        return this;
+      arc200Symbol(params: CallParams<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']> & {onComplete?: OnApplicationComplete.NoOpOC}) {
+        promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.arc200Symbol(params)))
+        resultMappers.push((v) => client.decodeReturnValue('arc200_symbol()byte[8]', v))
+        return this
       },
       /**
        * Add a arc200_decimals()uint8 method call against the Arc200 contract
        */
-      arc200Decimals(
-        params: CallParams<
-          Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']
-        > & { onComplete?: OnApplicationComplete.NoOpOC }
-      ) {
-        promiseChain = promiseChain.then(async () =>
-          composer.addAppCallMethodCall(await client.params.arc200Decimals(params))
-        );
-        resultMappers.push((v) => client.decodeReturnValue('arc200_decimals()uint8', v));
-        return this;
+      arc200Decimals(params: CallParams<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']> & {onComplete?: OnApplicationComplete.NoOpOC}) {
+        promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.arc200Decimals(params)))
+        resultMappers.push((v) => client.decodeReturnValue('arc200_decimals()uint8', v))
+        return this
       },
       /**
        * Add a arc200_totalSupply()uint256 method call against the Arc200 contract
        */
-      arc200TotalSupply(
-        params: CallParams<
-          Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']
-        > & { onComplete?: OnApplicationComplete.NoOpOC }
-      ) {
-        promiseChain = promiseChain.then(async () =>
-          composer.addAppCallMethodCall(await client.params.arc200TotalSupply(params))
-        );
-        resultMappers.push((v) => client.decodeReturnValue('arc200_totalSupply()uint256', v));
-        return this;
+      arc200TotalSupply(params: CallParams<Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']> & {onComplete?: OnApplicationComplete.NoOpOC}) {
+        promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.arc200TotalSupply(params)))
+        resultMappers.push((v) => client.decodeReturnValue('arc200_totalSupply()uint256', v))
+        return this
       },
       /**
        * Add a arc200_balanceOf(address)uint256 method call against the Arc200 contract
        */
-      arc200BalanceOf(
-        params: CallParams<
-          | Arc200Args['obj']['arc200_balanceOf(address)uint256']
-          | Arc200Args['tuple']['arc200_balanceOf(address)uint256']
-        > & { onComplete?: OnApplicationComplete.NoOpOC }
-      ) {
-        promiseChain = promiseChain.then(async () =>
-          composer.addAppCallMethodCall(await client.params.arc200BalanceOf(params))
-        );
-        resultMappers.push((v) => client.decodeReturnValue('arc200_balanceOf(address)uint256', v));
-        return this;
+      arc200BalanceOf(params: CallParams<Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']> & {onComplete?: OnApplicationComplete.NoOpOC}) {
+        promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.arc200BalanceOf(params)))
+        resultMappers.push((v) => client.decodeReturnValue('arc200_balanceOf(address)uint256', v))
+        return this
       },
       /**
        * Add a arc200_transfer(address,uint256)bool method call against the Arc200 contract
        */
-      arc200Transfer(
-        params: CallParams<
-          | Arc200Args['obj']['arc200_transfer(address,uint256)bool']
-          | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']
-        > & { onComplete?: OnApplicationComplete.NoOpOC }
-      ) {
-        promiseChain = promiseChain.then(async () =>
-          composer.addAppCallMethodCall(await client.params.arc200Transfer(params))
-        );
-        resultMappers.push((v) => client.decodeReturnValue('arc200_transfer(address,uint256)bool', v));
-        return this;
+      arc200Transfer(params: CallParams<Arc200Args['obj']['arc200_transfer(address,uint256)bool'] | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) {
+        promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.arc200Transfer(params)))
+        resultMappers.push((v) => client.decodeReturnValue('arc200_transfer(address,uint256)bool', v))
+        return this
       },
       /**
        * Add a arc200_transferFrom(address,address,uint256)bool method call against the Arc200 contract
        */
-      arc200TransferFrom(
-        params: CallParams<
-          | Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool']
-          | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']
-        > & { onComplete?: OnApplicationComplete.NoOpOC }
-      ) {
-        promiseChain = promiseChain.then(async () =>
-          composer.addAppCallMethodCall(await client.params.arc200TransferFrom(params))
-        );
-        resultMappers.push((v) => client.decodeReturnValue('arc200_transferFrom(address,address,uint256)bool', v));
-        return this;
+      arc200TransferFrom(params: CallParams<Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool'] | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) {
+        promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.arc200TransferFrom(params)))
+        resultMappers.push((v) => client.decodeReturnValue('arc200_transferFrom(address,address,uint256)bool', v))
+        return this
       },
       /**
        * Add a arc200_approve(address,uint256)bool method call against the Arc200 contract
        */
-      arc200Approve(
-        params: CallParams<
-          | Arc200Args['obj']['arc200_approve(address,uint256)bool']
-          | Arc200Args['tuple']['arc200_approve(address,uint256)bool']
-        > & { onComplete?: OnApplicationComplete.NoOpOC }
-      ) {
-        promiseChain = promiseChain.then(async () =>
-          composer.addAppCallMethodCall(await client.params.arc200Approve(params))
-        );
-        resultMappers.push((v) => client.decodeReturnValue('arc200_approve(address,uint256)bool', v));
-        return this;
+      arc200Approve(params: CallParams<Arc200Args['obj']['arc200_approve(address,uint256)bool'] | Arc200Args['tuple']['arc200_approve(address,uint256)bool']> & {onComplete?: OnApplicationComplete.NoOpOC}) {
+        promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.arc200Approve(params)))
+        resultMappers.push((v) => client.decodeReturnValue('arc200_approve(address,uint256)bool', v))
+        return this
       },
       /**
        * Add a arc200_allowance(address,address)uint256 method call against the Arc200 contract
        */
-      arc200Allowance(
-        params: CallParams<
-          | Arc200Args['obj']['arc200_allowance(address,address)uint256']
-          | Arc200Args['tuple']['arc200_allowance(address,address)uint256']
-        > & { onComplete?: OnApplicationComplete.NoOpOC }
-      ) {
-        promiseChain = promiseChain.then(async () =>
-          composer.addAppCallMethodCall(await client.params.arc200Allowance(params))
-        );
-        resultMappers.push((v) => client.decodeReturnValue('arc200_allowance(address,address)uint256', v));
-        return this;
+      arc200Allowance(params: CallParams<Arc200Args['obj']['arc200_allowance(address,address)uint256'] | Arc200Args['tuple']['arc200_allowance(address,address)uint256']> & {onComplete?: OnApplicationComplete.NoOpOC}) {
+        promiseChain = promiseChain.then(async () => composer.addAppCallMethodCall(await client.params.arc200Allowance(params)))
+        resultMappers.push((v) => client.decodeReturnValue('arc200_allowance(address,address)uint256', v))
+        return this
       },
       /**
        * Add a clear state call to the Arc200 contract
        */
       clearState(params: AppClientBareCallParams) {
-        promiseChain = promiseChain.then(() => composer.addAppCall(client.params.clearState(params)));
-        return this;
+        promiseChain = promiseChain.then(() => composer.addAppCall(client.params.clearState(params)))
+        return this
       },
       addTransaction(txn: Transaction, signer?: TransactionSigner) {
-        promiseChain = promiseChain.then(() => composer.addTransaction(txn, signer));
-        return this;
+        promiseChain = promiseChain.then(() => composer.addTransaction(txn, signer))
+        return this
       },
       async composer() {
-        await promiseChain;
-        return composer;
+        await promiseChain
+        return composer
       },
       async simulate(options?: SimulateOptions) {
-        await promiseChain;
-        const result = await (!options ? composer.simulate() : composer.simulate(options));
+        await promiseChain
+        const result = await (!options ? composer.simulate() : composer.simulate(options))
         return {
           ...result,
-          returns: result.returns?.map((val, i) =>
-            resultMappers[i] !== undefined ? resultMappers[i]!(val) : val.returnValue
-          ),
-        };
+          returns: result.returns?.map((val, i) => resultMappers[i] !== undefined ? resultMappers[i]!(val) : val.returnValue)
+        }
       },
       async send(params?: SendParams) {
-        await promiseChain;
-        const result = await composer.send(params);
+        await promiseChain
+        const result = await composer.send(params)
         return {
           ...result,
-          returns: result.returns?.map((val, i) =>
-            resultMappers[i] !== undefined ? resultMappers[i]!(val) : val.returnValue
-          ),
-        };
-      },
-    } as unknown as Arc200Composer;
+          returns: result.returns?.map((val, i) => resultMappers[i] !== undefined ? resultMappers[i]!(val) : val.returnValue)
+        }
+      }
+    } as unknown as Arc200Composer
   }
 }
 export type Arc200Composer<TReturns extends [...any[]] = []> = {
@@ -2151,12 +1486,7 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  bootstrap(
-    params?: CallParams<
-      | Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool']
-      | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']
-    >
-  ): Arc200Composer<[...TReturns, Arc200Returns['bootstrap(byte[],byte[],uint8,uint256)bool'] | undefined]>;
+  bootstrap(params?: CallParams<Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool'] | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']>): Arc200Composer<[...TReturns, Arc200Returns['bootstrap(byte[],byte[],uint8,uint256)bool'] | undefined]>
 
   /**
    * Calls the arc200_name()byte[32] ABI method.
@@ -2167,9 +1497,7 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  arc200Name(
-    params?: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']>
-  ): Arc200Composer<[...TReturns, Arc200Returns['arc200_name()byte[32]'] | undefined]>;
+  arc200Name(params?: CallParams<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_name()byte[32]'] | undefined]>
 
   /**
    * Calls the arc200_symbol()byte[8] ABI method.
@@ -2180,9 +1508,7 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  arc200Symbol(
-    params?: CallParams<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']>
-  ): Arc200Composer<[...TReturns, Arc200Returns['arc200_symbol()byte[8]'] | undefined]>;
+  arc200Symbol(params?: CallParams<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_symbol()byte[8]'] | undefined]>
 
   /**
    * Calls the arc200_decimals()uint8 ABI method.
@@ -2193,9 +1519,7 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  arc200Decimals(
-    params?: CallParams<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']>
-  ): Arc200Composer<[...TReturns, Arc200Returns['arc200_decimals()uint8'] | undefined]>;
+  arc200Decimals(params?: CallParams<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_decimals()uint8'] | undefined]>
 
   /**
    * Calls the arc200_totalSupply()uint256 ABI method.
@@ -2206,11 +1530,7 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  arc200TotalSupply(
-    params?: CallParams<
-      Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']
-    >
-  ): Arc200Composer<[...TReturns, Arc200Returns['arc200_totalSupply()uint256'] | undefined]>;
+  arc200TotalSupply(params?: CallParams<Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_totalSupply()uint256'] | undefined]>
 
   /**
    * Calls the arc200_balanceOf(address)uint256 ABI method.
@@ -2221,11 +1541,7 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  arc200BalanceOf(
-    params?: CallParams<
-      Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']
-    >
-  ): Arc200Composer<[...TReturns, Arc200Returns['arc200_balanceOf(address)uint256'] | undefined]>;
+  arc200BalanceOf(params?: CallParams<Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_balanceOf(address)uint256'] | undefined]>
 
   /**
    * Calls the arc200_transfer(address,uint256)bool ABI method.
@@ -2236,12 +1552,7 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  arc200Transfer(
-    params?: CallParams<
-      | Arc200Args['obj']['arc200_transfer(address,uint256)bool']
-      | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']
-    >
-  ): Arc200Composer<[...TReturns, Arc200Returns['arc200_transfer(address,uint256)bool'] | undefined]>;
+  arc200Transfer(params?: CallParams<Arc200Args['obj']['arc200_transfer(address,uint256)bool'] | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_transfer(address,uint256)bool'] | undefined]>
 
   /**
    * Calls the arc200_transferFrom(address,address,uint256)bool ABI method.
@@ -2252,12 +1563,7 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  arc200TransferFrom(
-    params?: CallParams<
-      | Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool']
-      | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']
-    >
-  ): Arc200Composer<[...TReturns, Arc200Returns['arc200_transferFrom(address,address,uint256)bool'] | undefined]>;
+  arc200TransferFrom(params?: CallParams<Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool'] | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_transferFrom(address,address,uint256)bool'] | undefined]>
 
   /**
    * Calls the arc200_approve(address,uint256)bool ABI method.
@@ -2268,12 +1574,7 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  arc200Approve(
-    params?: CallParams<
-      | Arc200Args['obj']['arc200_approve(address,uint256)bool']
-      | Arc200Args['tuple']['arc200_approve(address,uint256)bool']
-    >
-  ): Arc200Composer<[...TReturns, Arc200Returns['arc200_approve(address,uint256)bool'] | undefined]>;
+  arc200Approve(params?: CallParams<Arc200Args['obj']['arc200_approve(address,uint256)bool'] | Arc200Args['tuple']['arc200_approve(address,uint256)bool']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_approve(address,uint256)bool'] | undefined]>
 
   /**
    * Calls the arc200_allowance(address,address)uint256 ABI method.
@@ -2284,12 +1585,7 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param params Any additional parameters for the call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  arc200Allowance(
-    params?: CallParams<
-      | Arc200Args['obj']['arc200_allowance(address,address)uint256']
-      | Arc200Args['tuple']['arc200_allowance(address,address)uint256']
-    >
-  ): Arc200Composer<[...TReturns, Arc200Returns['arc200_allowance(address,address)uint256'] | undefined]>;
+  arc200Allowance(params?: CallParams<Arc200Args['obj']['arc200_allowance(address,address)uint256'] | Arc200Args['tuple']['arc200_allowance(address,address)uint256']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_allowance(address,address)uint256'] | undefined]>
 
   /**
    * Makes a clear_state call to an existing instance of the Arc200 smart contract.
@@ -2297,7 +1593,7 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param args The arguments for the bare call
    * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
    */
-  clearState(params?: AppClientBareCallParams): Arc200Composer<[...TReturns, undefined]>;
+  clearState(params?: AppClientBareCallParams): Arc200Composer<[...TReturns, undefined]>
 
   /**
    * Adds a transaction to the composer
@@ -2305,28 +1601,23 @@ export type Arc200Composer<TReturns extends [...any[]] = []> = {
    * @param txn A transaction to add to the transaction group
    * @param signer The optional signer to use when signing this transaction.
    */
-  addTransaction(txn: Transaction, signer?: TransactionSigner): Arc200Composer<TReturns>;
+  addTransaction(txn: Transaction, signer?: TransactionSigner): Arc200Composer<TReturns>
   /**
    * Returns the underlying AtomicTransactionComposer instance
    */
-  composer(): Promise<TransactionComposer>;
+  composer(): Promise<TransactionComposer>
   /**
    * Simulates the transaction group and returns the result
    */
-  simulate(): Promise<Arc200ComposerResults<TReturns> & { simulateResponse: SimulateResponse }>;
-  simulate(
-    options: SkipSignaturesSimulateOptions
-  ): Promise<Arc200ComposerResults<TReturns> & { simulateResponse: SimulateResponse }>;
-  simulate(
-    options: RawSimulateOptions
-  ): Promise<Arc200ComposerResults<TReturns> & { simulateResponse: SimulateResponse }>;
+  simulate(): Promise<Arc200ComposerResults<TReturns> & { simulateResponse: modelsv2.SimulateResponse }>
+  simulate(options: SkipSignaturesSimulateOptions): Promise<Arc200ComposerResults<TReturns> & { simulateResponse: modelsv2.SimulateResponse }>
+  simulate(options: RawSimulateOptions): Promise<Arc200ComposerResults<TReturns> & { simulateResponse: modelsv2.SimulateResponse }>
   /**
    * Sends the transaction group to the network and returns the results
    */
-  send(params?: SendParams): Promise<Arc200ComposerResults<TReturns>>;
-};
-export type Arc200ComposerResults<TReturns extends [...any[]]> = Expand<
-  SendAtomicTransactionComposerResults & {
-    returns: TReturns;
-  }
->;
+  send(params?: SendParams): Promise<Arc200ComposerResults<TReturns>>
+}
+export type Arc200ComposerResults<TReturns extends [...any[]]> = Expand<SendAtomicTransactionComposerResults & {
+  returns: TReturns
+}>
+

@@ -14,7 +14,6 @@ import { Address, OnApplicationComplete, Transaction, TransactionSigner, modelsv
 import { AlgorandClient } from '@algorandfoundation/algokit-utils/types/algorand-client';
 import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName, ResolveAppClientByNetwork, AppClientBareCallParams, AppClientMethodCallParams, CloneAppClientParams, AppClientCompilationParams } from '@algorandfoundation/algokit-utils/types/app-client';
 import { AppFactory, AppFactoryParams, AppFactoryAppClientParams, AppFactoryResolveAppClientByCreatorAndNameParams, AppFactoryDeployParams, CreateSchema } from '@algorandfoundation/algokit-utils/types/app-factory';
-import { SimulateResponse } from 'algosdk/dist/types/client/v2/algod/models/types';
 import { AlgorandClient as AlgorandClient$1 } from '@algorandfoundation/algokit-utils';
 
 /**
@@ -102,12 +101,7 @@ type Arc200Args = {
      * The tuple representation of the arguments for each method
      */
     tuple: {
-        'bootstrap(byte[],byte[],uint8,uint256)bool': [
-            name: Uint8Array,
-            symbol: Uint8Array,
-            decimals: bigint | number,
-            totalSupply: bigint | number
-        ];
+        'bootstrap(byte[],byte[],uint8,uint256)bool': [name: Uint8Array, symbol: Uint8Array, decimals: bigint | number, totalSupply: bigint | number];
         'arc200_name()byte[32]': [];
         'arc200_symbol()byte[8]': [];
         'arc200_decimals()uint8': [];
@@ -454,6 +448,7 @@ declare class Arc200Factory {
                 note?: string | Uint8Array | undefined;
                 args?: Uint8Array[] | undefined;
                 signer?: TransactionSigner | _algorandfoundation_algokit_utils_types_account.TransactionSignerAccount | undefined;
+                rejectVersion?: number | undefined;
                 lease?: string | Uint8Array | undefined;
                 rekeyTo?: string | Address | undefined;
                 staticFee?: _algorandfoundation_algokit_utils_types_amount.AlgoAmount | undefined;
@@ -465,6 +460,7 @@ declare class Arc200Factory {
                 appReferences?: bigint[] | undefined;
                 assetReferences?: bigint[] | undefined;
                 boxReferences?: (_algorandfoundation_algokit_utils_types_app_manager.BoxIdentifier | _algorandfoundation_algokit_utils_types_app_manager.BoxReference)[] | undefined;
+                accessReferences?: _algorandfoundation_algokit_utils_types_app_manager.ResourceReference[] | undefined;
                 sender?: string | Address | undefined;
                 updatable?: boolean | undefined;
                 deletable?: boolean | undefined;
@@ -914,7 +910,7 @@ declare class Arc200Client {
         bootstrap: (params: CallParams<Arc200Args["obj"]["bootstrap(byte[],byte[],uint8,uint256)bool"] | Arc200Args["tuple"]["bootstrap(byte[],byte[],uint8,uint256)bool"]> & SendParams & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
-            return: undefined | Arc200Returns["bootstrap(byte[],byte[],uint8,uint256)bool"];
+            return: (undefined | Arc200Returns["bootstrap(byte[],byte[],uint8,uint256)bool"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -936,7 +932,7 @@ declare class Arc200Client {
         arc200Name: (params?: CallParams<Arc200Args["obj"]["arc200_name()byte[32]"] | Arc200Args["tuple"]["arc200_name()byte[32]"]> & SendParams & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
-            return: undefined | Arc200Returns["arc200_name()byte[32]"];
+            return: (undefined | Arc200Returns["arc200_name()byte[32]"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -958,7 +954,7 @@ declare class Arc200Client {
         arc200Symbol: (params?: CallParams<Arc200Args["obj"]["arc200_symbol()byte[8]"] | Arc200Args["tuple"]["arc200_symbol()byte[8]"]> & SendParams & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
-            return: undefined | Arc200Returns["arc200_symbol()byte[8]"];
+            return: (undefined | Arc200Returns["arc200_symbol()byte[8]"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -980,7 +976,7 @@ declare class Arc200Client {
         arc200Decimals: (params?: CallParams<Arc200Args["obj"]["arc200_decimals()uint8"] | Arc200Args["tuple"]["arc200_decimals()uint8"]> & SendParams & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
-            return: undefined | Arc200Returns["arc200_decimals()uint8"];
+            return: (undefined | Arc200Returns["arc200_decimals()uint8"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -1002,7 +998,7 @@ declare class Arc200Client {
         arc200TotalSupply: (params?: CallParams<Arc200Args["obj"]["arc200_totalSupply()uint256"] | Arc200Args["tuple"]["arc200_totalSupply()uint256"]> & SendParams & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
-            return: undefined | Arc200Returns["arc200_totalSupply()uint256"];
+            return: (undefined | Arc200Returns["arc200_totalSupply()uint256"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -1024,7 +1020,7 @@ declare class Arc200Client {
         arc200BalanceOf: (params: CallParams<Arc200Args["obj"]["arc200_balanceOf(address)uint256"] | Arc200Args["tuple"]["arc200_balanceOf(address)uint256"]> & SendParams & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
-            return: undefined | Arc200Returns["arc200_balanceOf(address)uint256"];
+            return: (undefined | Arc200Returns["arc200_balanceOf(address)uint256"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -1044,7 +1040,7 @@ declare class Arc200Client {
         arc200Transfer: (params: CallParams<Arc200Args["obj"]["arc200_transfer(address,uint256)bool"] | Arc200Args["tuple"]["arc200_transfer(address,uint256)bool"]> & SendParams & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
-            return: undefined | Arc200Returns["arc200_transfer(address,uint256)bool"];
+            return: (undefined | Arc200Returns["arc200_transfer(address,uint256)bool"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -1064,7 +1060,7 @@ declare class Arc200Client {
         arc200TransferFrom: (params: CallParams<Arc200Args["obj"]["arc200_transferFrom(address,address,uint256)bool"] | Arc200Args["tuple"]["arc200_transferFrom(address,address,uint256)bool"]> & SendParams & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
-            return: undefined | Arc200Returns["arc200_transferFrom(address,address,uint256)bool"];
+            return: (undefined | Arc200Returns["arc200_transferFrom(address,address,uint256)bool"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -1084,7 +1080,7 @@ declare class Arc200Client {
         arc200Approve: (params: CallParams<Arc200Args["obj"]["arc200_approve(address,uint256)bool"] | Arc200Args["tuple"]["arc200_approve(address,uint256)bool"]> & SendParams & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
-            return: undefined | Arc200Returns["arc200_approve(address,uint256)bool"];
+            return: (undefined | Arc200Returns["arc200_approve(address,uint256)bool"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -1106,7 +1102,7 @@ declare class Arc200Client {
         arc200Allowance: (params: CallParams<Arc200Args["obj"]["arc200_allowance(address,address)uint256"] | Arc200Args["tuple"]["arc200_allowance(address,address)uint256"]> & SendParams & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
-            return: undefined | Arc200Returns["arc200_allowance(address,address)uint256"];
+            return: (undefined | Arc200Returns["arc200_allowance(address,address)uint256"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -1377,13 +1373,13 @@ type Arc200Composer<TReturns extends [...any[]] = []> = {
      * Simulates the transaction group and returns the result
      */
     simulate(): Promise<Arc200ComposerResults<TReturns> & {
-        simulateResponse: SimulateResponse;
+        simulateResponse: modelsv2.SimulateResponse;
     }>;
     simulate(options: SkipSignaturesSimulateOptions): Promise<Arc200ComposerResults<TReturns> & {
-        simulateResponse: SimulateResponse;
+        simulateResponse: modelsv2.SimulateResponse;
     }>;
     simulate(options: RawSimulateOptions): Promise<Arc200ComposerResults<TReturns> & {
-        simulateResponse: SimulateResponse;
+        simulateResponse: modelsv2.SimulateResponse;
     }>;
     /**
      * Sends the transaction group to the network and returns the results
