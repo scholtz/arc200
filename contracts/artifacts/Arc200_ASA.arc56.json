@@ -1,0 +1,829 @@
+{
+    "name": "Arc200_ASA",
+    "structs": {
+        "ApprovalStruct": [
+            {
+                "name": "approvalAmount",
+                "type": "uint256"
+            },
+            {
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "name": "spender",
+                "type": "address"
+            }
+        ],
+        "arc200_exchangeInfo": [
+            {
+                "name": "exchange_asset",
+                "type": "uint64"
+            },
+            {
+                "name": "sink",
+                "type": "address"
+            }
+        ],
+        "asaProps": [
+            {
+                "name": "metadataHash",
+                "type": "byte[32]"
+            },
+            {
+                "name": "url",
+                "type": "byte[]"
+            }
+        ]
+    },
+    "methods": [
+        {
+            "name": "bootstrap",
+            "args": [
+                {
+                    "type": "byte[]",
+                    "name": "name"
+                },
+                {
+                    "type": "byte[]",
+                    "name": "symbol"
+                },
+                {
+                    "type": "uint8",
+                    "name": "decimals"
+                },
+                {
+                    "type": "uint256",
+                    "name": "totalSupply"
+                },
+                {
+                    "type": "(byte[32],byte[])",
+                    "struct": "asaProps",
+                    "name": "asset"
+                }
+            ],
+            "returns": {
+                "type": "bool"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": false,
+            "events": [
+                {
+                    "name": "arc200_Transfer",
+                    "args": [
+                        {
+                            "type": "address",
+                            "name": "from"
+                        },
+                        {
+                            "type": "address",
+                            "name": "to"
+                        },
+                        {
+                            "type": "uint256",
+                            "name": "value"
+                        }
+                    ]
+                }
+            ],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_name",
+            "args": [],
+            "returns": {
+                "type": "byte[32]",
+                "desc": "The name of the token"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": true,
+            "desc": "Returns the name of the token",
+            "events": [],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_symbol",
+            "args": [],
+            "returns": {
+                "type": "byte[8]",
+                "desc": "The symbol of the token"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": true,
+            "desc": "Returns the symbol of the token",
+            "events": [],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_decimals",
+            "args": [],
+            "returns": {
+                "type": "uint8",
+                "desc": "The decimals of the token"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": true,
+            "desc": "Returns the decimals of the token",
+            "events": [],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_totalSupply",
+            "args": [],
+            "returns": {
+                "type": "uint256",
+                "desc": "The total supply of the token"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": true,
+            "desc": "Returns the total supply of the token",
+            "events": [],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_balanceOf",
+            "args": [
+                {
+                    "type": "address",
+                    "name": "owner",
+                    "desc": "The address of the owner of the token"
+                }
+            ],
+            "returns": {
+                "type": "uint256",
+                "desc": "The current balance of the holder of the token"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": true,
+            "desc": "Returns the current balance of the owner of the token",
+            "events": [],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_transfer",
+            "args": [
+                {
+                    "type": "address",
+                    "name": "to",
+                    "desc": "The destination of the transfer"
+                },
+                {
+                    "type": "uint256",
+                    "name": "value",
+                    "desc": "Amount of tokens to transfer"
+                }
+            ],
+            "returns": {
+                "type": "bool",
+                "desc": "Success"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": false,
+            "desc": "Transfers tokens",
+            "events": [
+                {
+                    "name": "arc200_Transfer",
+                    "args": [
+                        {
+                            "type": "address",
+                            "name": "from"
+                        },
+                        {
+                            "type": "address",
+                            "name": "to"
+                        },
+                        {
+                            "type": "uint256",
+                            "name": "value"
+                        }
+                    ]
+                }
+            ],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_transferFrom",
+            "args": [
+                {
+                    "type": "address",
+                    "name": "from",
+                    "desc": "The source of the transfer"
+                },
+                {
+                    "type": "address",
+                    "name": "to",
+                    "desc": "The destination of the transfer"
+                },
+                {
+                    "type": "uint256",
+                    "name": "value",
+                    "desc": "Amount of tokens to transfer"
+                }
+            ],
+            "returns": {
+                "type": "bool",
+                "desc": "Success"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": false,
+            "desc": "Transfers tokens from source to destination as approved spender",
+            "events": [
+                {
+                    "name": "arc200_Approval",
+                    "args": [
+                        {
+                            "type": "address",
+                            "name": "owner"
+                        },
+                        {
+                            "type": "address",
+                            "name": "spender"
+                        },
+                        {
+                            "type": "uint256",
+                            "name": "value"
+                        }
+                    ]
+                },
+                {
+                    "name": "arc200_Transfer",
+                    "args": [
+                        {
+                            "type": "address",
+                            "name": "from"
+                        },
+                        {
+                            "type": "address",
+                            "name": "to"
+                        },
+                        {
+                            "type": "uint256",
+                            "name": "value"
+                        }
+                    ]
+                }
+            ],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_approve",
+            "args": [
+                {
+                    "type": "address",
+                    "name": "spender",
+                    "desc": "Who is allowed to take tokens on owner's behalf"
+                },
+                {
+                    "type": "uint256",
+                    "name": "value",
+                    "desc": "Amount of tokens to be taken by spender"
+                }
+            ],
+            "returns": {
+                "type": "bool",
+                "desc": "Success"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": false,
+            "desc": "Approve spender for a token",
+            "events": [
+                {
+                    "name": "arc200_Approval",
+                    "args": [
+                        {
+                            "type": "address",
+                            "name": "owner"
+                        },
+                        {
+                            "type": "address",
+                            "name": "spender"
+                        },
+                        {
+                            "type": "uint256",
+                            "name": "value"
+                        }
+                    ]
+                }
+            ],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_exchange",
+            "args": [],
+            "returns": {
+                "type": "(uint64,address)",
+                "struct": "arc200_exchangeInfo"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": true,
+            "desc": "arc200_exchange() \u2192 (uint64 exchange_asset, address sink)\nReturns configuration parameters used by the exchange mechanism:\nexchange_asset: The ASA ID that the ARC200 token can be exchanged with.\n\nsink: The address that holds ARC200 tokens for redemption operations.\n\nThis method MUST NOT mutate state.\n\nhttps://docs.google.com/document/d/1Uy9kbWF6yfM7W_VbBp1W5c2VqVdcoCj_hyoXUf1FIV0/edit?tab=t.0#heading=h.socgebj776o0",
+            "events": [],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_redeem",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "amount"
+                }
+            ],
+            "returns": {
+                "type": "void"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": false,
+            "desc": "Exchanges ASA tokens for ARC200 tokens.\nRequirements:\nThe user MUST include a valid ASA transfer to the contract in the same transaction group.\n\nThe ASA ID MUST match the configured exchange_asset.\n\nThe amount transferred MUST be equal to or greater than the amount requested.\n\nThe contract MUST transfer ARC200 tokens to the user from the sink address.\n\nNo ARC200 tokens may be minted or burned during the exchange.\n\nhttps://docs.google.com/document/d/1Uy9kbWF6yfM7W_VbBp1W5c2VqVdcoCj_hyoXUf1FIV0/edit?tab=t.0#heading=h.socgebj776o0",
+            "events": [
+                {
+                    "name": "arc200_Transfer",
+                    "args": [
+                        {
+                            "type": "address",
+                            "name": "from"
+                        },
+                        {
+                            "type": "address",
+                            "name": "to"
+                        },
+                        {
+                            "type": "uint256",
+                            "name": "value"
+                        }
+                    ]
+                }
+            ],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_swapBack",
+            "args": [
+                {
+                    "type": "uint64",
+                    "name": "amount",
+                    "desc": ""
+                }
+            ],
+            "returns": {
+                "type": "void"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": false,
+            "desc": "arc200_swapBack(uint64 amount) \u2192 void\n\nExchanges ARC200 tokens back into ASA tokens.\nRequirements:\nThe user MUST transfer ARC200 tokens to the configured sink address.\n\nUpon receiving the ARC200 tokens, the contract MUST transfer the equivalent amount of ASA tokens to the user.\n\nThe ASA MUST be transferred from the application's own account.\n\nNo ARC200 tokens may be minted or burned during the exchange.\n\nhttps://docs.google.com/document/d/1Uy9kbWF6yfM7W_VbBp1W5c2VqVdcoCj_hyoXUf1FIV0/edit?tab=t.0#heading=h.socgebj776o0",
+            "events": [
+                {
+                    "name": "arc200_Transfer",
+                    "args": [
+                        {
+                            "type": "address",
+                            "name": "from"
+                        },
+                        {
+                            "type": "address",
+                            "name": "to"
+                        },
+                        {
+                            "type": "uint256",
+                            "name": "value"
+                        }
+                    ]
+                }
+            ],
+            "recommendations": {}
+        },
+        {
+            "name": "arc200_allowance",
+            "args": [
+                {
+                    "type": "address",
+                    "name": "owner",
+                    "desc": "Owner's account"
+                },
+                {
+                    "type": "address",
+                    "name": "spender",
+                    "desc": "Who is allowed to take tokens on owner's behalf"
+                }
+            ],
+            "returns": {
+                "type": "uint256",
+                "desc": "The remaining allowance"
+            },
+            "actions": {
+                "create": [],
+                "call": [
+                    "NoOp"
+                ]
+            },
+            "readonly": true,
+            "desc": "Returns the current allowance of the spender of the tokens of the owner",
+            "events": [],
+            "recommendations": {}
+        }
+    ],
+    "arcs": [
+        22,
+        28
+    ],
+    "desc": "Smart Contract Token Base Interface",
+    "networks": {},
+    "state": {
+        "schema": {
+            "global": {
+                "ints": 0,
+                "bytes": 5
+            },
+            "local": {
+                "ints": 0,
+                "bytes": 0
+            }
+        },
+        "keys": {
+            "global": {
+                "name": {
+                    "keyType": "AVMString",
+                    "valueType": "byte[]",
+                    "key": "bg==",
+                    "desc": "Name of the asset. Max 32 bytes"
+                },
+                "symbol": {
+                    "keyType": "AVMString",
+                    "valueType": "byte[]",
+                    "key": "cw==",
+                    "desc": "Symbol of the asset. Max 8 bytes"
+                },
+                "decimals": {
+                    "keyType": "AVMString",
+                    "valueType": "uint8",
+                    "key": "ZA==",
+                    "desc": "Decimals of the asset. Recommended is 6 decimal places."
+                },
+                "totalSupply": {
+                    "keyType": "AVMString",
+                    "valueType": "uint256",
+                    "key": "dA==",
+                    "desc": "Minted supply"
+                },
+                "assetId": {
+                    "keyType": "AVMString",
+                    "valueType": "uint64",
+                    "key": "YXNh",
+                    "desc": "Asa exchangable with the ARC200 token"
+                }
+            },
+            "local": {},
+            "box": {}
+        },
+        "maps": {
+            "global": {},
+            "local": {},
+            "box": {
+                "balances": {
+                    "keyType": "address",
+                    "valueType": "uint256",
+                    "prefix": "Yg=="
+                },
+                "approvals": {
+                    "keyType": "byte[32]",
+                    "valueType": "ApprovalStruct",
+                    "prefix": "YQ=="
+                }
+            }
+        }
+    },
+    "bareActions": {
+        "create": [
+            "NoOp"
+        ],
+        "call": []
+    },
+    "sourceInfo": {
+        "approval": {
+            "sourceInfo": [
+                {
+                    "pc": [
+                        684
+                    ],
+                    "errorMessage": "ASA ID must match configured exchange_asset"
+                },
+                {
+                    "pc": [
+                        692
+                    ],
+                    "errorMessage": "ASA must be sent to the sink address"
+                },
+                {
+                    "pc": [
+                        699
+                    ],
+                    "errorMessage": "ASA sender must match ARC200 redeemer"
+                },
+                {
+                    "pc": [
+                        815,
+                        931
+                    ],
+                    "errorMessage": "Box must have value"
+                },
+                {
+                    "pc": [
+                        836
+                    ],
+                    "errorMessage": "Insufficient balance at the sender account"
+                },
+                {
+                    "pc": [
+                        352
+                    ],
+                    "errorMessage": "Length must be 32"
+                },
+                {
+                    "pc": [
+                        270
+                    ],
+                    "errorMessage": "Name of the asset must be longer or equal to 1 character"
+                },
+                {
+                    "pc": [
+                        273
+                    ],
+                    "errorMessage": "Name of the asset must be shorter or equal to 32 characters"
+                },
+                {
+                    "pc": [
+                        68
+                    ],
+                    "errorMessage": "OnCompletion must be NoOp"
+                },
+                {
+                    "pc": [
+                        178
+                    ],
+                    "errorMessage": "OnCompletion must be NoOp && can only call when creating"
+                },
+                {
+                    "pc": [
+                        261
+                    ],
+                    "errorMessage": "Only deployer of this smart contract can call bootstrap method"
+                },
+                {
+                    "pc": [
+                        652
+                    ],
+                    "errorMessage": "Previous txn must be ASA transfer"
+                },
+                {
+                    "pc": [
+                        282
+                    ],
+                    "errorMessage": "Symbol of the asset must be longer or equal to 1 character"
+                },
+                {
+                    "pc": [
+                        285
+                    ],
+                    "errorMessage": "Symbol of the asset must be shorter or equal to 8 characters"
+                },
+                {
+                    "pc": [
+                        673
+                    ],
+                    "errorMessage": "The amount transferred MUST be equal to or greater than the amount requested"
+                },
+                {
+                    "pc": [
+                        292
+                    ],
+                    "errorMessage": "This method can be called only once"
+                },
+                {
+                    "pc": [
+                        424,
+                        444,
+                        464,
+                        474,
+                        625,
+                        681,
+                        751
+                    ],
+                    "errorMessage": "check GlobalState exists"
+                },
+                {
+                    "pc": [
+                        564
+                    ],
+                    "errorMessage": "insufficient approval"
+                },
+                {
+                    "pc": [
+                        186,
+                        200,
+                        248
+                    ],
+                    "errorMessage": "invalid array length header"
+                },
+                {
+                    "pc": [
+                        194,
+                        208
+                    ],
+                    "errorMessage": "invalid number of bytes for arc4.dynamic_array<arc4.uint8>"
+                },
+                {
+                    "pc": [
+                        488,
+                        505,
+                        534,
+                        542,
+                        600,
+                        776,
+                        784
+                    ],
+                    "errorMessage": "invalid number of bytes for arc4.static_array<arc4.uint8, 32>"
+                },
+                {
+                    "pc": [
+                        225,
+                        513,
+                        550,
+                        608
+                    ],
+                    "errorMessage": "invalid number of bytes for arc4.uint256"
+                },
+                {
+                    "pc": [
+                        642,
+                        724
+                    ],
+                    "errorMessage": "invalid number of bytes for arc4.uint64"
+                },
+                {
+                    "pc": [
+                        216
+                    ],
+                    "errorMessage": "invalid number of bytes for arc4.uint8"
+                },
+                {
+                    "pc": [
+                        255
+                    ],
+                    "errorMessage": "invalid number of bytes for asaProps"
+                },
+                {
+                    "pc": [
+                        432,
+                        452
+                    ],
+                    "errorMessage": "invalid size"
+                },
+                {
+                    "pc": [
+                        239
+                    ],
+                    "errorMessage": "invalid tail pointer at index 1 of (uint8[32],(len+uint8[]))"
+                },
+                {
+                    "pc": [
+                        234
+                    ],
+                    "errorMessage": "invalid tuple encoding"
+                },
+                {
+                    "pc": [
+                        331,
+                        572,
+                        733,
+                        854,
+                        876
+                    ],
+                    "errorMessage": "overflow"
+                },
+                {
+                    "pc": [
+                        663
+                    ],
+                    "errorMessage": "transaction type is axfer"
+                }
+            ],
+            "pcOffsetMethod": "none"
+        },
+        "clear": {
+            "sourceInfo": [],
+            "pcOffsetMethod": "none"
+        }
+    },
+    "source": {
+        "approval": "I3ByYWdtYSB2ZXJzaW9uIDExCiNwcmFnbWEgdHlwZXRyYWNrIGZhbHNlCgovLyBAYWxnb3JhbmRmb3VuZGF0aW9uL2FsZ29yYW5kLXR5cGVzY3JpcHQvYXJjNC9pbmRleC5kLnRzOjpDb250cmFjdC5hcHByb3ZhbFByb2dyYW0oKSAtPiB1aW50NjQ6Cm1haW46CiAgICBpbnRjYmxvY2sgMzIgMSAwIDgKICAgIGJ5dGVjYmxvY2sgMHgxNTFmN2M3NSAiYiIgImFzYSIgInQiIDB4Nzk4M2MzNWMgMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjYxCiAgICAvLyBleHBvcnQgY2xhc3MgQXJjMjAwX0FTQSBleHRlbmRzIENvbnRyYWN0IHsKICAgIHR4biBOdW1BcHBBcmdzCiAgICBieiBtYWluX19fYWxnb3RzX18uZGVmYXVsdENyZWF0ZUAyMAogICAgdHhuIE9uQ29tcGxldGlvbgogICAgIQogICAgYXNzZXJ0IC8vIE9uQ29tcGxldGlvbiBtdXN0IGJlIE5vT3AKICAgIHR4biBBcHBsaWNhdGlvbklECiAgICBhc3NlcnQKICAgIHB1c2hieXRlc3MgMHg4OWQ5NzUxZiAweDY1N2QxM2VjIDB4YjZhZTFhMjUgMHg4NGVjMTNkNSAweGVjOTk2MDQxIDB4ODJlNTczYzQgMHhkYTcwMjViOSAweDRhOTY4ZjhmIDB4YjU0MjIxMjUgMHg0MDliNTQ5NyAweDYyZDQxY2RmIDB4N2MwMmRhYWYgMHhiYmIzMTlmMyAvLyBtZXRob2QgImJvb3RzdHJhcChieXRlW10sYnl0ZVtdLHVpbnQ4LHVpbnQyNTYsKGJ5dGVbMzJdLGJ5dGVbXSkpYm9vbCIsIG1ldGhvZCAiYXJjMjAwX25hbWUoKWJ5dGVbMzJdIiwgbWV0aG9kICJhcmMyMDBfc3ltYm9sKClieXRlWzhdIiwgbWV0aG9kICJhcmMyMDBfZGVjaW1hbHMoKXVpbnQ4IiwgbWV0aG9kICJhcmMyMDBfdG90YWxTdXBwbHkoKXVpbnQyNTYiLCBtZXRob2QgImFyYzIwMF9iYWxhbmNlT2YoYWRkcmVzcyl1aW50MjU2IiwgbWV0aG9kICJhcmMyMDBfdHJhbnNmZXIoYWRkcmVzcyx1aW50MjU2KWJvb2wiLCBtZXRob2QgImFyYzIwMF90cmFuc2ZlckZyb20oYWRkcmVzcyxhZGRyZXNzLHVpbnQyNTYpYm9vbCIsIG1ldGhvZCAiYXJjMjAwX2FwcHJvdmUoYWRkcmVzcyx1aW50MjU2KWJvb2wiLCBtZXRob2QgImFyYzIwMF9leGNoYW5nZSgpKHVpbnQ2NCxhZGRyZXNzKSIsIG1ldGhvZCAiYXJjMjAwX3JlZGVlbSh1aW50NjQpdm9pZCIsIG1ldGhvZCAiYXJjMjAwX3N3YXBCYWNrKHVpbnQ2NCl2b2lkIiwgbWV0aG9kICJhcmMyMDBfYWxsb3dhbmNlKGFkZHJlc3MsYWRkcmVzcyl1aW50MjU2IgogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMAogICAgbWF0Y2ggYm9vdHN0cmFwIGFyYzIwMF9uYW1lIGFyYzIwMF9zeW1ib2wgYXJjMjAwX2RlY2ltYWxzIGFyYzIwMF90b3RhbFN1cHBseSBhcmMyMDBfYmFsYW5jZU9mIGFyYzIwMF90cmFuc2ZlciBhcmMyMDBfdHJhbnNmZXJGcm9tIGFyYzIwMF9hcHByb3ZlIGFyYzIwMF9leGNoYW5nZSBhcmMyMDBfcmVkZWVtIGFyYzIwMF9zd2FwQmFjayBhcmMyMDBfYWxsb3dhbmNlCiAgICBlcnIKCm1haW5fX19hbGdvdHNfXy5kZWZhdWx0Q3JlYXRlQDIwOgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo2MQogICAgLy8gZXhwb3J0IGNsYXNzIEFyYzIwMF9BU0EgZXh0ZW5kcyBDb250cmFjdCB7CiAgICB0eG4gT25Db21wbGV0aW9uCiAgICAhCiAgICB0eG4gQXBwbGljYXRpb25JRAogICAgIQogICAgJiYKICAgIGFzc2VydCAvLyBPbkNvbXBsZXRpb24gbXVzdCBiZSBOb09wICYmIGNhbiBvbmx5IGNhbGwgd2hlbiBjcmVhdGluZwogICAgaW50Y18xIC8vIDEKICAgIHJldHVybgoKCi8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6OkFyYzIwMF9BU0EuYm9vdHN0cmFwW3JvdXRpbmddKCkgLT4gdm9pZDoKYm9vdHN0cmFwOgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo5MQogICAgLy8gQGFyYzQuYWJpbWV0aG9kKCkKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDEKICAgIGR1cAogICAgaW50Y18yIC8vIDAKICAgIGV4dHJhY3RfdWludDE2IC8vIG9uIGVycm9yOiBpbnZhbGlkIGFycmF5IGxlbmd0aCBoZWFkZXIKICAgIHB1c2hpbnQgMiAvLyAyCiAgICArCiAgICBkaWcgMQogICAgbGVuCiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgbnVtYmVyIG9mIGJ5dGVzIGZvciBhcmM0LmR5bmFtaWNfYXJyYXk8YXJjNC51aW50OD4KICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDIKICAgIGR1cAogICAgaW50Y18yIC8vIDAKICAgIGV4dHJhY3RfdWludDE2IC8vIG9uIGVycm9yOiBpbnZhbGlkIGFycmF5IGxlbmd0aCBoZWFkZXIKICAgIHB1c2hpbnQgMiAvLyAyCiAgICArCiAgICBkaWcgMQogICAgbGVuCiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgbnVtYmVyIG9mIGJ5dGVzIGZvciBhcmM0LmR5bmFtaWNfYXJyYXk8YXJjNC51aW50OD4KICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDMKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzEgLy8gMQogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIG51bWJlciBvZiBieXRlcyBmb3IgYXJjNC51aW50OAogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgNAogICAgZHVwCiAgICBsZW4KICAgIGR1cAogICAgaW50Y18wIC8vIDMyCiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgbnVtYmVyIG9mIGJ5dGVzIGZvciBhcmM0LnVpbnQyNTYKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDUKICAgIGR1cAogICAgbGVuCiAgICBkaWcgMQogICAgaW50Y18wIC8vIDMyCiAgICBleHRyYWN0X3VpbnQxNiAvLyBvbiBlcnJvcjogaW52YWxpZCB0dXBsZSBlbmNvZGluZwogICAgZHVwCiAgICBwdXNoaW50IDM0IC8vIDM0CiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgdGFpbCBwb2ludGVyIGF0IGluZGV4IDEgb2YgKHVpbnQ4WzMyXSwobGVuK3VpbnQ4W10pKQogICAgZGlnIDIKICAgIHN3YXAKICAgIGRpZyAyCiAgICBzdWJzdHJpbmczCiAgICBkdXAKICAgIGludGNfMiAvLyAwCiAgICBleHRyYWN0X3VpbnQxNiAvLyBvbiBlcnJvcjogaW52YWxpZCBhcnJheSBsZW5ndGggaGVhZGVyCiAgICBwdXNoaW50IDM2IC8vIDM2CiAgICArCiAgICB1bmNvdmVyIDIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBudW1iZXIgb2YgYnl0ZXMgZm9yIGFzYVByb3BzCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjk5CiAgICAvLyBhc3NlcnQoVHhuLnNlbmRlciA9PT0gR2xvYmFsLmNyZWF0b3JBZGRyZXNzLCAnT25seSBkZXBsb3llciBvZiB0aGlzIHNtYXJ0IGNvbnRyYWN0IGNhbiBjYWxsIGJvb3RzdHJhcCBtZXRob2QnKQogICAgdHhuIFNlbmRlcgogICAgZ2xvYmFsIENyZWF0b3JBZGRyZXNzCiAgICA9PQogICAgYXNzZXJ0IC8vIE9ubHkgZGVwbG95ZXIgb2YgdGhpcyBzbWFydCBjb250cmFjdCBjYW4gY2FsbCBib290c3RyYXAgbWV0aG9kCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjEwMAogICAgLy8gYXNzZXJ0KG5hbWUubmF0aXZlLmxlbmd0aCA+IDAsICdOYW1lIG9mIHRoZSBhc3NldCBtdXN0IGJlIGxvbmdlciBvciBlcXVhbCB0byAxIGNoYXJhY3RlcicpCiAgICBkaWcgNgogICAgZXh0cmFjdCAyIDAKICAgIGR1cAogICAgbGVuCiAgICBkdXAKICAgIGFzc2VydCAvLyBOYW1lIG9mIHRoZSBhc3NldCBtdXN0IGJlIGxvbmdlciBvciBlcXVhbCB0byAxIGNoYXJhY3RlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxMDEKICAgIC8vIGFzc2VydChuYW1lLm5hdGl2ZS5sZW5ndGggPD0gMzIsICdOYW1lIG9mIHRoZSBhc3NldCBtdXN0IGJlIHNob3J0ZXIgb3IgZXF1YWwgdG8gMzIgY2hhcmFjdGVycycpCiAgICBpbnRjXzAgLy8gMzIKICAgIDw9CiAgICBhc3NlcnQgLy8gTmFtZSBvZiB0aGUgYXNzZXQgbXVzdCBiZSBzaG9ydGVyIG9yIGVxdWFsIHRvIDMyIGNoYXJhY3RlcnMKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTAyCiAgICAvLyBhc3NlcnQoc3ltYm9sLm5hdGl2ZS5sZW5ndGggPiAwLCAnU3ltYm9sIG9mIHRoZSBhc3NldCBtdXN0IGJlIGxvbmdlciBvciBlcXVhbCB0byAxIGNoYXJhY3RlcicpCiAgICBkaWcgNgogICAgZXh0cmFjdCAyIDAKICAgIGR1cAogICAgbGVuCiAgICBkdXAKICAgIGFzc2VydCAvLyBTeW1ib2wgb2YgdGhlIGFzc2V0IG11c3QgYmUgbG9uZ2VyIG9yIGVxdWFsIHRvIDEgY2hhcmFjdGVyCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjEwMwogICAgLy8gYXNzZXJ0KHN5bWJvbC5uYXRpdmUubGVuZ3RoIDw9IDgsICdTeW1ib2wgb2YgdGhlIGFzc2V0IG11c3QgYmUgc2hvcnRlciBvciBlcXVhbCB0byA4IGNoYXJhY3RlcnMnKQogICAgaW50Y18zIC8vIDgKICAgIDw9CiAgICBhc3NlcnQgLy8gU3ltYm9sIG9mIHRoZSBhc3NldCBtdXN0IGJlIHNob3J0ZXIgb3IgZXF1YWwgdG8gOCBjaGFyYWN0ZXJzCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjEwNAogICAgLy8gYXNzZXJ0KCF0aGlzLnRvdGFsU3VwcGx5Lmhhc1ZhbHVlLCAnVGhpcyBtZXRob2QgY2FuIGJlIGNhbGxlZCBvbmx5IG9uY2UnKQogICAgaW50Y18yIC8vIDAKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6ODAKICAgIC8vIHB1YmxpYyB0b3RhbFN1cHBseSA9IEdsb2JhbFN0YXRlPFVpbnQyNTY+KHsga2V5OiAndCcgfSkKICAgIGJ5dGVjXzMgLy8gInQiCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjEwNAogICAgLy8gYXNzZXJ0KCF0aGlzLnRvdGFsU3VwcGx5Lmhhc1ZhbHVlLCAnVGhpcyBtZXRob2QgY2FuIGJlIGNhbGxlZCBvbmx5IG9uY2UnKQogICAgYXBwX2dsb2JhbF9nZXRfZXgKICAgIGJ1cnkgMQogICAgIQogICAgYXNzZXJ0IC8vIFRoaXMgbWV0aG9kIGNhbiBiZSBjYWxsZWQgb25seSBvbmNlCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjY1CiAgICAvLyBwdWJsaWMgbmFtZSA9IEdsb2JhbFN0YXRlPER5bmFtaWNCeXRlcz4oeyBrZXk6ICduJyB9KQogICAgcHVzaGJ5dGVzICJuIgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxMDYKICAgIC8vIHRoaXMubmFtZS52YWx1ZSA9IG5hbWUKICAgIHVuY292ZXIgOQogICAgYXBwX2dsb2JhbF9wdXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6NzAKICAgIC8vIHB1YmxpYyBzeW1ib2wgPSBHbG9iYWxTdGF0ZTxEeW5hbWljQnl0ZXM+KHsga2V5OiAncycgfSkKICAgIHB1c2hieXRlcyAicyIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTA3CiAgICAvLyB0aGlzLnN5bWJvbC52YWx1ZSA9IHN5bWJvbAogICAgdW5jb3ZlciA4CiAgICBhcHBfZ2xvYmFsX3B1dAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo4MAogICAgLy8gcHVibGljIHRvdGFsU3VwcGx5ID0gR2xvYmFsU3RhdGU8VWludDI1Nj4oeyBrZXk6ICd0JyB9KQogICAgYnl0ZWNfMyAvLyAidCIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTA4CiAgICAvLyB0aGlzLnRvdGFsU3VwcGx5LnZhbHVlID0gdG90YWxTdXBwbHkKICAgIGRpZyA2CiAgICBhcHBfZ2xvYmFsX3B1dAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo3NQogICAgLy8gcHVibGljIGRlY2ltYWxzID0gR2xvYmFsU3RhdGU8VWludDg+KHsga2V5OiAnZCcgfSkKICAgIHB1c2hieXRlcyAiZCIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTA5CiAgICAvLyB0aGlzLmRlY2ltYWxzLnZhbHVlID0gZGVjaW1hbHMKICAgIGRpZyA3CiAgICBhcHBfZ2xvYmFsX3B1dAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxMTEKICAgIC8vIGNvbnN0IHNlbmRlciA9IG5ldyBBZGRyZXNzKFR4bi5zZW5kZXIpCiAgICB0eG4gU2VuZGVyCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjgyCiAgICAvLyBwdWJsaWMgYmFsYW5jZXMgPSBCb3hNYXA8QWRkcmVzcywgVWludDI1Nj4oeyBrZXlQcmVmaXg6ICdiJyB9KQogICAgYnl0ZWNfMSAvLyAiYiIKICAgIGRpZyAxCiAgICBjb25jYXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTEzCiAgICAvLyB0aGlzLmJhbGFuY2VzKHNlbmRlcikudmFsdWUgPSB0b3RhbFN1cHBseQogICAgZGlnIDcKICAgIGJveF9wdXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTE1LTEyOAogICAgLy8gY29uc3QgY3JlYXRlZEFzc2V0ID0gaXR4bgogICAgLy8gICAuYXNzZXRDb25maWcoewogICAgLy8gICAgIHRvdGFsOiB0b3RhbFN1cHBseS5hc1VpbnQ2NCgpLAogICAgLy8gICAgIGRlZmF1bHRGcm96ZW46IGZhbHNlLAogICAgLy8gICAgIHVuaXROYW1lOiBzeW1ib2wubmF0aXZlLAogICAgLy8gICAgIGFzc2V0TmFtZTogbmFtZS5uYXRpdmUsCiAgICAvLyAgICAgbWFuYWdlcjogR2xvYmFsLmN1cnJlbnRBcHBsaWNhdGlvbkFkZHJlc3MsCiAgICAvLyAgICAgcmVzZXJ2ZTogR2xvYmFsLmN1cnJlbnRBcHBsaWNhdGlvbkFkZHJlc3MsCiAgICAvLyAgICAgZmVlOiAwLAogICAgLy8gICAgIG1ldGFkYXRhSGFzaDogYXNzZXQubWV0YWRhdGFIYXNoLm5hdGl2ZS50b0ZpeGVkKHsgbGVuZ3RoOiAzMiB9KSwKICAgIC8vICAgICB1cmw6IGFzc2V0LnVybC5uYXRpdmUsCiAgICAvLyAgICAgZGVjaW1hbHM6IGRlY2ltYWxzLmFzVWludDY0KCksCiAgICAvLyAgIH0pCiAgICAvLyAgIC5zdWJtaXQoKS5jcmVhdGVkQXNzZXQKICAgIGl0eG5fYmVnaW4KICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTE3CiAgICAvLyB0b3RhbDogdG90YWxTdXBwbHkuYXNVaW50NjQoKSwKICAgIGRpZyA2CiAgICBiaXRsZW4KICAgIHB1c2hpbnQgNjQgLy8gNjQKICAgIDw9CiAgICBhc3NlcnQgLy8gb3ZlcmZsb3cKICAgIHVuY292ZXIgNQogICAgaW50Y18zIC8vIDgKICAgIC0KICAgIGRpZyA2CiAgICBzd2FwCiAgICBleHRyYWN0X3VpbnQ2NAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxMjEKICAgIC8vIG1hbmFnZXI6IEdsb2JhbC5jdXJyZW50QXBwbGljYXRpb25BZGRyZXNzLAogICAgZ2xvYmFsIEN1cnJlbnRBcHBsaWNhdGlvbkFkZHJlc3MKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTIyCiAgICAvLyByZXNlcnZlOiBHbG9iYWwuY3VycmVudEFwcGxpY2F0aW9uQWRkcmVzcywKICAgIGR1cAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxMjQKICAgIC8vIG1ldGFkYXRhSGFzaDogYXNzZXQubWV0YWRhdGFIYXNoLm5hdGl2ZS50b0ZpeGVkKHsgbGVuZ3RoOiAzMiB9KSwKICAgIHVuY292ZXIgNwogICAgZXh0cmFjdCAwIDMyCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA9PQogICAgYXNzZXJ0IC8vIExlbmd0aCBtdXN0IGJlIDMyCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjEyNQogICAgLy8gdXJsOiBhc3NldC51cmwubmF0aXZlLAogICAgdW5jb3ZlciA3CiAgICBleHRyYWN0IDIgMAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxMjYKICAgIC8vIGRlY2ltYWxzOiBkZWNpbWFscy5hc1VpbnQ2NCgpLAogICAgdW5jb3ZlciA5CiAgICBidG9pCiAgICBpdHhuX2ZpZWxkIENvbmZpZ0Fzc2V0RGVjaW1hbHMKICAgIGl0eG5fZmllbGQgQ29uZmlnQXNzZXRVUkwKICAgIGl0eG5fZmllbGQgQ29uZmlnQXNzZXRNZXRhZGF0YUhhc2gKICAgIGl0eG5fZmllbGQgQ29uZmlnQXNzZXRSZXNlcnZlCiAgICBpdHhuX2ZpZWxkIENvbmZpZ0Fzc2V0TWFuYWdlcgogICAgdW5jb3ZlciAzCiAgICBpdHhuX2ZpZWxkIENvbmZpZ0Fzc2V0TmFtZQogICAgdW5jb3ZlciAyCiAgICBpdHhuX2ZpZWxkIENvbmZpZ0Fzc2V0VW5pdE5hbWUKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTE4CiAgICAvLyBkZWZhdWx0RnJvemVuOiBmYWxzZSwKICAgIGludGNfMiAvLyAwCiAgICBpdHhuX2ZpZWxkIENvbmZpZ0Fzc2V0RGVmYXVsdEZyb3plbgogICAgaXR4bl9maWVsZCBDb25maWdBc3NldFRvdGFsCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjExNS0xMjcKICAgIC8vIGNvbnN0IGNyZWF0ZWRBc3NldCA9IGl0eG4KICAgIC8vICAgLmFzc2V0Q29uZmlnKHsKICAgIC8vICAgICB0b3RhbDogdG90YWxTdXBwbHkuYXNVaW50NjQoKSwKICAgIC8vICAgICBkZWZhdWx0RnJvemVuOiBmYWxzZSwKICAgIC8vICAgICB1bml0TmFtZTogc3ltYm9sLm5hdGl2ZSwKICAgIC8vICAgICBhc3NldE5hbWU6IG5hbWUubmF0aXZlLAogICAgLy8gICAgIG1hbmFnZXI6IEdsb2JhbC5jdXJyZW50QXBwbGljYXRpb25BZGRyZXNzLAogICAgLy8gICAgIHJlc2VydmU6IEdsb2JhbC5jdXJyZW50QXBwbGljYXRpb25BZGRyZXNzLAogICAgLy8gICAgIGZlZTogMCwKICAgIC8vICAgICBtZXRhZGF0YUhhc2g6IGFzc2V0Lm1ldGFkYXRhSGFzaC5uYXRpdmUudG9GaXhlZCh7IGxlbmd0aDogMzIgfSksCiAgICAvLyAgICAgdXJsOiBhc3NldC51cmwubmF0aXZlLAogICAgLy8gICAgIGRlY2ltYWxzOiBkZWNpbWFscy5hc1VpbnQ2NCgpLAogICAgLy8gICB9KQogICAgcHVzaGludCAzIC8vIDMKICAgIGl0eG5fZmllbGQgVHlwZUVudW0KICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTIzCiAgICAvLyBmZWU6IDAsCiAgICBpbnRjXzIgLy8gMAogICAgaXR4bl9maWVsZCBGZWUKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTE1LTEyOAogICAgLy8gY29uc3QgY3JlYXRlZEFzc2V0ID0gaXR4bgogICAgLy8gICAuYXNzZXRDb25maWcoewogICAgLy8gICAgIHRvdGFsOiB0b3RhbFN1cHBseS5hc1VpbnQ2NCgpLAogICAgLy8gICAgIGRlZmF1bHRGcm96ZW46IGZhbHNlLAogICAgLy8gICAgIHVuaXROYW1lOiBzeW1ib2wubmF0aXZlLAogICAgLy8gICAgIGFzc2V0TmFtZTogbmFtZS5uYXRpdmUsCiAgICAvLyAgICAgbWFuYWdlcjogR2xvYmFsLmN1cnJlbnRBcHBsaWNhdGlvbkFkZHJlc3MsCiAgICAvLyAgICAgcmVzZXJ2ZTogR2xvYmFsLmN1cnJlbnRBcHBsaWNhdGlvbkFkZHJlc3MsCiAgICAvLyAgICAgZmVlOiAwLAogICAgLy8gICAgIG1ldGFkYXRhSGFzaDogYXNzZXQubWV0YWRhdGFIYXNoLm5hdGl2ZS50b0ZpeGVkKHsgbGVuZ3RoOiAzMiB9KSwKICAgIC8vICAgICB1cmw6IGFzc2V0LnVybC5uYXRpdmUsCiAgICAvLyAgICAgZGVjaW1hbHM6IGRlY2ltYWxzLmFzVWludDY0KCksCiAgICAvLyAgIH0pCiAgICAvLyAgIC5zdWJtaXQoKS5jcmVhdGVkQXNzZXQKICAgIGl0eG5fc3VibWl0CiAgICBpdHhuIENyZWF0ZWRBc3NldElECiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjEzMAogICAgLy8gdGhpcy5hc3NldElkLnZhbHVlID0gbmV3IFVpbnQ2NChjcmVhdGVkQXNzZXQuaWQpCiAgICBpdG9iCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjg5CiAgICAvLyBwdWJsaWMgYXNzZXRJZCA9IEdsb2JhbFN0YXRlPFVpbnQ2ND4oeyBrZXk6ICdhc2EnIH0pCiAgICBieXRlY18yIC8vICJhc2EiCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjEzMAogICAgLy8gdGhpcy5hc3NldElkLnZhbHVlID0gbmV3IFVpbnQ2NChjcmVhdGVkQXNzZXQuaWQpCiAgICBzd2FwCiAgICBhcHBfZ2xvYmFsX3B1dAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxMzIKICAgIC8vIGVtaXQobmV3IGFyYzIwMF9UcmFuc2Zlcih7IGZyb206IG5ldyBBZGRyZXNzKEdsb2JhbC56ZXJvQWRkcmVzcyksIHRvOiBzZW5kZXIsIHZhbHVlOiB0b3RhbFN1cHBseSB9KSkKICAgIGdsb2JhbCBaZXJvQWRkcmVzcwogICAgc3dhcAogICAgY29uY2F0CiAgICBzd2FwCiAgICBjb25jYXQKICAgIGJ5dGVjIDQgLy8gbWV0aG9kICJhcmMyMDBfVHJhbnNmZXIoYWRkcmVzcyxhZGRyZXNzLHVpbnQyNTYpIgogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6OTEKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICBwdXNoYnl0ZXMgMHgxNTFmN2M3NTgwCiAgICBsb2cKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCgovLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjpBcmMyMDBfQVNBLmFyYzIwMF9uYW1lW3JvdXRpbmddKCkgLT4gdm9pZDoKYXJjMjAwX25hbWU6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjE0MwogICAgLy8gcmV0dXJuIG5ldyBTdGF0aWNCeXRlczwzMj4odGhpcy5uYW1lLnZhbHVlLm5hdGl2ZSkKICAgIGludGNfMiAvLyAwCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjY1CiAgICAvLyBwdWJsaWMgbmFtZSA9IEdsb2JhbFN0YXRlPER5bmFtaWNCeXRlcz4oeyBrZXk6ICduJyB9KQogICAgcHVzaGJ5dGVzICJuIgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxNDMKICAgIC8vIHJldHVybiBuZXcgU3RhdGljQnl0ZXM8MzI+KHRoaXMubmFtZS52YWx1ZS5uYXRpdmUpCiAgICBhcHBfZ2xvYmFsX2dldF9leAogICAgYXNzZXJ0IC8vIGNoZWNrIEdsb2JhbFN0YXRlIGV4aXN0cwogICAgZXh0cmFjdCAyIDAKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzAgLy8gMzIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBzaXplCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjE0MQogICAgLy8gQGFyYzQuYWJpbWV0aG9kKHsgcmVhZG9ubHk6IHRydWUgfSkKICAgIGJ5dGVjXzAgLy8gMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCgovLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjpBcmMyMDBfQVNBLmFyYzIwMF9zeW1ib2xbcm91dGluZ10oKSAtPiB2b2lkOgphcmMyMDBfc3ltYm9sOgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxNTMKICAgIC8vIHJldHVybiBuZXcgU3RhdGljQnl0ZXM8OD4odGhpcy5zeW1ib2wudmFsdWUubmF0aXZlKQogICAgaW50Y18yIC8vIDAKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6NzAKICAgIC8vIHB1YmxpYyBzeW1ib2wgPSBHbG9iYWxTdGF0ZTxEeW5hbWljQnl0ZXM+KHsga2V5OiAncycgfSkKICAgIHB1c2hieXRlcyAicyIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTUzCiAgICAvLyByZXR1cm4gbmV3IFN0YXRpY0J5dGVzPDg+KHRoaXMuc3ltYm9sLnZhbHVlLm5hdGl2ZSkKICAgIGFwcF9nbG9iYWxfZ2V0X2V4CiAgICBhc3NlcnQgLy8gY2hlY2sgR2xvYmFsU3RhdGUgZXhpc3RzCiAgICBleHRyYWN0IDIgMAogICAgZHVwCiAgICBsZW4KICAgIGludGNfMyAvLyA4CiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgc2l6ZQogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxNTEKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzEgLy8gMQogICAgcmV0dXJuCgoKLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo6QXJjMjAwX0FTQS5hcmMyMDBfZGVjaW1hbHNbcm91dGluZ10oKSAtPiB2b2lkOgphcmMyMDBfZGVjaW1hbHM6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjE2MwogICAgLy8gcmV0dXJuIHRoaXMuZGVjaW1hbHMudmFsdWUKICAgIGludGNfMiAvLyAwCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjc1CiAgICAvLyBwdWJsaWMgZGVjaW1hbHMgPSBHbG9iYWxTdGF0ZTxVaW50OD4oeyBrZXk6ICdkJyB9KQogICAgcHVzaGJ5dGVzICJkIgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxNjMKICAgIC8vIHJldHVybiB0aGlzLmRlY2ltYWxzLnZhbHVlCiAgICBhcHBfZ2xvYmFsX2dldF9leAogICAgYXNzZXJ0IC8vIGNoZWNrIEdsb2JhbFN0YXRlIGV4aXN0cwogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxNjEKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzEgLy8gMQogICAgcmV0dXJuCgoKLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo6QXJjMjAwX0FTQS5hcmMyMDBfdG90YWxTdXBwbHlbcm91dGluZ10oKSAtPiB2b2lkOgphcmMyMDBfdG90YWxTdXBwbHk6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjE3MwogICAgLy8gcmV0dXJuIHRoaXMudG90YWxTdXBwbHkudmFsdWUKICAgIGludGNfMiAvLyAwCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjgwCiAgICAvLyBwdWJsaWMgdG90YWxTdXBwbHkgPSBHbG9iYWxTdGF0ZTxVaW50MjU2Pih7IGtleTogJ3QnIH0pCiAgICBieXRlY18zIC8vICJ0IgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxNzMKICAgIC8vIHJldHVybiB0aGlzLnRvdGFsU3VwcGx5LnZhbHVlCiAgICBhcHBfZ2xvYmFsX2dldF9leAogICAgYXNzZXJ0IC8vIGNoZWNrIEdsb2JhbFN0YXRlIGV4aXN0cwogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxNzEKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzEgLy8gMQogICAgcmV0dXJuCgoKLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo6QXJjMjAwX0FTQS5hcmMyMDBfYmFsYW5jZU9mW3JvdXRpbmddKCkgLT4gdm9pZDoKYXJjMjAwX2JhbGFuY2VPZjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MTgyCiAgICAvLyBAYXJjNC5hYmltZXRob2QoeyByZWFkb25seTogdHJ1ZSB9KQogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMQogICAgZHVwCiAgICBsZW4KICAgIGludGNfMCAvLyAzMgogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIG51bWJlciBvZiBieXRlcyBmb3IgYXJjNC5zdGF0aWNfYXJyYXk8YXJjNC51aW50OCwgMzI+CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjE4NAogICAgLy8gcmV0dXJuIHRoaXMuX2JhbGFuY2VPZihvd25lcikKICAgIGNhbGxzdWIgX2JhbGFuY2VPZgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxODIKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzEgLy8gMQogICAgcmV0dXJuCgoKLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo6QXJjMjAwX0FTQS5hcmMyMDBfdHJhbnNmZXJbcm91dGluZ10oKSAtPiB2b2lkOgphcmMyMDBfdHJhbnNmZXI6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjE5NAogICAgLy8gQGFyYzQuYWJpbWV0aG9kKCkKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDEKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzAgLy8gMzIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBudW1iZXIgb2YgYnl0ZXMgZm9yIGFyYzQuc3RhdGljX2FycmF5PGFyYzQudWludDgsIDMyPgogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMgogICAgZHVwCiAgICBsZW4KICAgIGludGNfMCAvLyAzMgogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIG51bWJlciBvZiBieXRlcyBmb3IgYXJjNC51aW50MjU2CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjE5NgogICAgLy8gcmV0dXJuIHRoaXMuX3RyYW5zZmVyKG5ldyBBZGRyZXNzKFR4bi5zZW5kZXIpLCB0bywgdmFsdWUpCiAgICB0eG4gU2VuZGVyCiAgICBjb3ZlciAyCiAgICBjYWxsc3ViIF90cmFuc2ZlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoxOTQKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzEgLy8gMQogICAgcmV0dXJuCgoKLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo6QXJjMjAwX0FTQS5hcmMyMDBfdHJhbnNmZXJGcm9tW3JvdXRpbmddKCkgLT4gdm9pZDoKYXJjMjAwX3RyYW5zZmVyRnJvbToKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MjA3CiAgICAvLyBAYXJjNC5hYmltZXRob2QoKQogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMQogICAgZHVwCiAgICBsZW4KICAgIGludGNfMCAvLyAzMgogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIG51bWJlciBvZiBieXRlcyBmb3IgYXJjNC5zdGF0aWNfYXJyYXk8YXJjNC51aW50OCwgMzI+CiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAyCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgbnVtYmVyIG9mIGJ5dGVzIGZvciBhcmM0LnN0YXRpY19hcnJheTxhcmM0LnVpbnQ4LCAzMj4KICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDMKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzAgLy8gMzIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBudW1iZXIgb2YgYnl0ZXMgZm9yIGFyYzQudWludDI1NgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyMDkKICAgIC8vIGNvbnN0IHNwZW5kZXIgPSBuZXcgQWRkcmVzcyhUeG4uc2VuZGVyKQogICAgdHhuIFNlbmRlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyMTAKICAgIC8vIGNvbnN0IHNwZW5kZXJfYWxsb3dhbmNlID0gdGhpcy5fYWxsb3dhbmNlKGZyb20sIHNwZW5kZXIpCiAgICBkaWcgMwogICAgZGlnIDEKICAgIGNhbGxzdWIgX2FsbG93YW5jZQogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyMTEKICAgIC8vIGFzc2VydChzcGVuZGVyX2FsbG93YW5jZS5hc0JpZ1VpbnQoKSA+PSB2YWx1ZS5hc0JpZ1VpbnQoKSwgJ2luc3VmZmljaWVudCBhcHByb3ZhbCcpCiAgICBkdXAKICAgIGRpZyAzCiAgICBiPj0KICAgIGFzc2VydCAvLyBpbnN1ZmZpY2llbnQgYXBwcm92YWwKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MjEyCiAgICAvLyBjb25zdCBuZXdfc3BlbmRlcl9hbGxvd2FuY2UgPSBuZXcgVWludDI1NihzcGVuZGVyX2FsbG93YW5jZS5hc0JpZ1VpbnQoKSAtIHZhbHVlLmFzQmlnVWludCgpKQogICAgZGlnIDIKICAgIGItCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA8PQogICAgYXNzZXJ0IC8vIG92ZXJmbG93CiAgICBpbnRjXzAgLy8gMzIKICAgIGJ6ZXJvCiAgICBifAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyMTMKICAgIC8vIHRoaXMuX2FwcHJvdmUoZnJvbSwgc3BlbmRlciwgbmV3X3NwZW5kZXJfYWxsb3dhbmNlKQogICAgZGlnIDQKICAgIGNvdmVyIDIKICAgIGNhbGxzdWIgX2FwcHJvdmUKICAgIHBvcAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyMTQKICAgIC8vIHJldHVybiB0aGlzLl90cmFuc2Zlcihmcm9tLCB0bywgdmFsdWUpCiAgICBjYWxsc3ViIF90cmFuc2ZlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyMDcKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzEgLy8gMQogICAgcmV0dXJuCgoKLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo6QXJjMjAwX0FTQS5hcmMyMDBfYXBwcm92ZVtyb3V0aW5nXSgpIC0+IHZvaWQ6CmFyYzIwMF9hcHByb3ZlOgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyMjQKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAxCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA9PQogICAgYXNzZXJ0IC8vIGludmFsaWQgbnVtYmVyIG9mIGJ5dGVzIGZvciBhcmM0LnN0YXRpY19hcnJheTxhcmM0LnVpbnQ4LCAzMj4KICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDIKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzAgLy8gMzIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBudW1iZXIgb2YgYnl0ZXMgZm9yIGFyYzQudWludDI1NgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyMjYKICAgIC8vIGNvbnN0IG93bmVyID0gbmV3IEFkZHJlc3MoVHhuLnNlbmRlcikKICAgIHR4biBTZW5kZXIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MjI3CiAgICAvLyByZXR1cm4gdGhpcy5fYXBwcm92ZShvd25lciwgc3BlbmRlciwgdmFsdWUpCiAgICBjb3ZlciAyCiAgICBjYWxsc3ViIF9hcHByb3ZlCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjIyNAogICAgLy8gQGFyYzQuYWJpbWV0aG9kKCkKICAgIGJ5dGVjXzAgLy8gMHgxNTFmN2M3NQogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIGludGNfMSAvLyAxCiAgICByZXR1cm4KCgovLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjpBcmMyMDBfQVNBLmFyYzIwMF9leGNoYW5nZVtyb3V0aW5nXSgpIC0+IHZvaWQ6CmFyYzIwMF9leGNoYW5nZToKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MjQzCiAgICAvLyBleGNoYW5nZV9hc3NldDogdGhpcy5hc3NldElkLnZhbHVlLCAvL1RoZSBBU0EgSUQgdGhhdCB0aGUgQVJDMjAwIHRva2VuIGNhbiBiZSBleGNoYW5nZWQgd2l0aC4KICAgIGludGNfMiAvLyAwCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjg5CiAgICAvLyBwdWJsaWMgYXNzZXRJZCA9IEdsb2JhbFN0YXRlPFVpbnQ2ND4oeyBrZXk6ICdhc2EnIH0pCiAgICBieXRlY18yIC8vICJhc2EiCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjI0MwogICAgLy8gZXhjaGFuZ2VfYXNzZXQ6IHRoaXMuYXNzZXRJZC52YWx1ZSwgLy9UaGUgQVNBIElEIHRoYXQgdGhlIEFSQzIwMCB0b2tlbiBjYW4gYmUgZXhjaGFuZ2VkIHdpdGguCiAgICBhcHBfZ2xvYmFsX2dldF9leAogICAgYXNzZXJ0IC8vIGNoZWNrIEdsb2JhbFN0YXRlIGV4aXN0cwogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyNDQKICAgIC8vIHNpbms6IG5ldyBBZGRyZXNzKEdsb2JhbC5jdXJyZW50QXBwbGljYXRpb25BZGRyZXNzKSwgLy8gVGhlIGFkZHJlc3MgdGhhdCBob2xkcyBBUkMyMDAgdG9rZW5zIGZvciByZWRlbXB0aW9uIG9wZXJhdGlvbnMuCiAgICBnbG9iYWwgQ3VycmVudEFwcGxpY2F0aW9uQWRkcmVzcwogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyNDItMjQ1CiAgICAvLyByZXR1cm4gbmV3IGFyYzIwMF9leGNoYW5nZUluZm8oewogICAgLy8gICBleGNoYW5nZV9hc3NldDogdGhpcy5hc3NldElkLnZhbHVlLCAvL1RoZSBBU0EgSUQgdGhhdCB0aGUgQVJDMjAwIHRva2VuIGNhbiBiZSBleGNoYW5nZWQgd2l0aC4KICAgIC8vICAgc2luazogbmV3IEFkZHJlc3MoR2xvYmFsLmN1cnJlbnRBcHBsaWNhdGlvbkFkZHJlc3MpLCAvLyBUaGUgYWRkcmVzcyB0aGF0IGhvbGRzIEFSQzIwMCB0b2tlbnMgZm9yIHJlZGVtcHRpb24gb3BlcmF0aW9ucy4KICAgIC8vIH0pCiAgICBjb25jYXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MjQwCiAgICAvLyBAYXJjNC5hYmltZXRob2QoeyByZWFkb25seTogdHJ1ZSB9KQogICAgYnl0ZWNfMCAvLyAweDE1MWY3Yzc1CiAgICBzd2FwCiAgICBjb25jYXQKICAgIGxvZwogICAgaW50Y18xIC8vIDEKICAgIHJldHVybgoKCi8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6OkFyYzIwMF9BU0EuYXJjMjAwX3JlZGVlbVtyb3V0aW5nXSgpIC0+IHZvaWQ6CmFyYzIwMF9yZWRlZW06CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjI2MwogICAgLy8gQGFyYzQuYWJpbWV0aG9kKCkKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDEKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzMgLy8gOAogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIG51bWJlciBvZiBieXRlcyBmb3IgYXJjNC51aW50NjQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MjY1CiAgICAvLyBjb25zdCBwcmV2ID0gZ3R4bi5UcmFuc2FjdGlvbihUeG4uZ3JvdXBJbmRleCAtIDEpCiAgICB0eG4gR3JvdXBJbmRleAogICAgaW50Y18xIC8vIDEKICAgIC0KICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MjY2CiAgICAvLyBhc3NlcnQocHJldi50eXBlID09PSBUcmFuc2FjdGlvblR5cGUuQXNzZXRUcmFuc2ZlciwgJ1ByZXZpb3VzIHR4biBtdXN0IGJlIEFTQSB0cmFuc2ZlcicpCiAgICBndHhucyBUeXBlRW51bQogICAgcHVzaGludCA0IC8vIDQKICAgID09CiAgICBhc3NlcnQgLy8gUHJldmlvdXMgdHhuIG11c3QgYmUgQVNBIHRyYW5zZmVyCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjI2NwogICAgLy8gY29uc3QgYXhmZXIgPSBndHhuLkFzc2V0VHJhbnNmZXJUeG4oVHhuLmdyb3VwSW5kZXggLSAxKQogICAgdHhuIEdyb3VwSW5kZXgKICAgIGludGNfMSAvLyAxCiAgICAtCiAgICBkdXAKICAgIGd0eG5zIFR5cGVFbnVtCiAgICBwdXNoaW50IDQgLy8gYXhmZXIKICAgID09CiAgICBhc3NlcnQgLy8gdHJhbnNhY3Rpb24gdHlwZSBpcyBheGZlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyNjkKICAgIC8vIGF4ZmVyLmFzc2V0QW1vdW50ID49IGFtb3VudC5hc1VpbnQ2NCgpLAogICAgZHVwCiAgICBndHhucyBBc3NldEFtb3VudAogICAgdW5jb3ZlciAyCiAgICBidG9pCiAgICBkaWcgMQogICAgPD0KICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MjY4LTI3MQogICAgLy8gYXNzZXJ0KAogICAgLy8gICBheGZlci5hc3NldEFtb3VudCA+PSBhbW91bnQuYXNVaW50NjQoKSwKICAgIC8vICAgJ1RoZSBhbW91bnQgdHJhbnNmZXJyZWQgTVVTVCBiZSBlcXVhbCB0byBvciBncmVhdGVyIHRoYW4gdGhlIGFtb3VudCByZXF1ZXN0ZWQnLAogICAgLy8gKQogICAgYXNzZXJ0IC8vIFRoZSBhbW91bnQgdHJhbnNmZXJyZWQgTVVTVCBiZSBlcXVhbCB0byBvciBncmVhdGVyIHRoYW4gdGhlIGFtb3VudCByZXF1ZXN0ZWQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MjcyCiAgICAvLyBhc3NlcnQoYXhmZXIueGZlckFzc2V0LmlkID09PSB0aGlzLmFzc2V0SWQudmFsdWUuYXNVaW50NjQoKSwgJ0FTQSBJRCBtdXN0IG1hdGNoIGNvbmZpZ3VyZWQgZXhjaGFuZ2VfYXNzZXQnKQogICAgZGlnIDEKICAgIGd0eG5zIFhmZXJBc3NldAogICAgaW50Y18yIC8vIDAKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6ODkKICAgIC8vIHB1YmxpYyBhc3NldElkID0gR2xvYmFsU3RhdGU8VWludDY0Pih7IGtleTogJ2FzYScgfSkKICAgIGJ5dGVjXzIgLy8gImFzYSIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MjcyCiAgICAvLyBhc3NlcnQoYXhmZXIueGZlckFzc2V0LmlkID09PSB0aGlzLmFzc2V0SWQudmFsdWUuYXNVaW50NjQoKSwgJ0FTQSBJRCBtdXN0IG1hdGNoIGNvbmZpZ3VyZWQgZXhjaGFuZ2VfYXNzZXQnKQogICAgYXBwX2dsb2JhbF9nZXRfZXgKICAgIGFzc2VydCAvLyBjaGVjayBHbG9iYWxTdGF0ZSBleGlzdHMKICAgIGJ0b2kKICAgID09CiAgICBhc3NlcnQgLy8gQVNBIElEIG11c3QgbWF0Y2ggY29uZmlndXJlZCBleGNoYW5nZV9hc3NldAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyNzMKICAgIC8vIGFzc2VydChheGZlci5hc3NldFJlY2VpdmVyID09PSBHbG9iYWwuY3VycmVudEFwcGxpY2F0aW9uQWRkcmVzcywgJ0FTQSBtdXN0IGJlIHNlbnQgdG8gdGhlIHNpbmsgYWRkcmVzcycpCiAgICBkaWcgMQogICAgZ3R4bnMgQXNzZXRSZWNlaXZlcgogICAgZ2xvYmFsIEN1cnJlbnRBcHBsaWNhdGlvbkFkZHJlc3MKICAgID09CiAgICBhc3NlcnQgLy8gQVNBIG11c3QgYmUgc2VudCB0byB0aGUgc2luayBhZGRyZXNzCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjI3NAogICAgLy8gYXNzZXJ0KGF4ZmVyLnNlbmRlciA9PT0gVHhuLnNlbmRlciwgJ0FTQSBzZW5kZXIgbXVzdCBtYXRjaCBBUkMyMDAgcmVkZWVtZXInKQogICAgc3dhcAogICAgZ3R4bnMgU2VuZGVyCiAgICB0eG4gU2VuZGVyCiAgICA9PQogICAgYXNzZXJ0IC8vIEFTQSBzZW5kZXIgbXVzdCBtYXRjaCBBUkMyMDAgcmVkZWVtZXIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6Mjc3CiAgICAvLyBuZXcgQWRkcmVzcyhHbG9iYWwuY3VycmVudEFwcGxpY2F0aW9uQWRkcmVzcyksCiAgICBnbG9iYWwgQ3VycmVudEFwcGxpY2F0aW9uQWRkcmVzcwogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyNzgKICAgIC8vIG5ldyBBZGRyZXNzKFR4bi5zZW5kZXIpLAogICAgdHhuIFNlbmRlcgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyNzkKICAgIC8vIG5ldyBVaW50MjU2KGF4ZmVyLmFzc2V0QW1vdW50KSwgLy8gc2VuZCB0aGUgcmVhbCBhbW91bnQgd2hpY2ggbXVzdCBiZSBncmVhdGVyIG9yIGVxdWFsIHRvIHJlcXVlc3RlZCBhbW91bnQKICAgIHVuY292ZXIgMgogICAgaXRvYgogICAgaW50Y18wIC8vIDMyCiAgICBiemVybwogICAgYnwKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6Mjc2LTI4MAogICAgLy8gdGhpcy5fdHJhbnNmZXIoCiAgICAvLyAgIG5ldyBBZGRyZXNzKEdsb2JhbC5jdXJyZW50QXBwbGljYXRpb25BZGRyZXNzKSwKICAgIC8vICAgbmV3IEFkZHJlc3MoVHhuLnNlbmRlciksCiAgICAvLyAgIG5ldyBVaW50MjU2KGF4ZmVyLmFzc2V0QW1vdW50KSwgLy8gc2VuZCB0aGUgcmVhbCBhbW91bnQgd2hpY2ggbXVzdCBiZSBncmVhdGVyIG9yIGVxdWFsIHRvIHJlcXVlc3RlZCBhbW91bnQKICAgIC8vICkKICAgIGNhbGxzdWIgX3RyYW5zZmVyCiAgICBwb3AKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MjYzCiAgICAvLyBAYXJjNC5hYmltZXRob2QoKQogICAgaW50Y18xIC8vIDEKICAgIHJldHVybgoKCi8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6OkFyYzIwMF9BU0EuYXJjMjAwX3N3YXBCYWNrW3JvdXRpbmddKCkgLT4gdm9pZDoKYXJjMjAwX3N3YXBCYWNrOgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czoyOTgKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCgpCiAgICB0eG5hIEFwcGxpY2F0aW9uQXJncyAxCiAgICBkdXAKICAgIGxlbgogICAgZHVwCiAgICBpbnRjXzMgLy8gOAogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIG51bWJlciBvZiBieXRlcyBmb3IgYXJjNC51aW50NjQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzAxCiAgICAvLyBuZXcgQWRkcmVzcyhUeG4uc2VuZGVyKSwKICAgIHR4biBTZW5kZXIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzAyCiAgICAvLyBuZXcgQWRkcmVzcyhHbG9iYWwuY3VycmVudEFwcGxpY2F0aW9uQWRkcmVzcyksCiAgICBnbG9iYWwgQ3VycmVudEFwcGxpY2F0aW9uQWRkcmVzcwogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czozMDMKICAgIC8vIG5ldyBVaW50MjU2KGFtb3VudC5hc0JpZ1VpbnQoKSksCiAgICB1bmNvdmVyIDIKICAgIGludGNfMCAvLyAzMgogICAgPD0KICAgIGFzc2VydCAvLyBvdmVyZmxvdwogICAgaW50Y18wIC8vIDMyCiAgICBiemVybwogICAgZGlnIDMKICAgIGJ8CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjMwMC0zMDQKICAgIC8vIHRoaXMuX3RyYW5zZmVyKAogICAgLy8gICBuZXcgQWRkcmVzcyhUeG4uc2VuZGVyKSwKICAgIC8vICAgbmV3IEFkZHJlc3MoR2xvYmFsLmN1cnJlbnRBcHBsaWNhdGlvbkFkZHJlc3MpLAogICAgLy8gICBuZXcgVWludDI1NihhbW91bnQuYXNCaWdVaW50KCkpLAogICAgLy8gKQogICAgY2FsbHN1YiBfdHJhbnNmZXIKICAgIHBvcAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czozMDUtMzEyCiAgICAvLyBpdHhuCiAgICAvLyAgIC5hc3NldFRyYW5zZmVyKHsKICAgIC8vICAgICBhc3NldFJlY2VpdmVyOiBUeG4uc2VuZGVyLAogICAgLy8gICAgIGFzc2V0QW1vdW50OiBhbW91bnQuYXNVaW50NjQoKSwKICAgIC8vICAgICB4ZmVyQXNzZXQ6IHRoaXMuYXNzZXRJZC52YWx1ZS5hc1VpbnQ2NCgpLAogICAgLy8gICAgIGZlZTogMCwKICAgIC8vICAgfSkKICAgIC8vICAgLnN1Ym1pdCgpCiAgICBpdHhuX2JlZ2luCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjMwNwogICAgLy8gYXNzZXRSZWNlaXZlcjogVHhuLnNlbmRlciwKICAgIHR4biBTZW5kZXIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzA4CiAgICAvLyBhc3NldEFtb3VudDogYW1vdW50LmFzVWludDY0KCksCiAgICBzd2FwCiAgICBidG9pCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjMwOQogICAgLy8geGZlckFzc2V0OiB0aGlzLmFzc2V0SWQudmFsdWUuYXNVaW50NjQoKSwKICAgIGludGNfMiAvLyAwCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjg5CiAgICAvLyBwdWJsaWMgYXNzZXRJZCA9IEdsb2JhbFN0YXRlPFVpbnQ2ND4oeyBrZXk6ICdhc2EnIH0pCiAgICBieXRlY18yIC8vICJhc2EiCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjMwOQogICAgLy8geGZlckFzc2V0OiB0aGlzLmFzc2V0SWQudmFsdWUuYXNVaW50NjQoKSwKICAgIGFwcF9nbG9iYWxfZ2V0X2V4CiAgICBhc3NlcnQgLy8gY2hlY2sgR2xvYmFsU3RhdGUgZXhpc3RzCiAgICBidG9pCiAgICBpdHhuX2ZpZWxkIFhmZXJBc3NldAogICAgaXR4bl9maWVsZCBBc3NldEFtb3VudAogICAgaXR4bl9maWVsZCBBc3NldFJlY2VpdmVyCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjMwNS0zMTEKICAgIC8vIGl0eG4KICAgIC8vICAgLmFzc2V0VHJhbnNmZXIoewogICAgLy8gICAgIGFzc2V0UmVjZWl2ZXI6IFR4bi5zZW5kZXIsCiAgICAvLyAgICAgYXNzZXRBbW91bnQ6IGFtb3VudC5hc1VpbnQ2NCgpLAogICAgLy8gICAgIHhmZXJBc3NldDogdGhpcy5hc3NldElkLnZhbHVlLmFzVWludDY0KCksCiAgICAvLyAgICAgZmVlOiAwLAogICAgLy8gICB9KQogICAgcHVzaGludCA0IC8vIDQKICAgIGl0eG5fZmllbGQgVHlwZUVudW0KICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzEwCiAgICAvLyBmZWU6IDAsCiAgICBpbnRjXzIgLy8gMAogICAgaXR4bl9maWVsZCBGZWUKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzA1LTMxMgogICAgLy8gaXR4bgogICAgLy8gICAuYXNzZXRUcmFuc2Zlcih7CiAgICAvLyAgICAgYXNzZXRSZWNlaXZlcjogVHhuLnNlbmRlciwKICAgIC8vICAgICBhc3NldEFtb3VudDogYW1vdW50LmFzVWludDY0KCksCiAgICAvLyAgICAgeGZlckFzc2V0OiB0aGlzLmFzc2V0SWQudmFsdWUuYXNVaW50NjQoKSwKICAgIC8vICAgICBmZWU6IDAsCiAgICAvLyAgIH0pCiAgICAvLyAgIC5zdWJtaXQoKQogICAgaXR4bl9zdWJtaXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6Mjk4CiAgICAvLyBAYXJjNC5hYmltZXRob2QoKQogICAgaW50Y18xIC8vIDEKICAgIHJldHVybgoKCi8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6OkFyYzIwMF9BU0EuYXJjMjAwX2FsbG93YW5jZVtyb3V0aW5nXSgpIC0+IHZvaWQ6CmFyYzIwMF9hbGxvd2FuY2U6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjMyMQogICAgLy8gQGFyYzQuYWJpbWV0aG9kKHsgcmVhZG9ubHk6IHRydWUgfSkKICAgIHR4bmEgQXBwbGljYXRpb25BcmdzIDEKICAgIGR1cAogICAgbGVuCiAgICBpbnRjXzAgLy8gMzIKICAgID09CiAgICBhc3NlcnQgLy8gaW52YWxpZCBudW1iZXIgb2YgYnl0ZXMgZm9yIGFyYzQuc3RhdGljX2FycmF5PGFyYzQudWludDgsIDMyPgogICAgdHhuYSBBcHBsaWNhdGlvbkFyZ3MgMgogICAgZHVwCiAgICBsZW4KICAgIGludGNfMCAvLyAzMgogICAgPT0KICAgIGFzc2VydCAvLyBpbnZhbGlkIG51bWJlciBvZiBieXRlcyBmb3IgYXJjNC5zdGF0aWNfYXJyYXk8YXJjNC51aW50OCwgMzI+CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjMyMwogICAgLy8gcmV0dXJuIHRoaXMuX2FsbG93YW5jZShvd25lciwgc3BlbmRlcikKICAgIGNhbGxzdWIgX2FsbG93YW5jZQogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czozMjEKICAgIC8vIEBhcmM0LmFiaW1ldGhvZCh7IHJlYWRvbmx5OiB0cnVlIH0pCiAgICBieXRlY18wIC8vIDB4MTUxZjdjNzUKICAgIHN3YXAKICAgIGNvbmNhdAogICAgbG9nCiAgICBpbnRjXzEgLy8gMQogICAgcmV0dXJuCgoKLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo6QXJjMjAwX0FTQS5fYmFsYW5jZU9mKG93bmVyOiBieXRlcykgLT4gYnl0ZXM6Cl9iYWxhbmNlT2Y6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjMyNgogICAgLy8gcHJpdmF0ZSBfYmFsYW5jZU9mKG93bmVyOiBBZGRyZXNzKTogVWludDI1NiB7CiAgICBwcm90byAxIDEKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6ODIKICAgIC8vIHB1YmxpYyBiYWxhbmNlcyA9IEJveE1hcDxBZGRyZXNzLCBVaW50MjU2Pih7IGtleVByZWZpeDogJ2InIH0pCiAgICBieXRlY18xIC8vICJiIgogICAgZnJhbWVfZGlnIC0xCiAgICBjb25jYXQKICAgIGR1cAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czozMjcKICAgIC8vIGlmICghdGhpcy5iYWxhbmNlcyhvd25lcikuZXhpc3RzKSByZXR1cm4gbmV3IFVpbnQyNTYoMCkKICAgIGJveF9sZW4KICAgIGJ1cnkgMQogICAgYm56IF9iYWxhbmNlT2ZfYWZ0ZXJfaWZfZWxzZUAyCiAgICBieXRlYyA1IC8vIDB4MDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMAogICAgc3dhcAogICAgcmV0c3ViCgpfYmFsYW5jZU9mX2FmdGVyX2lmX2Vsc2VAMjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzI4CiAgICAvLyByZXR1cm4gdGhpcy5iYWxhbmNlcyhvd25lcikudmFsdWUKICAgIGZyYW1lX2RpZyAwCiAgICBib3hfZ2V0CiAgICBhc3NlcnQgLy8gQm94IG11c3QgaGF2ZSB2YWx1ZQogICAgc3dhcAogICAgcmV0c3ViCgoKLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo6QXJjMjAwX0FTQS5fdHJhbnNmZXIoc2VuZGVyOiBieXRlcywgcmVjaXBpZW50OiBieXRlcywgYW1vdW50OiBieXRlcykgLT4gYnl0ZXM6Cl90cmFuc2ZlcjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzMxCiAgICAvLyBwcml2YXRlIF90cmFuc2ZlcihzZW5kZXI6IEFkZHJlc3MsIHJlY2lwaWVudDogQWRkcmVzcywgYW1vdW50OiBVaW50MjU2KTogQm9vbCB7CiAgICBwcm90byAzIDEKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzMyCiAgICAvLyBjb25zdCBzZW5kZXJfYmFsYW5jZSA9IHRoaXMuX2JhbGFuY2VPZihzZW5kZXIpCiAgICBmcmFtZV9kaWcgLTMKICAgIGNhbGxzdWIgX2JhbGFuY2VPZgogICAgZHVwCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjMzMwogICAgLy8gY29uc3QgcmVjaXBpZW50X2JhbGFuY2UgPSB0aGlzLl9iYWxhbmNlT2YocmVjaXBpZW50KQogICAgZnJhbWVfZGlnIC0yCiAgICBjYWxsc3ViIF9iYWxhbmNlT2YKICAgIHN3YXAKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzM0CiAgICAvLyBhc3NlcnQoc2VuZGVyX2JhbGFuY2UuYXNCaWdVaW50KCkgPj0gYW1vdW50LmFzQmlnVWludCgpLCAnSW5zdWZmaWNpZW50IGJhbGFuY2UgYXQgdGhlIHNlbmRlciBhY2NvdW50JykKICAgIGZyYW1lX2RpZyAtMQogICAgYj49CiAgICBhc3NlcnQgLy8gSW5zdWZmaWNpZW50IGJhbGFuY2UgYXQgdGhlIHNlbmRlciBhY2NvdW50CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjMzNgogICAgLy8gaWYgKHNlbmRlciAhPT0gcmVjaXBpZW50KSB7CiAgICBmcmFtZV9kaWcgLTMKICAgIGZyYW1lX2RpZyAtMgogICAgIT0KICAgIGJ6IF90cmFuc2Zlcl9hZnRlcl9pZl9lbHNlQDIKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzM4CiAgICAvLyB0aGlzLmJhbGFuY2VzKHNlbmRlcikudmFsdWUgPSBuZXcgVWludDI1NihzZW5kZXJfYmFsYW5jZS5hc0JpZ1VpbnQoKSAtIGFtb3VudC5hc0JpZ1VpbnQoKSkKICAgIGZyYW1lX2RpZyAwCiAgICBmcmFtZV9kaWcgLTEKICAgIGItCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA8PQogICAgYXNzZXJ0IC8vIG92ZXJmbG93CiAgICBpbnRjXzAgLy8gMzIKICAgIGJ6ZXJvCiAgICBzd2FwCiAgICBkaWcgMQogICAgYnwKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6ODIKICAgIC8vIHB1YmxpYyBiYWxhbmNlcyA9IEJveE1hcDxBZGRyZXNzLCBVaW50MjU2Pih7IGtleVByZWZpeDogJ2InIH0pCiAgICBieXRlY18xIC8vICJiIgogICAgZnJhbWVfZGlnIC0zCiAgICBjb25jYXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzM4CiAgICAvLyB0aGlzLmJhbGFuY2VzKHNlbmRlcikudmFsdWUgPSBuZXcgVWludDI1NihzZW5kZXJfYmFsYW5jZS5hc0JpZ1VpbnQoKSAtIGFtb3VudC5hc0JpZ1VpbnQoKSkKICAgIHN3YXAKICAgIGJveF9wdXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzM5CiAgICAvLyB0aGlzLmJhbGFuY2VzKHJlY2lwaWVudCkudmFsdWUgPSBuZXcgVWludDI1NihyZWNpcGllbnRfYmFsYW5jZS5hc0JpZ1VpbnQoKSArIGFtb3VudC5hc0JpZ1VpbnQoKSkKICAgIGZyYW1lX2RpZyAxCiAgICBmcmFtZV9kaWcgLTEKICAgIGIrCiAgICBkdXAKICAgIGxlbgogICAgaW50Y18wIC8vIDMyCiAgICA8PQogICAgYXNzZXJ0IC8vIG92ZXJmbG93CiAgICBifAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo4MgogICAgLy8gcHVibGljIGJhbGFuY2VzID0gQm94TWFwPEFkZHJlc3MsIFVpbnQyNTY+KHsga2V5UHJlZml4OiAnYicgfSkKICAgIGJ5dGVjXzEgLy8gImIiCiAgICBmcmFtZV9kaWcgLTIKICAgIGNvbmNhdAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czozMzkKICAgIC8vIHRoaXMuYmFsYW5jZXMocmVjaXBpZW50KS52YWx1ZSA9IG5ldyBVaW50MjU2KHJlY2lwaWVudF9iYWxhbmNlLmFzQmlnVWludCgpICsgYW1vdW50LmFzQmlnVWludCgpKQogICAgc3dhcAogICAgYm94X3B1dAoKX3RyYW5zZmVyX2FmdGVyX2lmX2Vsc2VAMjoKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzQxCiAgICAvLyBlbWl0KG5ldyBhcmMyMDBfVHJhbnNmZXIoeyBmcm9tOiBzZW5kZXIsIHRvOiByZWNpcGllbnQsIHZhbHVlOiBhbW91bnQgfSkpCiAgICBmcmFtZV9kaWcgLTMKICAgIGZyYW1lX2RpZyAtMgogICAgY29uY2F0CiAgICBmcmFtZV9kaWcgLTEKICAgIGNvbmNhdAogICAgYnl0ZWMgNCAvLyBtZXRob2QgImFyYzIwMF9UcmFuc2ZlcihhZGRyZXNzLGFkZHJlc3MsdWludDI1NikiCiAgICBzd2FwCiAgICBjb25jYXQKICAgIGxvZwogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czozNDIKICAgIC8vIHJldHVybiBuZXcgQm9vbCh0cnVlKQogICAgcHVzaGJ5dGVzIDB4ODAKICAgIGZyYW1lX2J1cnkgMAogICAgcmV0c3ViCgoKLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo6QXJjMjAwX0FTQS5fYWxsb3dhbmNlKG93bmVyOiBieXRlcywgc3BlbmRlcjogYnl0ZXMpIC0+IGJ5dGVzOgpfYWxsb3dhbmNlOgogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czozNDkKICAgIC8vIHByaXZhdGUgX2FsbG93YW5jZShvd25lcjogQWRkcmVzcywgc3BlbmRlcjogQWRkcmVzcyk6IFVpbnQyNTYgewogICAgcHJvdG8gMiAxCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjM0NgogICAgLy8gcmV0dXJuIG5ldyBTdGF0aWNCeXRlczwzMj4ob3Auc2hhMjU2KG9wLmNvbmNhdChvd25lci5ieXRlcywgc3BlbmRlci5ieXRlcykpKQogICAgZnJhbWVfZGlnIC0yCiAgICBmcmFtZV9kaWcgLTEKICAgIGNvbmNhdAogICAgc2hhMjU2CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjg0CiAgICAvLyBwdWJsaWMgYXBwcm92YWxzID0gQm94TWFwPFN0YXRpY0J5dGVzPDMyPiwgQXBwcm92YWxTdHJ1Y3Q+KHsga2V5UHJlZml4OiAnYScgfSkKICAgIHB1c2hieXRlcyAiYSIKICAgIHN3YXAKICAgIGNvbmNhdAogICAgZHVwCiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjM1MQogICAgLy8gaWYgKCF0aGlzLmFwcHJvdmFscyhrZXkpLmV4aXN0cykgcmV0dXJuIG5ldyBVaW50MjU2KDApCiAgICBib3hfbGVuCiAgICBidXJ5IDEKICAgIGJueiBfYWxsb3dhbmNlX2FmdGVyX2lmX2Vsc2VAMgogICAgYnl0ZWMgNSAvLyAweDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAKICAgIHN3YXAKICAgIHJldHN1YgoKX2FsbG93YW5jZV9hZnRlcl9pZl9lbHNlQDI6CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjM1MgogICAgLy8gcmV0dXJuIHRoaXMuYXBwcm92YWxzKGtleSkudmFsdWUuYXBwcm92YWxBbW91bnQKICAgIGZyYW1lX2RpZyAwCiAgICBib3hfZ2V0CiAgICBhc3NlcnQgLy8gQm94IG11c3QgaGF2ZSB2YWx1ZQogICAgZXh0cmFjdCAwIDMyCiAgICBzd2FwCiAgICByZXRzdWIKCgovLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjpBcmMyMDBfQVNBLl9hcHByb3ZlKG93bmVyOiBieXRlcywgc3BlbmRlcjogYnl0ZXMsIGFtb3VudDogYnl0ZXMpIC0+IGJ5dGVzOgpfYXBwcm92ZToKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzU1CiAgICAvLyBwcml2YXRlIF9hcHByb3ZlKG93bmVyOiBBZGRyZXNzLCBzcGVuZGVyOiBBZGRyZXNzLCBhbW91bnQ6IFVpbnQyNTYpOiBCb29sIHsKICAgIHByb3RvIDMgMQogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czozNDYKICAgIC8vIHJldHVybiBuZXcgU3RhdGljQnl0ZXM8MzI+KG9wLnNoYTI1NihvcC5jb25jYXQob3duZXIuYnl0ZXMsIHNwZW5kZXIuYnl0ZXMpKSkKICAgIGZyYW1lX2RpZyAtMwogICAgZnJhbWVfZGlnIC0yCiAgICBjb25jYXQKICAgIGR1cAogICAgc2hhMjU2CiAgICAvLyBjb250cmFjdHMvYXJjMjAwX2FzYS5hbGdvLnRzOjM1Ny0zNjEKICAgIC8vIGNvbnN0IGFwcHJvdmFsQm94OiBBcHByb3ZhbFN0cnVjdCA9IG5ldyBBcHByb3ZhbFN0cnVjdCh7CiAgICAvLyAgIGFwcHJvdmFsQW1vdW50OiBhbW91bnQsCiAgICAvLyAgIG93bmVyOiBvd25lciwKICAgIC8vICAgc3BlbmRlcjogc3BlbmRlciwKICAgIC8vIH0pCiAgICBmcmFtZV9kaWcgLTEKICAgIGZyYW1lX2RpZyAtMwogICAgY29uY2F0CiAgICBmcmFtZV9kaWcgLTIKICAgIGNvbmNhdAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czo4NAogICAgLy8gcHVibGljIGFwcHJvdmFscyA9IEJveE1hcDxTdGF0aWNCeXRlczwzMj4sIEFwcHJvdmFsU3RydWN0Pih7IGtleVByZWZpeDogJ2EnIH0pCiAgICBwdXNoYnl0ZXMgImEiCiAgICB1bmNvdmVyIDIKICAgIGNvbmNhdAogICAgLy8gY29udHJhY3RzL2FyYzIwMF9hc2EuYWxnby50czozNjIKICAgIC8vIHRoaXMuYXBwcm92YWxzKGtleSkudmFsdWUgPSBjbG9uZShhcHByb3ZhbEJveCkKICAgIHN3YXAKICAgIGJveF9wdXQKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzYzCiAgICAvLyBlbWl0KG5ldyBhcmMyMDBfQXBwcm92YWwoeyBvd25lcjogb3duZXIsIHNwZW5kZXI6IHNwZW5kZXIsIHZhbHVlOiBhbW91bnQgfSkpCiAgICBmcmFtZV9kaWcgLTEKICAgIGNvbmNhdAogICAgcHVzaGJ5dGVzIDB4MTk2OWY4NjUgLy8gbWV0aG9kICJhcmMyMDBfQXBwcm92YWwoYWRkcmVzcyxhZGRyZXNzLHVpbnQyNTYpIgogICAgc3dhcAogICAgY29uY2F0CiAgICBsb2cKICAgIC8vIGNvbnRyYWN0cy9hcmMyMDBfYXNhLmFsZ28udHM6MzY0CiAgICAvLyByZXR1cm4gbmV3IEJvb2wodHJ1ZSkKICAgIHB1c2hieXRlcyAweDgwCiAgICByZXRzdWIK",
+        "clear": "I3ByYWdtYSB2ZXJzaW9uIDExCiNwcmFnbWEgdHlwZXRyYWNrIGZhbHNlCgovLyBAYWxnb3JhbmRmb3VuZGF0aW9uL2FsZ29yYW5kLXR5cGVzY3JpcHQvYmFzZS1jb250cmFjdC5kLnRzOjpCYXNlQ29udHJhY3QuY2xlYXJTdGF0ZVByb2dyYW0oKSAtPiB1aW50NjQ6Cm1haW46CiAgICBwdXNoaW50IDEgLy8gMQogICAgcmV0dXJuCg=="
+    },
+    "byteCode": {
+        "approval": "CyAEIAEACCYGBBUffHUBYgNhc2EBdAR5g8NcIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMRtBAGoxGRREMRhEgg0Eidl1HwRlfRPsBLauGiUEhOwT1QTsmWBBBILlc8QE2nAluQRKlo+PBLVCISUEQJtUlwRi1BzfBHwC2q8Eu7MZ8zYaAI4NAAsA+QENASEBLQE3AUgBZQGnAcQB0QIiAlcAMRkUMRgUEEQjQzYaAUkkWYECCEsBFRJENhoCSSRZgQIISwEVEkQ2GgNJFSMSRDYaBEkVSSISRDYaBUkVSwEiWUmBIhJESwJMSwJSSSRZgSQITwISRDEAMgkSREsGVwIASRVJRCIOREsGVwIASRVJRCUORCQrZUUBFESAAW5PCWeAAXNPCGcrSwZngAFkSwdnMQApSwFQSwe/sUsGk4FADkRPBSUJSwZMWzIKSU8HVwAgSRUiEkRPB1cCAE8JF7IjsieyKLIqsilPA7ImTwKyJSSyJLIigQOyECSyAbO0PBYqTGcyA0xQTFAnBExQsIAFFR98dYCwI0MkgAFuZURXAgBJFSISRChMULAjQySAAXNlRFcCAEkVJRJEKExQsCNDJIABZGVEKExQsCNDJCtlRChMULAjQzYaAUkVIhJEiAEuKExQsCNDNhoBSRUiEkQ2GgJJFSISRDEATgKIASkoTFCwI0M2GgFJFSISRDYaAkkVIhJENhoDSRUiEkQxAEsDSwGIAVdJSwOnREsCoUkVIg5EIq+rSwROAogBYkiIAOcoTFCwI0M2GgFJFSISRDYaAkkVIhJEMQBOAogBQShMULAjQyQqZUQyClAoTFCwI0M2GgFJFSUSRDEWIwk4EIEEEkQxFiMJSTgQgQQSREk4Ek8CF0sBDkRLATgRJCplRBcSREsBOBQyChJETDgAMQASRDIKMQBPAhYir6uIAGlII0M2GgFJFUklEkQxADIKTwIiDkQir0sDq4gATEixMQBMFyQqZUQXshGyErIUgQSyECSyAbMjQzYaAUkVIhJENhoCSRUiEkSIAHMoTFCwI0OKAQEpi/9QSb1FAUAABCcFTImLAL5ETImKAwGL/Yj/4EmL/oj/2kyL/6dEi/2L/hNBACeLAIv/oUkVIg5EIq9MSwGrKYv9UEy/iwGL/6BJFSIORKspi/5QTL+L/Yv+UIv/UCcETFCwgAGAjACJigIBi/6L/1ABgAFhTFBJvUUBQAAEJwVMiYsAvkRXACBMiYoDAYv9i/5QSQGL/4v9UIv+UIABYU8CUEy/i/9QgAQZafhlTFCwgAGAiQ==",
+        "clear": "C4EBQw=="
+    },
+    "compilerInfo": {
+        "compiler": "puya",
+        "compilerVersion": {
+            "major": 5,
+            "minor": 3,
+            "patch": 2
+        }
+    },
+    "events": [
+        {
+            "name": "arc200_Transfer",
+            "args": [
+                {
+                    "type": "address",
+                    "name": "from"
+                },
+                {
+                    "type": "address",
+                    "name": "to"
+                },
+                {
+                    "type": "uint256",
+                    "name": "value"
+                }
+            ]
+        },
+        {
+            "name": "arc200_Approval",
+            "args": [
+                {
+                    "type": "address",
+                    "name": "owner"
+                },
+                {
+                    "type": "address",
+                    "name": "spender"
+                },
+                {
+                    "type": "uint256",
+                    "name": "value"
+                }
+            ]
+        }
+    ],
+    "templateVariables": {}
+}

@@ -1,5 +1,5 @@
 import { Address, ProgramSourceMap, TransactionSigner } from 'algosdk'
-import { Arc200Client } from '../contracts/artifacts/Arc200Client'
+import { Arc200AsaClient } from '../contracts/artifacts/Arc200_ASAClient'
 import { AlgorandClient } from '@algorandfoundation/algokit-utils'
 
 interface IGetClientInput {
@@ -12,8 +12,8 @@ interface IGetClientInput {
   defaultSigner: TransactionSigner | undefined
 }
 
-export const getArc200Client = (input: IGetClientInput) => {
-  return new Arc200Client({
+export const getArc200ASAClient = (input: IGetClientInput) => {
+  return new Arc200AsaClient({
     algorand: input.algorand,
     appId: input.appId,
     appName: input.appName,
