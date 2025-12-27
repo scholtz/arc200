@@ -3,3 +3,4 @@ coverage/
 dist/
 .algokit/
 .npmrc
+debug_traces
