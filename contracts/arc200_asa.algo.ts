@@ -280,6 +280,32 @@ export class Arc200_ASA extends Contract {
     )
   }
   /**
+   * wnnt200 for arc200_redeem
+   *
+   * @param amount
+   * @returns
+   */
+  @arc4.abimethod()
+  public deposit(amount: Uint64): arc4.Uint256 {
+    const prev = gtxn.Transaction(Txn.groupIndex - 1)
+    assert(prev.type === TransactionType.AssetTransfer, 'Previous txn must be ASA transfer')
+    const axfer = gtxn.AssetTransferTxn(Txn.groupIndex - 1)
+    assert(
+      axfer.assetAmount >= amount.asUint64(),
+      'The amount transferred MUST be equal to or greater than the amount requested',
+    )
+    assert(axfer.xferAsset.id === this.assetId.value.asUint64(), 'ASA ID must match configured exchange_asset')
+    assert(axfer.assetReceiver === Global.currentApplicationAddress, 'ASA must be sent to the sink address')
+    assert(axfer.sender === Txn.sender, 'ASA sender must match ARC200 redeemer')
+    const ret = new Uint256(axfer.assetAmount)
+    this._transfer(
+      new Address(Global.currentApplicationAddress),
+      new Address(Txn.sender),
+      ret, // send the real amount which must be greater or equal to requested amount
+    )
+    return ret
+  }
+  /**
    * arc200_swapBack(uint64 amount) → void
    *
    * Exchanges ARC200 tokens back into ASA tokens.
@@ -310,6 +336,26 @@ export class Arc200_ASA extends Contract {
         fee: 0,
       })
       .submit()
+  }
+  /**
+   * wnnt200 for arc200_swapBack
+   *
+   * @param amount
+   * @returns
+   */
+  @arc4.abimethod()
+  public withdraw(amount: Uint64): arc4.Uint256 {
+    const ret = new Uint256(amount.asBigUint())
+    this._transfer(new Address(Txn.sender), new Address(Global.currentApplicationAddress), ret)
+    itxn
+      .assetTransfer({
+        assetReceiver: Txn.sender,
+        assetAmount: amount.asUint64(),
+        xferAsset: this.assetId.value.asUint64(),
+        fee: 0,
+      })
+      .submit()
+    return ret
   }
   /**
    * Returns the current allowance of the spender of the tokens of the owner

@@ -1484,7 +1484,13 @@ type Arc200AsaArgs = {
         'arc200_redeem(uint64)void': {
             amount: bigint | number;
         };
+        'deposit(uint64)uint256': {
+            amount: bigint | number;
+        };
         'arc200_swapBack(uint64)void': {
+            amount: bigint | number;
+        };
+        'withdraw(uint64)uint256': {
             amount: bigint | number;
         };
         'arc200_allowance(address,address)uint256': {
@@ -1513,7 +1519,9 @@ type Arc200AsaArgs = {
         'arc200_approve(address,uint256)bool': [spender: string, value: bigint | number];
         'arc200_exchange()(uint64,address)': [];
         'arc200_redeem(uint64)void': [amount: bigint | number];
+        'deposit(uint64)uint256': [amount: bigint | number];
         'arc200_swapBack(uint64)void': [amount: bigint | number];
+        'withdraw(uint64)uint256': [amount: bigint | number];
         'arc200_allowance(address,address)uint256': [owner: string, spender: string];
     };
 };
@@ -1532,7 +1540,9 @@ type Arc200AsaReturns = {
     'arc200_approve(address,uint256)bool': boolean;
     'arc200_exchange()(uint64,address)': Arc200ExchangeInfo;
     'arc200_redeem(uint64)void': void;
+    'deposit(uint64)uint256': bigint;
     'arc200_swapBack(uint64)void': void;
+    'withdraw(uint64)uint256': bigint;
     'arc200_allowance(address,address)uint256': bigint;
 };
 /**
@@ -1610,10 +1620,18 @@ type Arc200AsaTypes = {
         argsObj: Arc200AsaArgs['obj']['arc200_redeem(uint64)void'];
         argsTuple: Arc200AsaArgs['tuple']['arc200_redeem(uint64)void'];
         returns: Arc200AsaReturns['arc200_redeem(uint64)void'];
+    }> & Record<'deposit(uint64)uint256' | 'deposit', {
+        argsObj: Arc200AsaArgs['obj']['deposit(uint64)uint256'];
+        argsTuple: Arc200AsaArgs['tuple']['deposit(uint64)uint256'];
+        returns: Arc200AsaReturns['deposit(uint64)uint256'];
     }> & Record<'arc200_swapBack(uint64)void' | 'arc200_swapBack', {
         argsObj: Arc200AsaArgs['obj']['arc200_swapBack(uint64)void'];
         argsTuple: Arc200AsaArgs['tuple']['arc200_swapBack(uint64)void'];
         returns: Arc200AsaReturns['arc200_swapBack(uint64)void'];
+    }> & Record<'withdraw(uint64)uint256' | 'withdraw', {
+        argsObj: Arc200AsaArgs['obj']['withdraw(uint64)uint256'];
+        argsTuple: Arc200AsaArgs['tuple']['withdraw(uint64)uint256'];
+        returns: Arc200AsaReturns['withdraw(uint64)uint256'];
     }> & Record<'arc200_allowance(address,address)uint256' | 'arc200_allowance', {
         argsObj: Arc200AsaArgs['obj']['arc200_allowance(address,address)uint256'];
         argsTuple: Arc200AsaArgs['tuple']['arc200_allowance(address,address)uint256'];
@@ -1901,6 +1919,17 @@ declare class Arc200AsaClient {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<AppCallMethodCall>;
         /**
+         * Makes a call to the Arc200_ASA smart contract using the `deposit(uint64)uint256` ABI method.
+         *
+         * wnnt200 for arc200_redeem
+         *
+         * @param params The params for the smart contract call
+         * @returns The call params
+         */
+        deposit: (params: CallParams<Arc200AsaArgs["obj"]["deposit(uint64)uint256"] | Arc200AsaArgs["tuple"]["deposit(uint64)uint256"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<AppCallMethodCall>;
+        /**
          * Makes a call to the Arc200_ASA smart contract using the `arc200_swapBack(uint64)void` ABI method.
          *
         * arc200_swapBack(uint64 amount) → void
@@ -1922,6 +1951,17 @@ declare class Arc200AsaClient {
          * @returns The call params
          */
         arc200SwapBack: (params: CallParams<Arc200AsaArgs["obj"]["arc200_swapBack(uint64)void"] | Arc200AsaArgs["tuple"]["arc200_swapBack(uint64)void"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<AppCallMethodCall>;
+        /**
+         * Makes a call to the Arc200_ASA smart contract using the `withdraw(uint64)uint256` ABI method.
+         *
+         * wnnt200 for arc200_swapBack
+         *
+         * @param params The params for the smart contract call
+         * @returns The call params
+         */
+        withdraw: (params: CallParams<Arc200AsaArgs["obj"]["withdraw(uint64)uint256"] | Arc200AsaArgs["tuple"]["withdraw(uint64)uint256"]> & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<AppCallMethodCall>;
         /**
@@ -2147,6 +2187,21 @@ declare class Arc200AsaClient {
             signers: Map<number, TransactionSigner>;
         }>;
         /**
+         * Makes a call to the Arc200_ASA smart contract using the `deposit(uint64)uint256` ABI method.
+         *
+         * wnnt200 for arc200_redeem
+         *
+         * @param params The params for the smart contract call
+         * @returns The call transaction
+         */
+        deposit: (params: CallParams<Arc200AsaArgs["obj"]["deposit(uint64)uint256"] | Arc200AsaArgs["tuple"]["deposit(uint64)uint256"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            transactions: Transaction[];
+            methodCalls: Map<number, algosdk.ABIMethod>;
+            signers: Map<number, TransactionSigner>;
+        }>;
+        /**
          * Makes a call to the Arc200_ASA smart contract using the `arc200_swapBack(uint64)void` ABI method.
          *
         * arc200_swapBack(uint64 amount) → void
@@ -2168,6 +2223,21 @@ declare class Arc200AsaClient {
          * @returns The call transaction
          */
         arc200SwapBack: (params: CallParams<Arc200AsaArgs["obj"]["arc200_swapBack(uint64)void"] | Arc200AsaArgs["tuple"]["arc200_swapBack(uint64)void"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            transactions: Transaction[];
+            methodCalls: Map<number, algosdk.ABIMethod>;
+            signers: Map<number, TransactionSigner>;
+        }>;
+        /**
+         * Makes a call to the Arc200_ASA smart contract using the `withdraw(uint64)uint256` ABI method.
+         *
+         * wnnt200 for arc200_swapBack
+         *
+         * @param params The params for the smart contract call
+         * @returns The call transaction
+         */
+        withdraw: (params: CallParams<Arc200AsaArgs["obj"]["withdraw(uint64)uint256"] | Arc200AsaArgs["tuple"]["withdraw(uint64)uint256"]> & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
             transactions: Transaction[];
@@ -2465,6 +2535,26 @@ declare class Arc200AsaClient {
             transaction: Transaction;
         }>;
         /**
+         * Makes a call to the Arc200_ASA smart contract using the `deposit(uint64)uint256` ABI method.
+         *
+         * wnnt200 for arc200_redeem
+         *
+         * @param params The params for the smart contract call
+         * @returns The call result
+         */
+        deposit: (params: CallParams<Arc200AsaArgs["obj"]["deposit(uint64)uint256"] | Arc200AsaArgs["tuple"]["deposit(uint64)uint256"]> & SendParams & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            return: (undefined | Arc200AsaReturns["deposit(uint64)uint256"]);
+            returns?: ABIReturn[] | undefined | undefined;
+            groupId: string;
+            txIds: string[];
+            confirmations: modelsv2.PendingTransactionResponse[];
+            transactions: Transaction[];
+            confirmation: modelsv2.PendingTransactionResponse;
+            transaction: Transaction;
+        }>;
+        /**
          * Makes a call to the Arc200_ASA smart contract using the `arc200_swapBack(uint64)void` ABI method.
          *
         * arc200_swapBack(uint64 amount) → void
@@ -2489,6 +2579,26 @@ declare class Arc200AsaClient {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
             return: (undefined | Arc200AsaReturns["arc200_swapBack(uint64)void"]);
+            returns?: ABIReturn[] | undefined | undefined;
+            groupId: string;
+            txIds: string[];
+            confirmations: modelsv2.PendingTransactionResponse[];
+            transactions: Transaction[];
+            confirmation: modelsv2.PendingTransactionResponse;
+            transaction: Transaction;
+        }>;
+        /**
+         * Makes a call to the Arc200_ASA smart contract using the `withdraw(uint64)uint256` ABI method.
+         *
+         * wnnt200 for arc200_swapBack
+         *
+         * @param params The params for the smart contract call
+         * @returns The call result
+         */
+        withdraw: (params: CallParams<Arc200AsaArgs["obj"]["withdraw(uint64)uint256"] | Arc200AsaArgs["tuple"]["withdraw(uint64)uint256"]> & SendParams & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            return: (undefined | Arc200AsaReturns["withdraw(uint64)uint256"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -2816,6 +2926,16 @@ type Arc200AsaComposer<TReturns extends [...any[]] = []> = {
      */
     arc200Redeem(params?: CallParams<Arc200AsaArgs['obj']['arc200_redeem(uint64)void'] | Arc200AsaArgs['tuple']['arc200_redeem(uint64)void']>): Arc200AsaComposer<[...TReturns, Arc200AsaReturns['arc200_redeem(uint64)void'] | undefined]>;
     /**
+     * Calls the deposit(uint64)uint256 ABI method.
+     *
+     * wnnt200 for arc200_redeem
+     *
+     * @param args The arguments for the contract call
+     * @param params Any additional parameters for the call
+     * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
+     */
+    deposit(params?: CallParams<Arc200AsaArgs['obj']['deposit(uint64)uint256'] | Arc200AsaArgs['tuple']['deposit(uint64)uint256']>): Arc200AsaComposer<[...TReturns, Arc200AsaReturns['deposit(uint64)uint256'] | undefined]>;
+    /**
      * Calls the arc200_swapBack(uint64)void ABI method.
      *
     * arc200_swapBack(uint64 amount) → void
@@ -2838,6 +2958,16 @@ type Arc200AsaComposer<TReturns extends [...any[]] = []> = {
      * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
      */
     arc200SwapBack(params?: CallParams<Arc200AsaArgs['obj']['arc200_swapBack(uint64)void'] | Arc200AsaArgs['tuple']['arc200_swapBack(uint64)void']>): Arc200AsaComposer<[...TReturns, Arc200AsaReturns['arc200_swapBack(uint64)void'] | undefined]>;
+    /**
+     * Calls the withdraw(uint64)uint256 ABI method.
+     *
+     * wnnt200 for arc200_swapBack
+     *
+     * @param args The arguments for the contract call
+     * @param params Any additional parameters for the call
+     * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
+     */
+    withdraw(params?: CallParams<Arc200AsaArgs['obj']['withdraw(uint64)uint256'] | Arc200AsaArgs['tuple']['withdraw(uint64)uint256']>): Arc200AsaComposer<[...TReturns, Arc200AsaReturns['withdraw(uint64)uint256'] | undefined]>;
     /**
      * Calls the arc200_allowance(address,address)uint256 ABI method.
      *
