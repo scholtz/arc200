@@ -16,7 +16,7 @@ describe('ARC200 ASA contract', () => {
   })
   beforeEach(localnet.newScope)
 
-  test('decode name of 40153368', async () => {
+  test('decode name of 40153415 cbBTC', async () => {
     const algod = new algosdk.Algodv2('', 'https://mainnet-api.voi.nodely.dev', '')
     const indexer = new algosdk.Indexer('', 'https://mainnet-idx.voi.nodely.dev', '')
     var algoClient = AlgorandClient.fromClients({
@@ -48,5 +48,38 @@ describe('ARC200 ASA contract', () => {
     const exchangeInfo = await client.arc200Exchange()
     expect(exchangeInfo.exchangeAsset).toBe(40152648n)
     expect(exchangeInfo.sink).toBe(algosdk.getApplicationAddress(40153415n))
+  })
+  test('decode name of 40153368 POW', async () => {
+    const algod = new algosdk.Algodv2('', 'https://mainnet-api.voi.nodely.dev', '')
+    const indexer = new algosdk.Indexer('', 'https://mainnet-idx.voi.nodely.dev', '')
+    var algoClient = AlgorandClient.fromClients({
+      algod,
+      indexer: indexer,
+    })
+    const dummyAddress = 'TESTNTTTJDHIF5PJZUBTTDYYSKLCLM6KXCTWIOOTZJX5HO7263DPPMM2SU'
+    const dummyTransactionSigner = async (
+      txnGroup: algosdk.Transaction[],
+      indexesToSign: number[],
+    ): Promise<Uint8Array[]> => {
+      console.log('transactionSigner', txnGroup, indexesToSign)
+      return [] as Uint8Array[]
+    }
+    const client = getArc200ASAClient({
+      algorand: algoClient,
+      appId: 40153155n,
+      defaultSender: dummyAddress,
+      defaultSigner: dummyTransactionSigner,
+      appName: 'arc200',
+      approvalSourceMap: undefined,
+      clearSourceMap: undefined,
+    })
+
+    const name = await client.arc200Name()
+    const decodedName = Buffer.from(name).toString('ascii').replace(/\0/g, '')
+    expect(decodedName).toBe('Power')
+
+    const exchangeInfo = await client.arc200Exchange()
+    expect(exchangeInfo.exchangeAsset).toBe(40152679n)
+    expect(exchangeInfo.sink).toBe(algosdk.getApplicationAddress(40153155n))
   })
 })
