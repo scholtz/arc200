@@ -1524,6 +1524,17 @@ declare namespace Arc200Client$1 {
   export { APP_SPEC$1 as APP_SPEC, type ApprovalStruct$1 as ApprovalStruct, ApprovalStructFromTuple$1 as ApprovalStructFromTuple, type Arc200Client$1_Arc200Args as Arc200Args, Arc200Client$1_Arc200Client as Arc200Client, type Arc200Client$1_Arc200Composer as Arc200Composer, type Arc200Client$1_Arc200ComposerResults as Arc200ComposerResults, type Arc200Client$1_Arc200CreateCallParams as Arc200CreateCallParams, type Arc200Client$1_Arc200DeployParams as Arc200DeployParams, Arc200Client$1_Arc200Factory as Arc200Factory, type Arc200Client$1_Arc200NonVoidMethodSignatures as Arc200NonVoidMethodSignatures, Arc200Client$1_Arc200ParamsFactory as Arc200ParamsFactory, type Arc200Client$1_Arc200Returns as Arc200Returns, type Arc200Client$1_Arc200Signatures as Arc200Signatures, type Arc200Client$1_Arc200Types as Arc200Types, type BinaryState$1 as BinaryState, type BoxKeysState$1 as BoxKeysState, type CallParams$1 as CallParams, type Expand$1 as Expand, type GlobalKeysState$1 as GlobalKeysState, type MethodArgs$1 as MethodArgs, type MethodReturn$1 as MethodReturn };
 }
 
+interface IGetClientInput$1 {
+    algorand: AlgorandClient$1;
+    appId: bigint;
+    appName: string | undefined;
+    approvalSourceMap: ProgramSourceMap | undefined;
+    clearSourceMap: ProgramSourceMap | undefined;
+    defaultSender: string | Address | undefined;
+    defaultSigner: TransactionSigner | undefined;
+}
+declare const getArc200Client: (input: IGetClientInput$1) => Arc200Client;
+
 declare const APP_SPEC: Arc56Contract;
 /**
  * A state record containing binary data
@@ -3607,50 +3618,6 @@ type Arc200AsaComposerResults<TReturns extends [...any[]]> = Expand<SendAtomicTr
     returns: TReturns;
 }>;
 
-declare const Arc200_ASAClient_APP_SPEC: typeof APP_SPEC;
-type Arc200_ASAClient_ApprovalStruct = ApprovalStruct;
-declare const Arc200_ASAClient_ApprovalStructFromTuple: typeof ApprovalStructFromTuple;
-type Arc200_ASAClient_Arc200AsaArgs = Arc200AsaArgs;
-type Arc200_ASAClient_Arc200AsaClient = Arc200AsaClient;
-declare const Arc200_ASAClient_Arc200AsaClient: typeof Arc200AsaClient;
-type Arc200_ASAClient_Arc200AsaComposer<TReturns extends [...any[]] = []> = Arc200AsaComposer<TReturns>;
-type Arc200_ASAClient_Arc200AsaComposerResults<TReturns extends [...any[]]> = Arc200AsaComposerResults<TReturns>;
-type Arc200_ASAClient_Arc200AsaCreateCallParams = Arc200AsaCreateCallParams;
-type Arc200_ASAClient_Arc200AsaDeployParams = Arc200AsaDeployParams;
-type Arc200_ASAClient_Arc200AsaFactory = Arc200AsaFactory;
-declare const Arc200_ASAClient_Arc200AsaFactory: typeof Arc200AsaFactory;
-type Arc200_ASAClient_Arc200AsaNonVoidMethodSignatures = Arc200AsaNonVoidMethodSignatures;
-type Arc200_ASAClient_Arc200AsaParamsFactory = Arc200AsaParamsFactory;
-declare const Arc200_ASAClient_Arc200AsaParamsFactory: typeof Arc200AsaParamsFactory;
-type Arc200_ASAClient_Arc200AsaReturns = Arc200AsaReturns;
-type Arc200_ASAClient_Arc200AsaSignatures = Arc200AsaSignatures;
-type Arc200_ASAClient_Arc200AsaTypes = Arc200AsaTypes;
-type Arc200_ASAClient_Arc200ExchangeInfo = Arc200ExchangeInfo;
-declare const Arc200_ASAClient_Arc200ExchangeInfoFromTuple: typeof Arc200ExchangeInfoFromTuple;
-type Arc200_ASAClient_AsaProps = AsaProps;
-declare const Arc200_ASAClient_AsaPropsFromTuple: typeof AsaPropsFromTuple;
-type Arc200_ASAClient_BinaryState = BinaryState;
-type Arc200_ASAClient_BoxKeysState = BoxKeysState;
-type Arc200_ASAClient_CallParams<TArgs> = CallParams<TArgs>;
-type Arc200_ASAClient_Expand<T> = Expand<T>;
-type Arc200_ASAClient_GlobalKeysState = GlobalKeysState;
-type Arc200_ASAClient_MethodArgs<TSignature extends Arc200AsaSignatures> = MethodArgs<TSignature>;
-type Arc200_ASAClient_MethodReturn<TSignature extends Arc200AsaSignatures> = MethodReturn<TSignature>;
-declare namespace Arc200_ASAClient {
-  export { Arc200_ASAClient_APP_SPEC as APP_SPEC, type Arc200_ASAClient_ApprovalStruct as ApprovalStruct, Arc200_ASAClient_ApprovalStructFromTuple as ApprovalStructFromTuple, type Arc200_ASAClient_Arc200AsaArgs as Arc200AsaArgs, Arc200_ASAClient_Arc200AsaClient as Arc200AsaClient, type Arc200_ASAClient_Arc200AsaComposer as Arc200AsaComposer, type Arc200_ASAClient_Arc200AsaComposerResults as Arc200AsaComposerResults, type Arc200_ASAClient_Arc200AsaCreateCallParams as Arc200AsaCreateCallParams, type Arc200_ASAClient_Arc200AsaDeployParams as Arc200AsaDeployParams, Arc200_ASAClient_Arc200AsaFactory as Arc200AsaFactory, type Arc200_ASAClient_Arc200AsaNonVoidMethodSignatures as Arc200AsaNonVoidMethodSignatures, Arc200_ASAClient_Arc200AsaParamsFactory as Arc200AsaParamsFactory, type Arc200_ASAClient_Arc200AsaReturns as Arc200AsaReturns, type Arc200_ASAClient_Arc200AsaSignatures as Arc200AsaSignatures, type Arc200_ASAClient_Arc200AsaTypes as Arc200AsaTypes, type Arc200_ASAClient_Arc200ExchangeInfo as Arc200ExchangeInfo, Arc200_ASAClient_Arc200ExchangeInfoFromTuple as Arc200ExchangeInfoFromTuple, type Arc200_ASAClient_AsaProps as AsaProps, Arc200_ASAClient_AsaPropsFromTuple as AsaPropsFromTuple, type Arc200_ASAClient_BinaryState as BinaryState, type Arc200_ASAClient_BoxKeysState as BoxKeysState, type Arc200_ASAClient_CallParams as CallParams, type Arc200_ASAClient_Expand as Expand, type Arc200_ASAClient_GlobalKeysState as GlobalKeysState, type Arc200_ASAClient_MethodArgs as MethodArgs, type Arc200_ASAClient_MethodReturn as MethodReturn };
-}
-
-interface IGetClientInput$1 {
-    algorand: AlgorandClient$1;
-    appId: bigint;
-    appName: string | undefined;
-    approvalSourceMap: ProgramSourceMap | undefined;
-    clearSourceMap: ProgramSourceMap | undefined;
-    defaultSender: string | Address | undefined;
-    defaultSigner: TransactionSigner | undefined;
-}
-declare const getArc200Client: (input: IGetClientInput$1) => Arc200Client;
-
 interface IGetClientInput {
     algorand: AlgorandClient$1;
     appId: bigint;
@@ -3662,4 +3629,4 @@ interface IGetClientInput {
 }
 declare const getArc200ASAClient: (input: IGetClientInput) => Arc200AsaClient;
 
-export { APP_SPEC, type ApprovalStruct$1 as ApprovalStruct, ApprovalStructFromTuple, type Arc200AsaArgs, Arc200AsaClient, type Arc200AsaComposer, type Arc200AsaComposerResults, type Arc200AsaCreateCallParams, type Arc200AsaDeployParams, Arc200AsaFactory, type Arc200AsaNonVoidMethodSignatures, Arc200AsaParamsFactory, type Arc200AsaReturns, type Arc200AsaSignatures, type Arc200AsaTypes, Arc200Client, type Arc200ExchangeInfo, Arc200ExchangeInfoFromTuple, Arc200Factory, type AsaProps, AsaPropsFromTuple, type BinaryState, type BoxKeysState, type CallParams, type Expand, type GlobalKeysState, type MethodArgs, type MethodReturn, Arc200Client$1 as arc200, Arc200Client$1 as arc200Types, Arc200_ASAClient as arc200asa, getArc200ASAClient, getArc200Client };
+export { APP_SPEC, type ApprovalStruct$1 as ApprovalStruct, ApprovalStructFromTuple, type Arc200AsaArgs, Arc200AsaClient, type Arc200AsaComposer, type Arc200AsaComposerResults, type Arc200AsaCreateCallParams, type Arc200AsaDeployParams, Arc200AsaFactory, type Arc200AsaNonVoidMethodSignatures, Arc200AsaParamsFactory, type Arc200AsaReturns, type Arc200AsaSignatures, type Arc200AsaTypes, Arc200Client, type Arc200ExchangeInfo, Arc200ExchangeInfoFromTuple, Arc200Factory, type AsaProps, AsaPropsFromTuple, type BinaryState, type BoxKeysState, type CallParams, type Expand, type GlobalKeysState, type MethodArgs, type MethodReturn, Arc200Client$1 as arc200, getArc200ASAClient, getArc200Client };

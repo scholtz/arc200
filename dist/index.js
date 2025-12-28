@@ -30,7 +30,6 @@ __export(index_exports, {
   Arc200Factory: () => Arc200Factory,
   AsaPropsFromTuple: () => AsaPropsFromTuple,
   arc200: () => Arc200Client_exports,
-  arc200asa: () => Arc200_ASAClient_exports,
   getArc200ASAClient: () => getArc200ASAClient,
   getArc200Client: () => getArc200Client
 });
@@ -1090,17 +1089,20 @@ var Arc200Client = class _Arc200Client {
   }
 };
 
+// src/getArc200Client.ts
+var getArc200Client = (input) => {
+  return new Arc200Client({
+    algorand: input.algorand,
+    appId: input.appId,
+    appName: input.appName,
+    approvalSourceMap: input.approvalSourceMap,
+    clearSourceMap: input.clearSourceMap,
+    defaultSender: input.defaultSender,
+    defaultSigner: input.defaultSigner
+  });
+};
+
 // contracts/artifacts/Arc200_ASAClient.ts
-var Arc200_ASAClient_exports = {};
-__export(Arc200_ASAClient_exports, {
-  APP_SPEC: () => APP_SPEC2,
-  ApprovalStructFromTuple: () => ApprovalStructFromTuple2,
-  Arc200AsaClient: () => Arc200AsaClient,
-  Arc200AsaFactory: () => Arc200AsaFactory,
-  Arc200AsaParamsFactory: () => Arc200AsaParamsFactory,
-  Arc200ExchangeInfoFromTuple: () => Arc200ExchangeInfoFromTuple,
-  AsaPropsFromTuple: () => AsaPropsFromTuple
-});
 var import_app_arc562 = require("@algorandfoundation/algokit-utils/types/app-arc56");
 var import_app_client2 = require("@algorandfoundation/algokit-utils/types/app-client");
 var import_app_factory2 = require("@algorandfoundation/algokit-utils/types/app-factory");
@@ -2613,19 +2615,6 @@ var Arc200AsaClient = class _Arc200AsaClient {
   }
 };
 
-// src/getArc200Client.ts
-var getArc200Client = (input) => {
-  return new Arc200Client({
-    algorand: input.algorand,
-    appId: input.appId,
-    appName: input.appName,
-    approvalSourceMap: input.approvalSourceMap,
-    clearSourceMap: input.clearSourceMap,
-    defaultSender: input.defaultSender,
-    defaultSigner: input.defaultSigner
-  });
-};
-
 // src/getArc200ASAClient.ts
 var getArc200ASAClient = (input) => {
   return new Arc200AsaClient({
@@ -2650,7 +2639,6 @@ var getArc200ASAClient = (input) => {
   Arc200Factory,
   AsaPropsFromTuple,
   arc200,
-  arc200asa,
   getArc200ASAClient,
   getArc200Client
 });

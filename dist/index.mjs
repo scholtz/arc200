@@ -1060,17 +1060,20 @@ var Arc200Client = class _Arc200Client {
   }
 };
 
+// src/getArc200Client.ts
+var getArc200Client = (input) => {
+  return new Arc200Client({
+    algorand: input.algorand,
+    appId: input.appId,
+    appName: input.appName,
+    approvalSourceMap: input.approvalSourceMap,
+    clearSourceMap: input.clearSourceMap,
+    defaultSender: input.defaultSender,
+    defaultSigner: input.defaultSigner
+  });
+};
+
 // contracts/artifacts/Arc200_ASAClient.ts
-var Arc200_ASAClient_exports = {};
-__export(Arc200_ASAClient_exports, {
-  APP_SPEC: () => APP_SPEC2,
-  ApprovalStructFromTuple: () => ApprovalStructFromTuple2,
-  Arc200AsaClient: () => Arc200AsaClient,
-  Arc200AsaFactory: () => Arc200AsaFactory,
-  Arc200AsaParamsFactory: () => Arc200AsaParamsFactory,
-  Arc200ExchangeInfoFromTuple: () => Arc200ExchangeInfoFromTuple,
-  AsaPropsFromTuple: () => AsaPropsFromTuple
-});
 import { getArc56ReturnValue as getArc56ReturnValue2, getABIStructFromABITuple as getABIStructFromABITuple2 } from "@algorandfoundation/algokit-utils/types/app-arc56";
 import {
   AppClient as _AppClient2
@@ -2585,19 +2588,6 @@ var Arc200AsaClient = class _Arc200AsaClient {
   }
 };
 
-// src/getArc200Client.ts
-var getArc200Client = (input) => {
-  return new Arc200Client({
-    algorand: input.algorand,
-    appId: input.appId,
-    appName: input.appName,
-    approvalSourceMap: input.approvalSourceMap,
-    clearSourceMap: input.clearSourceMap,
-    defaultSender: input.defaultSender,
-    defaultSigner: input.defaultSigner
-  });
-};
-
 // src/getArc200ASAClient.ts
 var getArc200ASAClient = (input) => {
   return new Arc200AsaClient({
@@ -2621,7 +2611,6 @@ export {
   Arc200Factory,
   AsaPropsFromTuple,
   Arc200Client_exports as arc200,
-  Arc200_ASAClient_exports as arc200asa,
   getArc200ASAClient,
   getArc200Client
 };
