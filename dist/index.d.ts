@@ -12,10 +12,24 @@ import { Arc56Contract } from '@algorandfoundation/algokit-utils/types/app-arc56
 import * as algosdk from 'algosdk';
 import { Address, OnApplicationComplete, Transaction, TransactionSigner, modelsv2, ProgramSourceMap } from 'algosdk';
 import { AlgorandClient } from '@algorandfoundation/algokit-utils/types/algorand-client';
-import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName, ResolveAppClientByNetwork, AppClientBareCallParams, AppClientMethodCallParams, CloneAppClientParams, AppClientCompilationParams } from '@algorandfoundation/algokit-utils/types/app-client';
+import { AppClient, AppClientParams, ResolveAppClientByCreatorAndName, ResolveAppClientByNetwork, AppClientBareCallParams, AppClientMethodCallParams, CloneAppClientParams, AppClientCompilationParams, CallOnComplete } from '@algorandfoundation/algokit-utils/types/app-client';
 import { AppFactory, AppFactoryParams, AppFactoryAppClientParams, AppFactoryResolveAppClientByCreatorAndNameParams, AppFactoryDeployParams, CreateSchema } from '@algorandfoundation/algokit-utils/types/app-factory';
 import { AlgorandClient as AlgorandClient$1 } from '@algorandfoundation/algokit-utils';
 
+declare const APP_SPEC$1: Arc56Contract;
+/**
+ * A state record containing binary data
+ */
+interface BinaryState$1 {
+    /**
+     * Gets the state value as a Uint8Array
+     */
+    asByteArray(): Uint8Array | undefined;
+    /**
+     * Gets the state value as a string
+     */
+    asString(): string | undefined;
+}
 /**
  * Expands types for IntelliSense so they are more human readable
  * See https://stackoverflow.com/a/69288824
@@ -28,6 +42,10 @@ type ApprovalStruct$1 = {
     owner: string;
     spender: string;
 };
+/**
+ * Converts the ABI tuple representation of a ApprovalStruct to the struct representation
+ */
+declare function ApprovalStructFromTuple$1(abiTuple: [bigint, string, string]): ApprovalStruct$1;
 /**
  * The argument types for the Arc200 contract
  */
@@ -253,6 +271,10 @@ type CallParams$1<TArgs> = Expand$1<Omit<AppClientMethodCallParams, 'method' | '
     args: Expand$1<TArgs>;
 }>;
 /**
+ * Maps a method signature from the Arc200 smart contract to the method's arguments in either tuple or struct form
+ */
+type MethodArgs$1<TSignature extends Arc200Signatures> = Arc200Types['methods'][TSignature]['argsObj' | 'argsTuple'];
+/**
  * Maps a method signature from the Arc200 smart contract to the method's return type
  */
 type MethodReturn$1<TSignature extends Arc200Signatures> = Arc200Types['methods'][TSignature]['returns'];
@@ -281,6 +303,99 @@ type Arc200DeployParams = Expand$1<Omit<AppFactoryDeployParams, 'createParams' |
      */
     createParams?: Arc200CreateCallParams;
 }>;
+/**
+ * Exposes methods for constructing `AppClient` params objects for ABI calls to the Arc200 smart contract
+ */
+declare abstract class Arc200ParamsFactory {
+    /**
+     * Constructs a no op call for the bootstrap(byte[],byte[],uint8,uint256)bool ABI method
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static bootstrap(params: CallParams$1<Arc200Args['obj']['bootstrap(byte[],byte[],uint8,uint256)bool'] | Arc200Args['tuple']['bootstrap(byte[],byte[],uint8,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_name()byte[32] ABI method
+     *
+     * Returns the name of the token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Name(params: CallParams$1<Arc200Args['obj']['arc200_name()byte[32]'] | Arc200Args['tuple']['arc200_name()byte[32]']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_symbol()byte[8] ABI method
+     *
+     * Returns the symbol of the token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Symbol(params: CallParams$1<Arc200Args['obj']['arc200_symbol()byte[8]'] | Arc200Args['tuple']['arc200_symbol()byte[8]']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_decimals()uint8 ABI method
+     *
+     * Returns the decimals of the token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Decimals(params: CallParams$1<Arc200Args['obj']['arc200_decimals()uint8'] | Arc200Args['tuple']['arc200_decimals()uint8']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_totalSupply()uint256 ABI method
+     *
+     * Returns the total supply of the token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200TotalSupply(params: CallParams$1<Arc200Args['obj']['arc200_totalSupply()uint256'] | Arc200Args['tuple']['arc200_totalSupply()uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_balanceOf(address)uint256 ABI method
+     *
+     * Returns the current balance of the owner of the token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200BalanceOf(params: CallParams$1<Arc200Args['obj']['arc200_balanceOf(address)uint256'] | Arc200Args['tuple']['arc200_balanceOf(address)uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_transfer(address,uint256)bool ABI method
+     *
+     * Transfers tokens
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Transfer(params: CallParams$1<Arc200Args['obj']['arc200_transfer(address,uint256)bool'] | Arc200Args['tuple']['arc200_transfer(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_transferFrom(address,address,uint256)bool ABI method
+     *
+     * Transfers tokens from source to destination as approved spender
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200TransferFrom(params: CallParams$1<Arc200Args['obj']['arc200_transferFrom(address,address,uint256)bool'] | Arc200Args['tuple']['arc200_transferFrom(address,address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_approve(address,uint256)bool ABI method
+     *
+     * Approve spender for a token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Approve(params: CallParams$1<Arc200Args['obj']['arc200_approve(address,uint256)bool'] | Arc200Args['tuple']['arc200_approve(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_allowance(address,address)uint256 ABI method
+     *
+     * Returns the current allowance of the spender of the tokens of the owner
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Allowance(params: CallParams$1<Arc200Args['obj']['arc200_allowance(address,address)uint256'] | Arc200Args['tuple']['arc200_allowance(address,address)uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+}
 /**
  * A factory to create and deploy one or more instance of the Arc200 smart contract and to create one or more app clients to interact with those (or other) app instances
  */
@@ -1390,17 +1505,39 @@ type Arc200ComposerResults<TReturns extends [...any[]]> = Expand$1<SendAtomicTra
     returns: TReturns;
 }>;
 
-interface IGetClientInput$1 {
-    algorand: AlgorandClient$1;
-    appId: bigint;
-    appName: string | undefined;
-    approvalSourceMap: ProgramSourceMap | undefined;
-    clearSourceMap: ProgramSourceMap | undefined;
-    defaultSender: string | Address | undefined;
-    defaultSigner: TransactionSigner | undefined;
+type Arc200Client$1_Arc200Args = Arc200Args;
+type Arc200Client$1_Arc200Client = Arc200Client;
+declare const Arc200Client$1_Arc200Client: typeof Arc200Client;
+type Arc200Client$1_Arc200Composer<TReturns extends [...any[]] = []> = Arc200Composer<TReturns>;
+type Arc200Client$1_Arc200ComposerResults<TReturns extends [...any[]]> = Arc200ComposerResults<TReturns>;
+type Arc200Client$1_Arc200CreateCallParams = Arc200CreateCallParams;
+type Arc200Client$1_Arc200DeployParams = Arc200DeployParams;
+type Arc200Client$1_Arc200Factory = Arc200Factory;
+declare const Arc200Client$1_Arc200Factory: typeof Arc200Factory;
+type Arc200Client$1_Arc200NonVoidMethodSignatures = Arc200NonVoidMethodSignatures;
+type Arc200Client$1_Arc200ParamsFactory = Arc200ParamsFactory;
+declare const Arc200Client$1_Arc200ParamsFactory: typeof Arc200ParamsFactory;
+type Arc200Client$1_Arc200Returns = Arc200Returns;
+type Arc200Client$1_Arc200Signatures = Arc200Signatures;
+type Arc200Client$1_Arc200Types = Arc200Types;
+declare namespace Arc200Client$1 {
+  export { APP_SPEC$1 as APP_SPEC, type ApprovalStruct$1 as ApprovalStruct, ApprovalStructFromTuple$1 as ApprovalStructFromTuple, type Arc200Client$1_Arc200Args as Arc200Args, Arc200Client$1_Arc200Client as Arc200Client, type Arc200Client$1_Arc200Composer as Arc200Composer, type Arc200Client$1_Arc200ComposerResults as Arc200ComposerResults, type Arc200Client$1_Arc200CreateCallParams as Arc200CreateCallParams, type Arc200Client$1_Arc200DeployParams as Arc200DeployParams, Arc200Client$1_Arc200Factory as Arc200Factory, type Arc200Client$1_Arc200NonVoidMethodSignatures as Arc200NonVoidMethodSignatures, Arc200Client$1_Arc200ParamsFactory as Arc200ParamsFactory, type Arc200Client$1_Arc200Returns as Arc200Returns, type Arc200Client$1_Arc200Signatures as Arc200Signatures, type Arc200Client$1_Arc200Types as Arc200Types, type BinaryState$1 as BinaryState, type BoxKeysState$1 as BoxKeysState, type CallParams$1 as CallParams, type Expand$1 as Expand, type GlobalKeysState$1 as GlobalKeysState, type MethodArgs$1 as MethodArgs, type MethodReturn$1 as MethodReturn };
 }
-declare const getArc200Client: (input: IGetClientInput$1) => Arc200Client;
 
+declare const APP_SPEC: Arc56Contract;
+/**
+ * A state record containing binary data
+ */
+interface BinaryState {
+    /**
+     * Gets the state value as a Uint8Array
+     */
+    asByteArray(): Uint8Array | undefined;
+    /**
+     * Gets the state value as a string
+     */
+    asString(): string | undefined;
+}
 /**
  * Expands types for IntelliSense so they are more human readable
  * See https://stackoverflow.com/a/69288824
@@ -1413,14 +1550,26 @@ type ApprovalStruct = {
     owner: string;
     spender: string;
 };
+/**
+ * Converts the ABI tuple representation of a ApprovalStruct to the struct representation
+ */
+declare function ApprovalStructFromTuple(abiTuple: [bigint, string, string]): ApprovalStruct;
 type Arc200ExchangeInfo = {
     exchangeAsset: bigint;
     sink: string;
 };
+/**
+ * Converts the ABI tuple representation of a arc200_exchangeInfo to the struct representation
+ */
+declare function Arc200ExchangeInfoFromTuple(abiTuple: [bigint, string]): Arc200ExchangeInfo;
 type AsaProps = {
     metadataHash: Uint8Array;
     url: Uint8Array;
 };
+/**
+ * Converts the ABI tuple representation of a asaProps to the struct representation
+ */
+declare function AsaPropsFromTuple(abiTuple: [Uint8Array, Uint8Array]): AsaProps;
 /**
  * The argument types for the Arc200Asa contract
  */
@@ -1694,6 +1843,10 @@ type CallParams<TArgs> = Expand<Omit<AppClientMethodCallParams, 'method' | 'args
     args: Expand<TArgs>;
 }>;
 /**
+ * Maps a method signature from the Arc200Asa smart contract to the method's arguments in either tuple or struct form
+ */
+type MethodArgs<TSignature extends Arc200AsaSignatures> = Arc200AsaTypes['methods'][TSignature]['argsObj' | 'argsTuple'];
+/**
  * Maps a method signature from the Arc200Asa smart contract to the method's return type
  */
 type MethodReturn<TSignature extends Arc200AsaSignatures> = Arc200AsaTypes['methods'][TSignature]['returns'];
@@ -1705,6 +1858,443 @@ type GlobalKeysState = Arc200AsaTypes['state']['global']['keys'];
  * Defines the shape of the keyed box state of the application.
  */
 type BoxKeysState = Arc200AsaTypes['state']['box']['keys'];
+/**
+ * Defines supported create method params for this smart contract
+ */
+type Arc200AsaCreateCallParams = Expand<AppClientBareCallParams & {
+    method?: never;
+} & {
+    onComplete?: OnApplicationComplete.NoOpOC;
+} & CreateSchema>;
+/**
+ * Defines arguments required for the deploy method.
+ */
+type Arc200AsaDeployParams = Expand<Omit<AppFactoryDeployParams, 'createParams' | 'updateParams' | 'deleteParams'> & {
+    /**
+     * Create transaction parameters to use if a create needs to be issued as part of deployment; use `method` to define ABI call (if available) or leave out for a bare call (if available)
+     */
+    createParams?: Arc200AsaCreateCallParams;
+}>;
+/**
+ * Exposes methods for constructing `AppClient` params objects for ABI calls to the Arc200Asa smart contract
+ */
+declare abstract class Arc200AsaParamsFactory {
+    /**
+     * Constructs a no op call for the bootstrap(byte[],byte[],uint8,uint256,(byte[32],byte[]))bool ABI method
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static bootstrap(params: CallParams<Arc200AsaArgs['obj']['bootstrap(byte[],byte[],uint8,uint256,(byte[32],byte[]))bool'] | Arc200AsaArgs['tuple']['bootstrap(byte[],byte[],uint8,uint256,(byte[32],byte[]))bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_name()byte[32] ABI method
+     *
+     * Returns the name of the token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Name(params: CallParams<Arc200AsaArgs['obj']['arc200_name()byte[32]'] | Arc200AsaArgs['tuple']['arc200_name()byte[32]']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_symbol()byte[8] ABI method
+     *
+     * Returns the symbol of the token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Symbol(params: CallParams<Arc200AsaArgs['obj']['arc200_symbol()byte[8]'] | Arc200AsaArgs['tuple']['arc200_symbol()byte[8]']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_decimals()uint8 ABI method
+     *
+     * Returns the decimals of the token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Decimals(params: CallParams<Arc200AsaArgs['obj']['arc200_decimals()uint8'] | Arc200AsaArgs['tuple']['arc200_decimals()uint8']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_totalSupply()uint256 ABI method
+     *
+     * Returns the total supply of the token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200TotalSupply(params: CallParams<Arc200AsaArgs['obj']['arc200_totalSupply()uint256'] | Arc200AsaArgs['tuple']['arc200_totalSupply()uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_balanceOf(address)uint256 ABI method
+     *
+     * Returns the current balance of the owner of the token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200BalanceOf(params: CallParams<Arc200AsaArgs['obj']['arc200_balanceOf(address)uint256'] | Arc200AsaArgs['tuple']['arc200_balanceOf(address)uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_transfer(address,uint256)bool ABI method
+     *
+     * Transfers tokens
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Transfer(params: CallParams<Arc200AsaArgs['obj']['arc200_transfer(address,uint256)bool'] | Arc200AsaArgs['tuple']['arc200_transfer(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_transferFrom(address,address,uint256)bool ABI method
+     *
+     * Transfers tokens from source to destination as approved spender
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200TransferFrom(params: CallParams<Arc200AsaArgs['obj']['arc200_transferFrom(address,address,uint256)bool'] | Arc200AsaArgs['tuple']['arc200_transferFrom(address,address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_approve(address,uint256)bool ABI method
+     *
+     * Approve spender for a token
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Approve(params: CallParams<Arc200AsaArgs['obj']['arc200_approve(address,uint256)bool'] | Arc200AsaArgs['tuple']['arc200_approve(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_exchange()(uint64,address) ABI method
+     *
+    * arc200_exchange() → (uint64 exchange_asset, address sink)
+    Returns configuration parameters used by the exchange mechanism:
+    exchange_asset: The ASA ID that the ARC200 token can be exchanged with.
+    
+    sink: The address that holds ARC200 tokens for redemption operations.
+    
+    This method MUST NOT mutate state.
+    
+    https://docs.google.com/document/d/1Uy9kbWF6yfM7W_VbBp1W5c2VqVdcoCj_hyoXUf1FIV0/edit?tab=t.0#heading=h.socgebj776o0
+  
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Exchange(params: CallParams<Arc200AsaArgs['obj']['arc200_exchange()(uint64,address)'] | Arc200AsaArgs['tuple']['arc200_exchange()(uint64,address)']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_redeem(uint64)void ABI method
+     *
+    * Exchanges ASA tokens for ARC200 tokens.
+    Requirements:
+    The user MUST include a valid ASA transfer to the contract in the same transaction group.
+    
+    The ASA ID MUST match the configured exchange_asset.
+    
+    The amount transferred MUST be equal to or greater than the amount requested.
+    
+    The contract MUST transfer ARC200 tokens to the user from the sink address.
+    
+    No ARC200 tokens may be minted or burned during the exchange.
+    
+    https://docs.google.com/document/d/1Uy9kbWF6yfM7W_VbBp1W5c2VqVdcoCj_hyoXUf1FIV0/edit?tab=t.0#heading=h.socgebj776o0
+  
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Redeem(params: CallParams<Arc200AsaArgs['obj']['arc200_redeem(uint64)void'] | Arc200AsaArgs['tuple']['arc200_redeem(uint64)void']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the deposit(uint64)uint256 ABI method
+     *
+     * wnnt200 for arc200_redeem
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static deposit(params: CallParams<Arc200AsaArgs['obj']['deposit(uint64)uint256'] | Arc200AsaArgs['tuple']['deposit(uint64)uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_swapBack(uint64)void ABI method
+     *
+    * arc200_swapBack(uint64 amount) → void
+    
+    Exchanges ARC200 tokens back into ASA tokens.
+    Requirements:
+    The user MUST transfer ARC200 tokens to the configured sink address.
+    
+    Upon receiving the ARC200 tokens, the contract MUST transfer the equivalent amount of ASA tokens to the user.
+    
+    The ASA MUST be transferred from the application's own account.
+    
+    No ARC200 tokens may be minted or burned during the exchange.
+    
+    https://docs.google.com/document/d/1Uy9kbWF6yfM7W_VbBp1W5c2VqVdcoCj_hyoXUf1FIV0/edit?tab=t.0#heading=h.socgebj776o0
+  
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200SwapBack(params: CallParams<Arc200AsaArgs['obj']['arc200_swapBack(uint64)void'] | Arc200AsaArgs['tuple']['arc200_swapBack(uint64)void']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the withdraw(uint64)uint256 ABI method
+     *
+     * wnnt200 for arc200_swapBack
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static withdraw(params: CallParams<Arc200AsaArgs['obj']['withdraw(uint64)uint256'] | Arc200AsaArgs['tuple']['withdraw(uint64)uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_allowance(address,address)uint256 ABI method
+     *
+     * Returns the current allowance of the spender of the tokens of the owner
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200Allowance(params: CallParams<Arc200AsaArgs['obj']['arc200_allowance(address,address)uint256'] | Arc200AsaArgs['tuple']['arc200_allowance(address,address)uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+}
+/**
+ * A factory to create and deploy one or more instance of the Arc200_ASA smart contract and to create one or more app clients to interact with those (or other) app instances
+ */
+declare class Arc200AsaFactory {
+    /**
+     * The underlying `AppFactory` for when you want to have more flexibility
+     */
+    readonly appFactory: AppFactory;
+    /**
+     * Creates a new instance of `Arc200AsaFactory`
+     *
+     * @param params The parameters to initialise the app factory with
+     */
+    constructor(params: Omit<AppFactoryParams, 'appSpec'>);
+    /** The name of the app (from the ARC-32 / ARC-56 app spec or override). */
+    get appName(): string;
+    /** The ARC-56 app spec being used */
+    get appSpec(): Arc56Contract;
+    /** A reference to the underlying `AlgorandClient` this app factory is using. */
+    get algorand(): AlgorandClient;
+    /**
+     * Returns a new `AppClient` client for an app instance of the given ID.
+     *
+     * Automatically populates appName, defaultSender and source maps from the factory
+     * if not specified in the params.
+     * @param params The parameters to create the app client
+     * @returns The `AppClient`
+     */
+    getAppClientById(params: AppFactoryAppClientParams): Arc200AsaClient;
+    /**
+     * Returns a new `AppClient` client, resolving the app by creator address and name
+     * using AlgoKit app deployment semantics (i.e. looking for the app creation transaction note).
+     *
+     * Automatically populates appName, defaultSender and source maps from the factory
+     * if not specified in the params.
+     * @param params The parameters to create the app client
+     * @returns The `AppClient`
+     */
+    getAppClientByCreatorAndName(params: AppFactoryResolveAppClientByCreatorAndNameParams): Promise<Arc200AsaClient>;
+    /**
+     * Idempotently deploys the Arc200_ASA smart contract.
+     *
+     * @param params The arguments for the contract calls and any additional parameters for the call
+     * @returns The deployment result
+     */
+    deploy(params?: Arc200AsaDeployParams): Promise<{
+        result: {
+            return: algosdk.ABIValue | _algorandfoundation_algokit_utils_types_app_arc56.ABIStruct | undefined;
+            deleteReturn: algosdk.ABIValue | _algorandfoundation_algokit_utils_types_app_arc56.ABIStruct | undefined;
+            compiledApproval?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+            compiledClear?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+            operationPerformed: "create";
+            version: string;
+            name: string;
+            createdRound: bigint;
+            updatedRound: bigint;
+            createdMetadata: _algorandfoundation_algokit_utils_types_app.AppDeployMetadata;
+            deleted: boolean;
+            deletable?: boolean | undefined;
+            updatable?: boolean | undefined;
+            groupId: string;
+            txIds: string[];
+            returns?: _algorandfoundation_algokit_utils_types_app.ABIReturn[] | undefined;
+            confirmations: modelsv2.PendingTransactionResponse[];
+            transactions: Transaction[];
+            confirmation: modelsv2.PendingTransactionResponse;
+            transaction: Transaction;
+            appId: bigint;
+            appAddress: Address;
+        } | {
+            return: algosdk.ABIValue | _algorandfoundation_algokit_utils_types_app_arc56.ABIStruct | undefined;
+            deleteReturn: algosdk.ABIValue | _algorandfoundation_algokit_utils_types_app_arc56.ABIStruct | undefined;
+            compiledApproval?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+            compiledClear?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+            operationPerformed: "update";
+            appId: bigint;
+            appAddress: Address;
+            createdRound: bigint;
+            updatedRound: bigint;
+            createdMetadata: _algorandfoundation_algokit_utils_types_app.AppDeployMetadata;
+            deleted: boolean;
+            name: string;
+            version: string;
+            deletable?: boolean | undefined;
+            updatable?: boolean | undefined;
+            groupId: string;
+            txIds: string[];
+            returns?: _algorandfoundation_algokit_utils_types_app.ABIReturn[] | undefined;
+            confirmations: modelsv2.PendingTransactionResponse[];
+            transactions: Transaction[];
+            confirmation: modelsv2.PendingTransactionResponse;
+            transaction: Transaction;
+        } | {
+            return: algosdk.ABIValue | _algorandfoundation_algokit_utils_types_app_arc56.ABIStruct | undefined;
+            deleteReturn: algosdk.ABIValue | _algorandfoundation_algokit_utils_types_app_arc56.ABIStruct | undefined;
+            compiledApproval?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+            compiledClear?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+            operationPerformed: "replace";
+            version: string;
+            name: string;
+            createdRound: bigint;
+            updatedRound: bigint;
+            createdMetadata: _algorandfoundation_algokit_utils_types_app.AppDeployMetadata;
+            deleted: boolean;
+            deletable?: boolean | undefined;
+            updatable?: boolean | undefined;
+            groupId: string;
+            txIds: string[];
+            returns?: _algorandfoundation_algokit_utils_types_app.ABIReturn[] | undefined;
+            confirmations: modelsv2.PendingTransactionResponse[];
+            transactions: Transaction[];
+            confirmation: modelsv2.PendingTransactionResponse;
+            transaction: Transaction;
+            appId: bigint;
+            appAddress: Address;
+            deleteResult: _algorandfoundation_algokit_utils_types_transaction.ConfirmedTransactionResult;
+        } | {
+            return: algosdk.ABIValue | _algorandfoundation_algokit_utils_types_app_arc56.ABIStruct | undefined;
+            deleteReturn: algosdk.ABIValue | _algorandfoundation_algokit_utils_types_app_arc56.ABIStruct | undefined;
+            compiledApproval?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+            compiledClear?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+            operationPerformed: "nothing";
+            appId: bigint;
+            appAddress: Address;
+            createdRound: bigint;
+            updatedRound: bigint;
+            createdMetadata: _algorandfoundation_algokit_utils_types_app.AppDeployMetadata;
+            deleted: boolean;
+            name: string;
+            version: string;
+            deletable?: boolean | undefined;
+            updatable?: boolean | undefined;
+        };
+        appClient: Arc200AsaClient;
+    }>;
+    /**
+     * Get parameters to create transactions (create and deploy related calls) for the current app. A good mental model for this is that these parameters represent a deferred transaction creation.
+     */
+    readonly params: {
+        /**
+         * Gets available create methods
+         */
+        create: {
+            /**
+             * Creates a new instance of the Arc200_ASA smart contract using a bare call.
+             *
+             * @param params The params for the bare (raw) call
+             * @returns The params for a create call
+             */
+            bare: (params?: Expand<AppClientBareCallParams & AppClientCompilationParams & CreateSchema & {
+                onComplete?: OnApplicationComplete.NoOpOC;
+            }>) => Promise<{
+                approvalProgram: Uint8Array;
+                clearStateProgram: Uint8Array;
+                compiledApproval?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+                compiledClear?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+                deployTimeParams: _algorandfoundation_algokit_utils_types_app.TealTemplateParams | undefined;
+                schema: {
+                    globalInts: number;
+                    globalByteSlices: number;
+                    localInts: number;
+                    localByteSlices: number;
+                };
+                maxFee?: _algorandfoundation_algokit_utils_types_amount.AlgoAmount | undefined;
+                note?: string | Uint8Array | undefined;
+                args?: Uint8Array[] | undefined;
+                signer?: TransactionSigner | _algorandfoundation_algokit_utils_types_account.TransactionSignerAccount | undefined;
+                rejectVersion?: number | undefined;
+                lease?: string | Uint8Array | undefined;
+                rekeyTo?: string | Address | undefined;
+                staticFee?: _algorandfoundation_algokit_utils_types_amount.AlgoAmount | undefined;
+                extraFee?: _algorandfoundation_algokit_utils_types_amount.AlgoAmount | undefined;
+                validityWindow?: number | bigint | undefined;
+                firstValidRound?: bigint | undefined;
+                lastValidRound?: bigint | undefined;
+                accountReferences?: (string | Address)[] | undefined;
+                appReferences?: bigint[] | undefined;
+                assetReferences?: bigint[] | undefined;
+                boxReferences?: (_algorandfoundation_algokit_utils_types_app_manager.BoxIdentifier | _algorandfoundation_algokit_utils_types_app_manager.BoxReference)[] | undefined;
+                accessReferences?: _algorandfoundation_algokit_utils_types_app_manager.ResourceReference[] | undefined;
+                sender?: string | Address | undefined;
+                updatable?: boolean | undefined;
+                deletable?: boolean | undefined;
+                onComplete?: OnApplicationComplete.NoOpOC | OnApplicationComplete.OptInOC | OnApplicationComplete.CloseOutOC | OnApplicationComplete.UpdateApplicationOC | OnApplicationComplete.DeleteApplicationOC | undefined;
+                extraProgramPages?: number | undefined;
+            } & {
+                sender: Address;
+                signer: TransactionSigner | _algorandfoundation_algokit_utils_types_account.TransactionSignerAccount | undefined;
+                onComplete: OnApplicationComplete.NoOpOC | OnApplicationComplete.OptInOC | OnApplicationComplete.CloseOutOC | OnApplicationComplete.UpdateApplicationOC | OnApplicationComplete.DeleteApplicationOC;
+            }>;
+        };
+    };
+    /**
+     * Create transactions for the current app
+     */
+    readonly createTransaction: {
+        /**
+         * Gets available create methods
+         */
+        create: {
+            /**
+             * Creates a new instance of the Arc200_ASA smart contract using a bare call.
+             *
+             * @param params The params for the bare (raw) call
+             * @returns The transaction for a create call
+             */
+            bare: (params?: Expand<AppClientBareCallParams & AppClientCompilationParams & CreateSchema & {
+                onComplete?: OnApplicationComplete.NoOpOC;
+            }>) => Promise<Transaction>;
+        };
+    };
+    /**
+     * Send calls to the current app
+     */
+    readonly send: {
+        /**
+         * Gets available create methods
+         */
+        create: {
+            /**
+             * Creates a new instance of the Arc200_ASA smart contract using a bare call.
+             *
+             * @param params The params for the bare (raw) call
+             * @returns The create result
+             */
+            bare: (params?: Expand<AppClientBareCallParams & AppClientCompilationParams & CreateSchema & SendParams & {
+                onComplete?: OnApplicationComplete.NoOpOC;
+            }>) => Promise<{
+                result: {
+                    compiledApproval?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+                    compiledClear?: _algorandfoundation_algokit_utils_types_app.CompiledTeal | undefined;
+                    return: undefined;
+                    groupId: string;
+                    txIds: string[];
+                    returns?: _algorandfoundation_algokit_utils_types_app.ABIReturn[] | undefined;
+                    confirmations: modelsv2.PendingTransactionResponse[];
+                    transactions: Transaction[];
+                    confirmation: modelsv2.PendingTransactionResponse;
+                    transaction: Transaction;
+                    appId: bigint;
+                    appAddress: Address;
+                };
+                appClient: Arc200AsaClient;
+            }>;
+        };
+    };
+}
 /**
  * A client to make calls to the Arc200_ASA smart contract
  */
@@ -3017,6 +3607,50 @@ type Arc200AsaComposerResults<TReturns extends [...any[]]> = Expand<SendAtomicTr
     returns: TReturns;
 }>;
 
+declare const Arc200_ASAClient_APP_SPEC: typeof APP_SPEC;
+type Arc200_ASAClient_ApprovalStruct = ApprovalStruct;
+declare const Arc200_ASAClient_ApprovalStructFromTuple: typeof ApprovalStructFromTuple;
+type Arc200_ASAClient_Arc200AsaArgs = Arc200AsaArgs;
+type Arc200_ASAClient_Arc200AsaClient = Arc200AsaClient;
+declare const Arc200_ASAClient_Arc200AsaClient: typeof Arc200AsaClient;
+type Arc200_ASAClient_Arc200AsaComposer<TReturns extends [...any[]] = []> = Arc200AsaComposer<TReturns>;
+type Arc200_ASAClient_Arc200AsaComposerResults<TReturns extends [...any[]]> = Arc200AsaComposerResults<TReturns>;
+type Arc200_ASAClient_Arc200AsaCreateCallParams = Arc200AsaCreateCallParams;
+type Arc200_ASAClient_Arc200AsaDeployParams = Arc200AsaDeployParams;
+type Arc200_ASAClient_Arc200AsaFactory = Arc200AsaFactory;
+declare const Arc200_ASAClient_Arc200AsaFactory: typeof Arc200AsaFactory;
+type Arc200_ASAClient_Arc200AsaNonVoidMethodSignatures = Arc200AsaNonVoidMethodSignatures;
+type Arc200_ASAClient_Arc200AsaParamsFactory = Arc200AsaParamsFactory;
+declare const Arc200_ASAClient_Arc200AsaParamsFactory: typeof Arc200AsaParamsFactory;
+type Arc200_ASAClient_Arc200AsaReturns = Arc200AsaReturns;
+type Arc200_ASAClient_Arc200AsaSignatures = Arc200AsaSignatures;
+type Arc200_ASAClient_Arc200AsaTypes = Arc200AsaTypes;
+type Arc200_ASAClient_Arc200ExchangeInfo = Arc200ExchangeInfo;
+declare const Arc200_ASAClient_Arc200ExchangeInfoFromTuple: typeof Arc200ExchangeInfoFromTuple;
+type Arc200_ASAClient_AsaProps = AsaProps;
+declare const Arc200_ASAClient_AsaPropsFromTuple: typeof AsaPropsFromTuple;
+type Arc200_ASAClient_BinaryState = BinaryState;
+type Arc200_ASAClient_BoxKeysState = BoxKeysState;
+type Arc200_ASAClient_CallParams<TArgs> = CallParams<TArgs>;
+type Arc200_ASAClient_Expand<T> = Expand<T>;
+type Arc200_ASAClient_GlobalKeysState = GlobalKeysState;
+type Arc200_ASAClient_MethodArgs<TSignature extends Arc200AsaSignatures> = MethodArgs<TSignature>;
+type Arc200_ASAClient_MethodReturn<TSignature extends Arc200AsaSignatures> = MethodReturn<TSignature>;
+declare namespace Arc200_ASAClient {
+  export { Arc200_ASAClient_APP_SPEC as APP_SPEC, type Arc200_ASAClient_ApprovalStruct as ApprovalStruct, Arc200_ASAClient_ApprovalStructFromTuple as ApprovalStructFromTuple, type Arc200_ASAClient_Arc200AsaArgs as Arc200AsaArgs, Arc200_ASAClient_Arc200AsaClient as Arc200AsaClient, type Arc200_ASAClient_Arc200AsaComposer as Arc200AsaComposer, type Arc200_ASAClient_Arc200AsaComposerResults as Arc200AsaComposerResults, type Arc200_ASAClient_Arc200AsaCreateCallParams as Arc200AsaCreateCallParams, type Arc200_ASAClient_Arc200AsaDeployParams as Arc200AsaDeployParams, Arc200_ASAClient_Arc200AsaFactory as Arc200AsaFactory, type Arc200_ASAClient_Arc200AsaNonVoidMethodSignatures as Arc200AsaNonVoidMethodSignatures, Arc200_ASAClient_Arc200AsaParamsFactory as Arc200AsaParamsFactory, type Arc200_ASAClient_Arc200AsaReturns as Arc200AsaReturns, type Arc200_ASAClient_Arc200AsaSignatures as Arc200AsaSignatures, type Arc200_ASAClient_Arc200AsaTypes as Arc200AsaTypes, type Arc200_ASAClient_Arc200ExchangeInfo as Arc200ExchangeInfo, Arc200_ASAClient_Arc200ExchangeInfoFromTuple as Arc200ExchangeInfoFromTuple, type Arc200_ASAClient_AsaProps as AsaProps, Arc200_ASAClient_AsaPropsFromTuple as AsaPropsFromTuple, type Arc200_ASAClient_BinaryState as BinaryState, type Arc200_ASAClient_BoxKeysState as BoxKeysState, type Arc200_ASAClient_CallParams as CallParams, type Arc200_ASAClient_Expand as Expand, type Arc200_ASAClient_GlobalKeysState as GlobalKeysState, type Arc200_ASAClient_MethodArgs as MethodArgs, type Arc200_ASAClient_MethodReturn as MethodReturn };
+}
+
+interface IGetClientInput$1 {
+    algorand: AlgorandClient$1;
+    appId: bigint;
+    appName: string | undefined;
+    approvalSourceMap: ProgramSourceMap | undefined;
+    clearSourceMap: ProgramSourceMap | undefined;
+    defaultSender: string | Address | undefined;
+    defaultSigner: TransactionSigner | undefined;
+}
+declare const getArc200Client: (input: IGetClientInput$1) => Arc200Client;
+
 interface IGetClientInput {
     algorand: AlgorandClient$1;
     appId: bigint;
@@ -3028,4 +3662,4 @@ interface IGetClientInput {
 }
 declare const getArc200ASAClient: (input: IGetClientInput) => Arc200AsaClient;
 
-export { type ApprovalStruct$1 as ApprovalStruct, Arc200Client, Arc200Factory, getArc200ASAClient, getArc200Client };
+export { type ApprovalStruct$1 as ApprovalStruct, Arc200Client, Arc200Factory, Arc200Client$1 as arc200, Arc200_ASAClient as arc200asa, getArc200ASAClient, getArc200Client };
