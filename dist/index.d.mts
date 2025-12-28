@@ -3662,4 +3662,4 @@ interface IGetClientInput {
 }
 declare const getArc200ASAClient: (input: IGetClientInput) => Arc200AsaClient;
 
-export { type ApprovalStruct$1 as ApprovalStruct, Arc200Client, Arc200Factory, Arc200Client$1 as arc200, Arc200_ASAClient as arc200asa, getArc200ASAClient, getArc200Client };
+export { type ApprovalStruct$1 as ApprovalStruct, Arc200Client, Arc200Factory, Arc200Client$1 as arc200, Arc200Client$1 as arc200Types, Arc200_ASAClient as arc200asa, Arc200_ASAClient as arc200asaTypes, getArc200ASAClient, getArc200Client };

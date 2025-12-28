@@ -6,3 +6,5 @@ import { getArc200ASAClient } from './getArc200ASAClient'
 export { Arc200Client, Arc200Factory, type ApprovalStruct }
 export { getArc200Client, getArc200ASAClient }
 export { arc200, arc200asa }
+export type * as arc200Types from '../contracts/artifacts/Arc200Client'
+export type * as arc200asaTypes from '../contracts/artifacts/Arc200_ASAClient'
