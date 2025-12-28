@@ -18,6 +18,6 @@
     "isolatedModules": true,
     "noEmit": true
   },
-  "include": ["smart_contracts/**/*.ts"],
+  "include": ["contracts/**/*.ts", "src/**/*.ts"],
   "exclude": ["node_modules", "dist", "coverage"]
 }

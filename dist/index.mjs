@@ -2611,8 +2611,15 @@ var getArc200ASAClient = (input) => {
   });
 };
 export {
+  APP_SPEC2 as APP_SPEC,
+  ApprovalStructFromTuple2 as ApprovalStructFromTuple,
+  Arc200AsaClient,
+  Arc200AsaFactory,
+  Arc200AsaParamsFactory,
   Arc200Client,
+  Arc200ExchangeInfoFromTuple,
   Arc200Factory,
+  AsaPropsFromTuple,
   Arc200Client_exports as arc200,
   Arc200_ASAClient_exports as arc200asa,
   getArc200ASAClient,

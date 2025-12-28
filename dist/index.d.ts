@@ -3662,4 +3662,4 @@ interface IGetClientInput {
 }
 declare const getArc200ASAClient: (input: IGetClientInput) => Arc200AsaClient;
 
-export { type ApprovalStruct$1 as ApprovalStruct, Arc200Client, Arc200Factory, Arc200Client$1 as arc200, Arc200Client$1 as arc200Types, Arc200_ASAClient as arc200asa, Arc200_ASAClient as arc200asaTypes, getArc200ASAClient, getArc200Client };
+export { APP_SPEC, type ApprovalStruct$1 as ApprovalStruct, ApprovalStructFromTuple, type Arc200AsaArgs, Arc200AsaClient, type Arc200AsaComposer, type Arc200AsaComposerResults, type Arc200AsaCreateCallParams, type Arc200AsaDeployParams, Arc200AsaFactory, type Arc200AsaNonVoidMethodSignatures, Arc200AsaParamsFactory, type Arc200AsaReturns, type Arc200AsaSignatures, type Arc200AsaTypes, Arc200Client, type Arc200ExchangeInfo, Arc200ExchangeInfoFromTuple, Arc200Factory, type AsaProps, AsaPropsFromTuple, type BinaryState, type BoxKeysState, type CallParams, type Expand, type GlobalKeysState, type MethodArgs, type MethodReturn, Arc200Client$1 as arc200, Arc200Client$1 as arc200Types, Arc200_ASAClient as arc200asa, getArc200ASAClient, getArc200Client };
