@@ -1653,6 +1653,12 @@ type Arc200AsaArgs = {
         'withdraw(uint64)uint256': {
             amount: bigint | number;
         };
+        'createBalanceBox(address)byte': {
+            /**
+             * Owner
+             */
+            owner: string;
+        };
         'arc200_allowance(address,address)uint256': {
             /**
              * Owner's account
@@ -1682,6 +1688,7 @@ type Arc200AsaArgs = {
         'deposit(uint64)uint256': [amount: bigint | number];
         'arc200_swapBack(uint64)void': [amount: bigint | number];
         'withdraw(uint64)uint256': [amount: bigint | number];
+        'createBalanceBox(address)byte': [owner: string];
         'arc200_allowance(address,address)uint256': [owner: string, spender: string];
     };
 };
@@ -1703,6 +1710,7 @@ type Arc200AsaReturns = {
     'deposit(uint64)uint256': bigint;
     'arc200_swapBack(uint64)void': void;
     'withdraw(uint64)uint256': bigint;
+    'createBalanceBox(address)byte': number;
     'arc200_allowance(address,address)uint256': bigint;
 };
 /**
@@ -1792,6 +1800,13 @@ type Arc200AsaTypes = {
         argsObj: Arc200AsaArgs['obj']['withdraw(uint64)uint256'];
         argsTuple: Arc200AsaArgs['tuple']['withdraw(uint64)uint256'];
         returns: Arc200AsaReturns['withdraw(uint64)uint256'];
+    }> & Record<'createBalanceBox(address)byte' | 'createBalanceBox', {
+        argsObj: Arc200AsaArgs['obj']['createBalanceBox(address)byte'];
+        argsTuple: Arc200AsaArgs['tuple']['createBalanceBox(address)byte'];
+        /**
+         * 1 if box was created. 0 if box exists
+         */
+        returns: Arc200AsaReturns['createBalanceBox(address)byte'];
     }> & Record<'arc200_allowance(address,address)uint256' | 'arc200_allowance', {
         argsObj: Arc200AsaArgs['obj']['arc200_allowance(address,address)uint256'];
         argsTuple: Arc200AsaArgs['tuple']['arc200_allowance(address,address)uint256'];
@@ -2049,6 +2064,15 @@ declare abstract class Arc200AsaParamsFactory {
      * @returns An `AppClientMethodCallParams` object for the call
      */
     static withdraw(params: CallParams<Arc200AsaArgs['obj']['withdraw(uint64)uint256'] | Arc200AsaArgs['tuple']['withdraw(uint64)uint256']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the createBalanceBox(address)byte ABI method
+     *
+     * wnnt200 method to create balance box for an address
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static createBalanceBox(params: CallParams<Arc200AsaArgs['obj']['createBalanceBox(address)byte'] | Arc200AsaArgs['tuple']['createBalanceBox(address)byte']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
     /**
      * Constructs a no op call for the arc200_allowance(address,address)uint256 ABI method
      *
@@ -2566,6 +2590,17 @@ declare class Arc200AsaClient {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<AppCallMethodCall>;
         /**
+         * Makes a call to the Arc200_ASA smart contract using the `createBalanceBox(address)byte` ABI method.
+         *
+         * wnnt200 method to create balance box for an address
+         *
+         * @param params The params for the smart contract call
+         * @returns The call params: 1 if box was created. 0 if box exists
+         */
+        createBalanceBox: (params: CallParams<Arc200AsaArgs["obj"]["createBalanceBox(address)byte"] | Arc200AsaArgs["tuple"]["createBalanceBox(address)byte"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<AppCallMethodCall>;
+        /**
          * Makes a call to the Arc200_ASA smart contract using the `arc200_allowance(address,address)uint256` ABI method.
          *
          * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
@@ -2839,6 +2874,21 @@ declare class Arc200AsaClient {
          * @returns The call transaction
          */
         withdraw: (params: CallParams<Arc200AsaArgs["obj"]["withdraw(uint64)uint256"] | Arc200AsaArgs["tuple"]["withdraw(uint64)uint256"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            transactions: Transaction[];
+            methodCalls: Map<number, algosdk.ABIMethod>;
+            signers: Map<number, TransactionSigner>;
+        }>;
+        /**
+         * Makes a call to the Arc200_ASA smart contract using the `createBalanceBox(address)byte` ABI method.
+         *
+         * wnnt200 method to create balance box for an address
+         *
+         * @param params The params for the smart contract call
+         * @returns The call transaction: 1 if box was created. 0 if box exists
+         */
+        createBalanceBox: (params: CallParams<Arc200AsaArgs["obj"]["createBalanceBox(address)byte"] | Arc200AsaArgs["tuple"]["createBalanceBox(address)byte"]> & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
             transactions: Transaction[];
@@ -3209,6 +3259,26 @@ declare class Arc200AsaClient {
             transaction: Transaction;
         }>;
         /**
+         * Makes a call to the Arc200_ASA smart contract using the `createBalanceBox(address)byte` ABI method.
+         *
+         * wnnt200 method to create balance box for an address
+         *
+         * @param params The params for the smart contract call
+         * @returns The call result: 1 if box was created. 0 if box exists
+         */
+        createBalanceBox: (params: CallParams<Arc200AsaArgs["obj"]["createBalanceBox(address)byte"] | Arc200AsaArgs["tuple"]["createBalanceBox(address)byte"]> & SendParams & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            return: (undefined | Arc200AsaReturns["createBalanceBox(address)byte"]);
+            returns?: ABIReturn[] | undefined | undefined;
+            groupId: string;
+            txIds: string[];
+            confirmations: modelsv2.PendingTransactionResponse[];
+            transactions: Transaction[];
+            confirmation: modelsv2.PendingTransactionResponse;
+            transaction: Transaction;
+        }>;
+        /**
          * Makes a call to the Arc200_ASA smart contract using the `arc200_allowance(address,address)uint256` ABI method.
          *
          * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
@@ -3569,6 +3639,16 @@ type Arc200AsaComposer<TReturns extends [...any[]] = []> = {
      * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
      */
     withdraw(params?: CallParams<Arc200AsaArgs['obj']['withdraw(uint64)uint256'] | Arc200AsaArgs['tuple']['withdraw(uint64)uint256']>): Arc200AsaComposer<[...TReturns, Arc200AsaReturns['withdraw(uint64)uint256'] | undefined]>;
+    /**
+     * Calls the createBalanceBox(address)byte ABI method.
+     *
+     * wnnt200 method to create balance box for an address
+     *
+     * @param args The arguments for the contract call
+     * @param params Any additional parameters for the call
+     * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
+     */
+    createBalanceBox(params?: CallParams<Arc200AsaArgs['obj']['createBalanceBox(address)byte'] | Arc200AsaArgs['tuple']['createBalanceBox(address)byte']>): Arc200AsaComposer<[...TReturns, Arc200AsaReturns['createBalanceBox(address)byte'] | undefined]>;
     /**
      * Calls the arc200_allowance(address,address)uint256 ABI method.
      *

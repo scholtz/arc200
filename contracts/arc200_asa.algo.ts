@@ -358,6 +358,20 @@ export class Arc200_ASA extends Contract {
     return ret
   }
   /**
+   * wnnt200 method to create balance box for an address
+   *
+   * @param owner Owner
+   * @returns 1 if box was created. 0 if box exists
+   */
+  @arc4.abimethod()
+  public createBalanceBox(owner: Address): arc4.Byte {
+    if (!this.balances(owner).exists) {
+      this.balances(owner).value = new Uint256(0)
+      return new arc4.Byte(1)
+    }
+    return new arc4.Byte(0)
+  }
+  /**
    * Returns the current allowance of the spender of the tokens of the owner
    *
    * @param owner Owner's account

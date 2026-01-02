@@ -4,22 +4,22 @@
 // @algorandfoundation/algorand-typescript/arc4/index.d.ts::Contract.approvalProgram() -> uint64:
 main:
     intcblock 32 1 0 8
-    bytecblock 0x151f7c75 "asa" "b" "t" 0x7983c35c 0x0000000000000000000000000000000000000000000000000000000000000000
+    bytecblock 0x151f7c75 "asa" "b" "t" 0x0000000000000000000000000000000000000000000000000000000000000000 0x7983c35c
     // contracts/arc200_asa.algo.ts:61
     // export class Arc200_ASA extends Contract {
     txn NumAppArgs
-    bz main___algots__.defaultCreate@22
+    bz main___algots__.defaultCreate@23
     txn OnCompletion
     !
     assert // OnCompletion must be NoOp
     txn ApplicationID
     assert
-    pushbytess 0x89d9751f 0x657d13ec 0xb6ae1a25 0x84ec13d5 0xec996041 0x82e573c4 0xda7025b9 0x4a968f8f 0xb5422125 0x409b5497 0x62d41cdf 0x0223267c 0x7c02daaf 0x68cf98ce 0xbbb319f3 // method "bootstrap(byte[],byte[],uint8,uint256,(byte[32],byte[]))bool", method "arc200_name()byte[32]", method "arc200_symbol()byte[8]", method "arc200_decimals()uint8", method "arc200_totalSupply()uint256", method "arc200_balanceOf(address)uint256", method "arc200_transfer(address,uint256)bool", method "arc200_transferFrom(address,address,uint256)bool", method "arc200_approve(address,uint256)bool", method "arc200_exchange()(uint64,address)", method "arc200_redeem(uint64)void", method "deposit(uint64)uint256", method "arc200_swapBack(uint64)void", method "withdraw(uint64)uint256", method "arc200_allowance(address,address)uint256"
+    pushbytess 0x89d9751f 0x657d13ec 0xb6ae1a25 0x84ec13d5 0xec996041 0x82e573c4 0xda7025b9 0x4a968f8f 0xb5422125 0x409b5497 0x62d41cdf 0x0223267c 0x7c02daaf 0x68cf98ce 0xa359e475 0xbbb319f3 // method "bootstrap(byte[],byte[],uint8,uint256,(byte[32],byte[]))bool", method "arc200_name()byte[32]", method "arc200_symbol()byte[8]", method "arc200_decimals()uint8", method "arc200_totalSupply()uint256", method "arc200_balanceOf(address)uint256", method "arc200_transfer(address,uint256)bool", method "arc200_transferFrom(address,address,uint256)bool", method "arc200_approve(address,uint256)bool", method "arc200_exchange()(uint64,address)", method "arc200_redeem(uint64)void", method "deposit(uint64)uint256", method "arc200_swapBack(uint64)void", method "withdraw(uint64)uint256", method "createBalanceBox(address)byte", method "arc200_allowance(address,address)uint256"
     txna ApplicationArgs 0
-    match bootstrap arc200_name arc200_symbol arc200_decimals arc200_totalSupply arc200_balanceOf arc200_transfer arc200_transferFrom arc200_approve arc200_exchange arc200_redeem deposit arc200_swapBack withdraw arc200_allowance
+    match bootstrap arc200_name arc200_symbol arc200_decimals arc200_totalSupply arc200_balanceOf arc200_transfer arc200_transferFrom arc200_approve arc200_exchange arc200_redeem deposit arc200_swapBack withdraw createBalanceBox arc200_allowance
     err
 
-main___algots__.defaultCreate@22:
+main___algots__.defaultCreate@23:
     // contracts/arc200_asa.algo.ts:61
     // export class Arc200_ASA extends Contract {
     txn OnCompletion
@@ -295,7 +295,7 @@ bootstrap:
     concat
     swap
     concat
-    bytec 4 // method "arc200_Transfer(address,address,uint256)"
+    bytec 5 // method "arc200_Transfer(address,address,uint256)"
     swap
     concat
     log
@@ -986,9 +986,58 @@ withdraw:
     return
 
 
+// contracts/arc200_asa.algo.ts::Arc200_ASA.createBalanceBox[routing]() -> void:
+createBalanceBox:
+    // contracts/arc200_asa.algo.ts:366
+    // @arc4.abimethod()
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_0 // 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    // contracts/arc200_asa.algo.ts:82
+    // public balances = BoxMap<Address, Uint256>({ keyPrefix: 'b' })
+    bytec_2 // "b"
+    swap
+    concat
+    dup
+    // contracts/arc200_asa.algo.ts:368
+    // if (!this.balances(owner).exists) {
+    box_len
+    bury 1
+    bnz createBalanceBox_after_if_else@3
+    // contracts/arc200_asa.algo.ts:369
+    // this.balances(owner).value = new Uint256(0)
+    dup
+    bytec 4 // 0x0000000000000000000000000000000000000000000000000000000000000000
+    box_put
+    // contracts/arc200_asa.algo.ts:370
+    // return new arc4.Byte(1)
+    pushbytes 0x01
+
+createBalanceBox_after_inlined_contracts/arc200_asa.algo.ts::Arc200_ASA.createBalanceBox@4:
+    // contracts/arc200_asa.algo.ts:366
+    // @arc4.abimethod()
+    bytec_0 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+createBalanceBox_after_if_else@3:
+    // contracts/arc200_asa.algo.ts:372
+    // return new arc4.Byte(0)
+    pushbytes 0x00
+    // contracts/arc200_asa.algo.ts:366
+    // @arc4.abimethod()
+    b createBalanceBox_after_inlined_contracts/arc200_asa.algo.ts::Arc200_ASA.createBalanceBox@4
+
+
 // contracts/arc200_asa.algo.ts::Arc200_ASA.arc200_allowance[routing]() -> void:
 arc200_allowance:
-    // contracts/arc200_asa.algo.ts:367
+    // contracts/arc200_asa.algo.ts:381
     // @arc4.abimethod({ readonly: true })
     txna ApplicationArgs 1
     dup
@@ -1002,10 +1051,10 @@ arc200_allowance:
     intc_0 // 32
     ==
     assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
-    // contracts/arc200_asa.algo.ts:369
+    // contracts/arc200_asa.algo.ts:383
     // return this._allowance(owner, spender)
     callsub _allowance
-    // contracts/arc200_asa.algo.ts:367
+    // contracts/arc200_asa.algo.ts:381
     // @arc4.abimethod({ readonly: true })
     bytec_0 // 0x151f7c75
     swap
@@ -1017,7 +1066,7 @@ arc200_allowance:
 
 // contracts/arc200_asa.algo.ts::Arc200_ASA._balanceOf(owner: bytes) -> bytes:
 _balanceOf:
-    // contracts/arc200_asa.algo.ts:372
+    // contracts/arc200_asa.algo.ts:386
     // private _balanceOf(owner: Address): Uint256 {
     proto 1 1
     // contracts/arc200_asa.algo.ts:82
@@ -1026,17 +1075,17 @@ _balanceOf:
     frame_dig -1
     concat
     dup
-    // contracts/arc200_asa.algo.ts:373
+    // contracts/arc200_asa.algo.ts:387
     // if (!this.balances(owner).exists) return new Uint256(0)
     box_len
     bury 1
     bnz _balanceOf_after_if_else@2
-    bytec 5 // 0x0000000000000000000000000000000000000000000000000000000000000000
+    bytec 4 // 0x0000000000000000000000000000000000000000000000000000000000000000
     swap
     retsub
 
 _balanceOf_after_if_else@2:
-    // contracts/arc200_asa.algo.ts:374
+    // contracts/arc200_asa.algo.ts:388
     // return this.balances(owner).value
     frame_dig 0
     box_get
@@ -1047,31 +1096,31 @@ _balanceOf_after_if_else@2:
 
 // contracts/arc200_asa.algo.ts::Arc200_ASA._transfer(sender: bytes, recipient: bytes, amount: bytes) -> bytes:
 _transfer:
-    // contracts/arc200_asa.algo.ts:377
+    // contracts/arc200_asa.algo.ts:391
     // private _transfer(sender: Address, recipient: Address, amount: Uint256): Bool {
     proto 3 1
-    // contracts/arc200_asa.algo.ts:378
+    // contracts/arc200_asa.algo.ts:392
     // const sender_balance = this._balanceOf(sender)
     frame_dig -3
     callsub _balanceOf
     dup
-    // contracts/arc200_asa.algo.ts:379
+    // contracts/arc200_asa.algo.ts:393
     // const recipient_balance = this._balanceOf(recipient)
     frame_dig -2
     callsub _balanceOf
     swap
-    // contracts/arc200_asa.algo.ts:380
+    // contracts/arc200_asa.algo.ts:394
     // assert(sender_balance.asBigUint() >= amount.asBigUint(), 'Insufficient balance at the sender account')
     frame_dig -1
     b>=
     assert // Insufficient balance at the sender account
-    // contracts/arc200_asa.algo.ts:382
+    // contracts/arc200_asa.algo.ts:396
     // if (sender !== recipient) {
     frame_dig -3
     frame_dig -2
     !=
     bz _transfer_after_if_else@2
-    // contracts/arc200_asa.algo.ts:384
+    // contracts/arc200_asa.algo.ts:398
     // this.balances(sender).value = new Uint256(sender_balance.asBigUint() - amount.asBigUint())
     frame_dig 0
     frame_dig -1
@@ -1091,11 +1140,11 @@ _transfer:
     bytec_2 // "b"
     frame_dig -3
     concat
-    // contracts/arc200_asa.algo.ts:384
+    // contracts/arc200_asa.algo.ts:398
     // this.balances(sender).value = new Uint256(sender_balance.asBigUint() - amount.asBigUint())
     swap
     box_put
-    // contracts/arc200_asa.algo.ts:385
+    // contracts/arc200_asa.algo.ts:399
     // this.balances(recipient).value = new Uint256(recipient_balance.asBigUint() + amount.asBigUint())
     frame_dig 1
     frame_dig -1
@@ -1111,24 +1160,24 @@ _transfer:
     bytec_2 // "b"
     frame_dig -2
     concat
-    // contracts/arc200_asa.algo.ts:385
+    // contracts/arc200_asa.algo.ts:399
     // this.balances(recipient).value = new Uint256(recipient_balance.asBigUint() + amount.asBigUint())
     swap
     box_put
 
 _transfer_after_if_else@2:
-    // contracts/arc200_asa.algo.ts:387
+    // contracts/arc200_asa.algo.ts:401
     // emit(new arc200_Transfer({ from: sender, to: recipient, value: amount }))
     frame_dig -3
     frame_dig -2
     concat
     frame_dig -1
     concat
-    bytec 4 // method "arc200_Transfer(address,address,uint256)"
+    bytec 5 // method "arc200_Transfer(address,address,uint256)"
     swap
     concat
     log
-    // contracts/arc200_asa.algo.ts:388
+    // contracts/arc200_asa.algo.ts:402
     // return new Bool(true)
     pushbytes 0x80
     frame_bury 0
@@ -1137,10 +1186,10 @@ _transfer_after_if_else@2:
 
 // contracts/arc200_asa.algo.ts::Arc200_ASA._allowance(owner: bytes, spender: bytes) -> bytes:
 _allowance:
-    // contracts/arc200_asa.algo.ts:395
+    // contracts/arc200_asa.algo.ts:409
     // private _allowance(owner: Address, spender: Address): Uint256 {
     proto 2 1
-    // contracts/arc200_asa.algo.ts:392
+    // contracts/arc200_asa.algo.ts:406
     // return new StaticBytes<32>(op.sha256(op.concat(owner.bytes, spender.bytes)))
     frame_dig -2
     frame_dig -1
@@ -1152,17 +1201,17 @@ _allowance:
     swap
     concat
     dup
-    // contracts/arc200_asa.algo.ts:397
+    // contracts/arc200_asa.algo.ts:411
     // if (!this.approvals(key).exists) return new Uint256(0)
     box_len
     bury 1
     bnz _allowance_after_if_else@2
-    bytec 5 // 0x0000000000000000000000000000000000000000000000000000000000000000
+    bytec 4 // 0x0000000000000000000000000000000000000000000000000000000000000000
     swap
     retsub
 
 _allowance_after_if_else@2:
-    // contracts/arc200_asa.algo.ts:398
+    // contracts/arc200_asa.algo.ts:412
     // return this.approvals(key).value.approvalAmount
     frame_dig 0
     box_get
@@ -1174,17 +1223,17 @@ _allowance_after_if_else@2:
 
 // contracts/arc200_asa.algo.ts::Arc200_ASA._approve(owner: bytes, spender: bytes, amount: bytes) -> bytes:
 _approve:
-    // contracts/arc200_asa.algo.ts:401
+    // contracts/arc200_asa.algo.ts:415
     // private _approve(owner: Address, spender: Address, amount: Uint256): Bool {
     proto 3 1
-    // contracts/arc200_asa.algo.ts:392
+    // contracts/arc200_asa.algo.ts:406
     // return new StaticBytes<32>(op.sha256(op.concat(owner.bytes, spender.bytes)))
     frame_dig -3
     frame_dig -2
     concat
     dup
     sha256
-    // contracts/arc200_asa.algo.ts:403-407
+    // contracts/arc200_asa.algo.ts:417-421
     // const approvalBox: ApprovalStruct = new ApprovalStruct({
     //   approvalAmount: amount,
     //   owner: owner,
@@ -1200,11 +1249,11 @@ _approve:
     pushbytes "a"
     uncover 2
     concat
-    // contracts/arc200_asa.algo.ts:408
+    // contracts/arc200_asa.algo.ts:422
     // this.approvals(key).value = clone(approvalBox)
     swap
     box_put
-    // contracts/arc200_asa.algo.ts:409
+    // contracts/arc200_asa.algo.ts:423
     // emit(new arc200_Approval({ owner: owner, spender: spender, value: amount }))
     frame_dig -1
     concat
@@ -1212,7 +1261,7 @@ _approve:
     swap
     concat
     log
-    // contracts/arc200_asa.algo.ts:410
+    // contracts/arc200_asa.algo.ts:424
     // return new Bool(true)
     pushbytes 0x80
     retsub
