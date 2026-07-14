@@ -15,7 +15,7 @@ name = 'ARC200'
 artifacts = 'contracts/artifacts'
 
 [project.deploy]
-command = "npm run deploy:ci"
+command = "pnpm run deploy:ci"
 environment_secrets = [
   "DEPLOYER_MNEMONIC",
   "DISPENSER_MNEMONIC",
@@ -27,17 +27,17 @@ environment_secrets = []
 [project.run]
 # Commands intended for use locally and in CI
 build = { commands = [
-  'npm run build',
+  'pnpm run build',
 ], description = 'Build all smart contracts in the project' }
 test = { commands = [
-  'npm run test',
+  'pnpm run test',
 ], description = 'Run smart contract tests using vitest' }
 audit = { commands = [
-  'npm run audit',
+  'pnpm run audit',
 ], description = 'Audit with better-npm-audit' }
 lint = { commands = [
-  'npm run lint',
-  'npm run format',
+  'pnpm run lint',
+  'pnpm run format',
 ], description = 'Perform linting' }
 audit-teal = { commands = [
   # 🚨 IMPORTANT 🚨: For strict TEAL validation, remove --exclude statements. The default starter contract is not for production. Ensure thorough testing and adherence to best practices in smart contract development. This is not a replacement for a professional audit.
