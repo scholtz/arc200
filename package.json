@@ -1,6 +1,27 @@
 {
   "name": "arc200-client",
-  "version": "1.1.8",
+  "version": "1.1.9",
+  "description": "TypeScript/JavaScript client for the ARC200 fungible token standard on Algorand and Voi, generated with AlgoKit from the arc200.algo.ts and arc200_asa.algo.ts smart contracts.",
+  "keywords": [
+    "algorand",
+    "voi",
+    "arc200",
+    "arc-200",
+    "algokit",
+    "smart-contract",
+    "token",
+    "fungible-token",
+    "blockchain"
+  ],
+  "homepage": "https://github.com/scholtz/arc200#readme",
+  "bugs": {
+    "url": "https://github.com/scholtz/arc200/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scholtz/arc200.git"
+  },
+  "author": "Ludovit Scholtz",
   "packageManager": "pnpm@11.10.0",
   "license": "MIT",
   "main": "./dist/index.js",
