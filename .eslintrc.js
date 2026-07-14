@@ -50,6 +50,12 @@ module.exports = {
         'operator-assignment': 'off',
         'prefer-template': 'off',
         'prefer-destructuring': 'off',
+        // Puya/ARC4 contract conventions intentionally use a leading underscore for private
+        // helpers and snake_case for identifiers that mirror the ARC200/ARC4 spec's own casing
+        // (e.g. arc200_Transfer, sender_balance) and PascalCase for arc4.Struct/type constructors.
+        'no-underscore-dangle': 'off',
+        camelcase: 'off',
+        'new-cap': 'off',
       },
     },
   ],

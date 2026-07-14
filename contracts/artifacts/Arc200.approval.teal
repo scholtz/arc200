@@ -8,18 +8,18 @@ main:
     // contracts/arc200.algo.ts:38
     // export class Arc200 extends Contract {
     txn NumAppArgs
-    bz main___algots__.defaultCreate@17
+    bz main___algots__.defaultCreate@19
     txn OnCompletion
     !
     assert // OnCompletion must be NoOp
     txn ApplicationID
     assert
-    pushbytess 0x975382e2 0x657d13ec 0xb6ae1a25 0x84ec13d5 0xec996041 0x82e573c4 0xda7025b9 0x4a968f8f 0xb5422125 0xbbb319f3 // method "bootstrap(byte[],byte[],uint8,uint256)bool", method "arc200_name()byte[32]", method "arc200_symbol()byte[8]", method "arc200_decimals()uint8", method "arc200_totalSupply()uint256", method "arc200_balanceOf(address)uint256", method "arc200_transfer(address,uint256)bool", method "arc200_transferFrom(address,address,uint256)bool", method "arc200_approve(address,uint256)bool", method "arc200_allowance(address,address)uint256"
+    pushbytess 0x975382e2 0x657d13ec 0xb6ae1a25 0x84ec13d5 0xec996041 0x82e573c4 0xda7025b9 0x4a968f8f 0xb5422125 0x90f026cd 0xb8bef3cd 0xbbb319f3 // method "bootstrap(byte[],byte[],uint8,uint256)bool", method "arc200_name()byte[32]", method "arc200_symbol()byte[8]", method "arc200_decimals()uint8", method "arc200_totalSupply()uint256", method "arc200_balanceOf(address)uint256", method "arc200_transfer(address,uint256)bool", method "arc200_transferFrom(address,address,uint256)bool", method "arc200_approve(address,uint256)bool", method "arc200_increaseAllowance(address,uint256)bool", method "arc200_decreaseAllowance(address,uint256)bool", method "arc200_allowance(address,address)uint256"
     txna ApplicationArgs 0
-    match bootstrap arc200_name arc200_symbol arc200_decimals arc200_totalSupply arc200_balanceOf arc200_transfer arc200_transferFrom arc200_approve arc200_allowance
+    match bootstrap arc200_name arc200_symbol arc200_decimals arc200_totalSupply arc200_balanceOf arc200_transfer arc200_transferFrom arc200_approve arc200_increaseAllowance arc200_decreaseAllowance arc200_allowance
     err
 
-main___algots__.defaultCreate@17:
+main___algots__.defaultCreate@19:
     // contracts/arc200.algo.ts:38
     // export class Arc200 extends Contract {
     txn OnCompletion
@@ -423,9 +423,113 @@ arc200_approve:
     return
 
 
+// contracts/arc200.algo.ts::Arc200.arc200_increaseAllowance[routing]() -> void:
+arc200_increaseAllowance:
+    // contracts/arc200.algo.ts:186
+    // @arc4.abimethod()
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_0 // 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_0 // 32
+    ==
+    assert // invalid number of bytes for arc4.uint256
+    // contracts/arc200.algo.ts:188
+    // const owner = new Address(Txn.sender)
+    txn Sender
+    // contracts/arc200.algo.ts:189
+    // const current = this._allowance(owner, spender)
+    dup
+    dig 3
+    callsub _allowance
+    // contracts/arc200.algo.ts:190
+    // return this._approve(owner, spender, new Uint256(current.asBigUint() + value.asBigUint()))
+    uncover 2
+    b+
+    dup
+    len
+    intc_0 // 32
+    <=
+    assert // overflow
+    intc_0 // 32
+    bzero
+    b|
+    swap
+    cover 2
+    callsub _approve
+    // contracts/arc200.algo.ts:186
+    // @arc4.abimethod()
+    bytec_0 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// contracts/arc200.algo.ts::Arc200.arc200_decreaseAllowance[routing]() -> void:
+arc200_decreaseAllowance:
+    // contracts/arc200.algo.ts:201
+    // @arc4.abimethod()
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_0 // 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 2
+    dup
+    len
+    intc_0 // 32
+    ==
+    assert // invalid number of bytes for arc4.uint256
+    // contracts/arc200.algo.ts:203
+    // const owner = new Address(Txn.sender)
+    txn Sender
+    // contracts/arc200.algo.ts:204
+    // const current = this._allowance(owner, spender)
+    dup
+    dig 3
+    callsub _allowance
+    // contracts/arc200.algo.ts:205
+    // assert(current.asBigUint() >= value.asBigUint(), 'Decrease exceeds current allowance')
+    dup
+    dig 3
+    b>=
+    assert // Decrease exceeds current allowance
+    // contracts/arc200.algo.ts:206
+    // return this._approve(owner, spender, new Uint256(current.asBigUint() - value.asBigUint()))
+    uncover 2
+    b-
+    dup
+    len
+    intc_0 // 32
+    <=
+    assert // overflow
+    intc_0 // 32
+    bzero
+    b|
+    swap
+    cover 2
+    callsub _approve
+    // contracts/arc200.algo.ts:201
+    // @arc4.abimethod()
+    bytec_0 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
 // contracts/arc200.algo.ts::Arc200.arc200_allowance[routing]() -> void:
 arc200_allowance:
-    // contracts/arc200.algo.ts:185
+    // contracts/arc200.algo.ts:216
     // @arc4.abimethod({ readonly: true })
     txna ApplicationArgs 1
     dup
@@ -439,10 +543,10 @@ arc200_allowance:
     intc_0 // 32
     ==
     assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
-    // contracts/arc200.algo.ts:187
+    // contracts/arc200.algo.ts:218
     // return this._allowance(owner, spender)
     callsub _allowance
-    // contracts/arc200.algo.ts:185
+    // contracts/arc200.algo.ts:216
     // @arc4.abimethod({ readonly: true })
     bytec_0 // 0x151f7c75
     swap
@@ -454,7 +558,7 @@ arc200_allowance:
 
 // contracts/arc200.algo.ts::Arc200._balanceOf(owner: bytes) -> bytes:
 _balanceOf:
-    // contracts/arc200.algo.ts:190
+    // contracts/arc200.algo.ts:221
     // private _balanceOf(owner: Address): Uint256 {
     proto 1 1
     // contracts/arc200.algo.ts:59
@@ -463,7 +567,7 @@ _balanceOf:
     frame_dig -1
     concat
     dup
-    // contracts/arc200.algo.ts:191
+    // contracts/arc200.algo.ts:222
     // if (!this.balances(owner).exists) return new Uint256(0)
     box_len
     bury 1
@@ -473,7 +577,7 @@ _balanceOf:
     retsub
 
 _balanceOf_after_if_else@2:
-    // contracts/arc200.algo.ts:192
+    // contracts/arc200.algo.ts:223
     // return this.balances(owner).value
     frame_dig 0
     box_get
@@ -484,33 +588,60 @@ _balanceOf_after_if_else@2:
 
 // contracts/arc200.algo.ts::Arc200._transfer(sender: bytes, recipient: bytes, amount: bytes) -> bytes:
 _transfer:
-    // contracts/arc200.algo.ts:195
+    // contracts/arc200.algo.ts:226
     // private _transfer(sender: Address, recipient: Address, amount: Uint256): Bool {
     proto 3 1
-    // contracts/arc200.algo.ts:196
+    intc_2 // 0
+    // contracts/arc200.algo.ts:227
     // const sender_balance = this._balanceOf(sender)
     frame_dig -3
     callsub _balanceOf
     dup
-    // contracts/arc200.algo.ts:197
+    // contracts/arc200.algo.ts:228
     // const recipient_balance = this._balanceOf(recipient)
     frame_dig -2
     callsub _balanceOf
     swap
-    // contracts/arc200.algo.ts:198
+    // contracts/arc200.algo.ts:229
     // assert(sender_balance.asBigUint() >= amount.asBigUint(), 'Insufficient balance at the sender account')
     frame_dig -1
     b>=
     assert // Insufficient balance at the sender account
-    // contracts/arc200.algo.ts:200
+    // contracts/arc200.algo.ts:231
     // if (sender !== recipient) {
     frame_dig -3
     frame_dig -2
     !=
-    bz _transfer_after_if_else@2
-    // contracts/arc200.algo.ts:202
+    bz _transfer_after_if_else@4
+    // contracts/arc200.algo.ts:232
+    // assert(recipient !== new Address(Global.zeroAddress), 'Cannot transfer to the zero address')
+    frame_dig -2
+    global ZeroAddress
+    !=
+    assert // Cannot transfer to the zero address
+    // contracts/arc200.algo.ts:59
+    // public balances = BoxMap<Address, Uint256>({ keyPrefix: 'b' })
+    bytec_1 // "b"
+    frame_dig -2
+    concat
+    dup
+    frame_bury 0
+    // contracts/arc200.algo.ts:233
+    // if (!this.balances(recipient).exists) {
+    box_len
+    bury 1
+    bnz _transfer_after_if_else@3
+    // contracts/arc200.algo.ts:236
+    // assert(amount.asBigUint() > 0n, 'A zero-value transfer cannot be used to create a new balance box')
+    frame_dig -1
+    pushbytes 0x
+    b>
+    assert // A zero-value transfer cannot be used to create a new balance box
+
+_transfer_after_if_else@3:
+    // contracts/arc200.algo.ts:238
     // this.balances(sender).value = new Uint256(sender_balance.asBigUint() - amount.asBigUint())
-    frame_dig 0
+    frame_dig 1
     frame_dig -1
     b-
     dup
@@ -528,13 +659,13 @@ _transfer:
     bytec_1 // "b"
     frame_dig -3
     concat
-    // contracts/arc200.algo.ts:202
+    // contracts/arc200.algo.ts:238
     // this.balances(sender).value = new Uint256(sender_balance.asBigUint() - amount.asBigUint())
     swap
     box_put
-    // contracts/arc200.algo.ts:203
+    // contracts/arc200.algo.ts:239
     // this.balances(recipient).value = new Uint256(recipient_balance.asBigUint() + amount.asBigUint())
-    frame_dig 1
+    frame_dig 2
     frame_dig -1
     b+
     dup
@@ -543,18 +674,12 @@ _transfer:
     <=
     assert // overflow
     b|
-    // contracts/arc200.algo.ts:59
-    // public balances = BoxMap<Address, Uint256>({ keyPrefix: 'b' })
-    bytec_1 // "b"
-    frame_dig -2
-    concat
-    // contracts/arc200.algo.ts:203
-    // this.balances(recipient).value = new Uint256(recipient_balance.asBigUint() + amount.asBigUint())
+    frame_dig 0
     swap
     box_put
 
-_transfer_after_if_else@2:
-    // contracts/arc200.algo.ts:205
+_transfer_after_if_else@4:
+    // contracts/arc200.algo.ts:241
     // emit(new arc200_Transfer({ from: sender, to: recipient, value: amount }))
     frame_dig -3
     frame_dig -2
@@ -565,7 +690,7 @@ _transfer_after_if_else@2:
     swap
     concat
     log
-    // contracts/arc200.algo.ts:206
+    // contracts/arc200.algo.ts:242
     // return new Bool(true)
     pushbytes 0x80
     frame_bury 0
@@ -574,10 +699,10 @@ _transfer_after_if_else@2:
 
 // contracts/arc200.algo.ts::Arc200._allowance(owner: bytes, spender: bytes) -> bytes:
 _allowance:
-    // contracts/arc200.algo.ts:213
+    // contracts/arc200.algo.ts:249
     // private _allowance(owner: Address, spender: Address): Uint256 {
     proto 2 1
-    // contracts/arc200.algo.ts:210
+    // contracts/arc200.algo.ts:246
     // return new StaticBytes<32>(op.sha256(op.concat(owner.bytes, spender.bytes)))
     frame_dig -2
     frame_dig -1
@@ -589,7 +714,7 @@ _allowance:
     swap
     concat
     dup
-    // contracts/arc200.algo.ts:215
+    // contracts/arc200.algo.ts:251
     // if (!this.approvals(key).exists) return new Uint256(0)
     box_len
     bury 1
@@ -599,7 +724,7 @@ _allowance:
     retsub
 
 _allowance_after_if_else@2:
-    // contracts/arc200.algo.ts:216
+    // contracts/arc200.algo.ts:252
     // return this.approvals(key).value.approvalAmount
     frame_dig 0
     box_get
@@ -611,17 +736,17 @@ _allowance_after_if_else@2:
 
 // contracts/arc200.algo.ts::Arc200._approve(owner: bytes, spender: bytes, amount: bytes) -> bytes:
 _approve:
-    // contracts/arc200.algo.ts:219
+    // contracts/arc200.algo.ts:255
     // private _approve(owner: Address, spender: Address, amount: Uint256): Bool {
     proto 3 1
-    // contracts/arc200.algo.ts:210
+    // contracts/arc200.algo.ts:246
     // return new StaticBytes<32>(op.sha256(op.concat(owner.bytes, spender.bytes)))
     frame_dig -3
     frame_dig -2
     concat
     dup
     sha256
-    // contracts/arc200.algo.ts:221-225
+    // contracts/arc200.algo.ts:257-261
     // const approvalBox: ApprovalStruct = new ApprovalStruct({
     //   approvalAmount: amount,
     //   owner: owner,
@@ -637,11 +762,11 @@ _approve:
     pushbytes "a"
     uncover 2
     concat
-    // contracts/arc200.algo.ts:226
+    // contracts/arc200.algo.ts:262
     // this.approvals(key).value = clone(approvalBox)
     swap
     box_put
-    // contracts/arc200.algo.ts:227
+    // contracts/arc200.algo.ts:263
     // emit(new arc200_Approval({ owner: owner, spender: spender, value: amount }))
     frame_dig -1
     concat
@@ -649,7 +774,7 @@ _approve:
     swap
     concat
     log
-    // contracts/arc200.algo.ts:228
+    // contracts/arc200.algo.ts:264
     // return new Bool(true)
     pushbytes 0x80
     retsub

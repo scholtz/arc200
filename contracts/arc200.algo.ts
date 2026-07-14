@@ -176,6 +176,37 @@ export class Arc200 extends Contract {
   }
 
   /**
+   * Increases the allowance of spender by value, avoiding the classic approve() front-running
+   * race condition where an in-flight transferFrom can consume both the old and new allowance.
+   *
+   * @param spender Who is allowed to take tokens on owner's behalf
+   * @param value Amount to add to the current allowance
+   * @returns Success
+   */
+  @arc4.abimethod()
+  public arc200_increaseAllowance(spender: Address, value: arc4.Uint256): Bool {
+    const owner = new Address(Txn.sender)
+    const current = this._allowance(owner, spender)
+    return this._approve(owner, spender, new Uint256(current.asBigUint() + value.asBigUint()))
+  }
+
+  /**
+   * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+   * race condition where an in-flight transferFrom can consume both the old and new allowance.
+   *
+   * @param spender Who is allowed to take tokens on owner's behalf
+   * @param value Amount to subtract from the current allowance
+   * @returns Success
+   */
+  @arc4.abimethod()
+  public arc200_decreaseAllowance(spender: Address, value: arc4.Uint256): Bool {
+    const owner = new Address(Txn.sender)
+    const current = this._allowance(owner, spender)
+    assert(current.asBigUint() >= value.asBigUint(), 'Decrease exceeds current allowance')
+    return this._approve(owner, spender, new Uint256(current.asBigUint() - value.asBigUint()))
+  }
+
+  /**
    * Returns the current allowance of the spender of the tokens of the owner
    *
    * @param owner Owner's account
@@ -198,7 +229,12 @@ export class Arc200 extends Contract {
     assert(sender_balance.asBigUint() >= amount.asBigUint(), 'Insufficient balance at the sender account')
 
     if (sender !== recipient) {
-      // if sender == recipent, do nothing, just issue event
+      assert(recipient !== new Address(Global.zeroAddress), 'Cannot transfer to the zero address')
+      if (!this.balances(recipient).exists) {
+        // Prevents an attacker with a zero balance from spamming box creation (and draining the
+        // app account's box MBR) via free, valueless transfers to arbitrary fresh addresses.
+        assert(amount.asBigUint() > 0n, 'A zero-value transfer cannot be used to create a new balance box')
+      }
       this.balances(sender).value = new Uint256(sender_balance.asBigUint() - amount.asBigUint())
       this.balances(recipient).value = new Uint256(recipient_balance.asBigUint() + amount.asBigUint())
     }

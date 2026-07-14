@@ -104,6 +104,26 @@ type Arc200Args = {
              */
             value: bigint | number;
         };
+        'arc200_increaseAllowance(address,uint256)bool': {
+            /**
+             * Who is allowed to take tokens on owner's behalf
+             */
+            spender: string;
+            /**
+             * Amount to add to the current allowance
+             */
+            value: bigint | number;
+        };
+        'arc200_decreaseAllowance(address,uint256)bool': {
+            /**
+             * Who is allowed to take tokens on owner's behalf
+             */
+            spender: string;
+            /**
+             * Amount to subtract from the current allowance
+             */
+            value: bigint | number;
+        };
         'arc200_allowance(address,address)uint256': {
             /**
              * Owner's account
@@ -128,6 +148,8 @@ type Arc200Args = {
         'arc200_transfer(address,uint256)bool': [to: string, value: bigint | number];
         'arc200_transferFrom(address,address,uint256)bool': [from: string, to: string, value: bigint | number];
         'arc200_approve(address,uint256)bool': [spender: string, value: bigint | number];
+        'arc200_increaseAllowance(address,uint256)bool': [spender: string, value: bigint | number];
+        'arc200_decreaseAllowance(address,uint256)bool': [spender: string, value: bigint | number];
         'arc200_allowance(address,address)uint256': [owner: string, spender: string];
     };
 };
@@ -144,6 +166,8 @@ type Arc200Returns = {
     'arc200_transfer(address,uint256)bool': boolean;
     'arc200_transferFrom(address,address,uint256)bool': boolean;
     'arc200_approve(address,uint256)bool': boolean;
+    'arc200_increaseAllowance(address,uint256)bool': boolean;
+    'arc200_decreaseAllowance(address,uint256)bool': boolean;
     'arc200_allowance(address,address)uint256': bigint;
 };
 /**
@@ -213,6 +237,20 @@ type Arc200Types = {
          * Success
          */
         returns: Arc200Returns['arc200_approve(address,uint256)bool'];
+    }> & Record<'arc200_increaseAllowance(address,uint256)bool' | 'arc200_increaseAllowance', {
+        argsObj: Arc200Args['obj']['arc200_increaseAllowance(address,uint256)bool'];
+        argsTuple: Arc200Args['tuple']['arc200_increaseAllowance(address,uint256)bool'];
+        /**
+         * Success
+         */
+        returns: Arc200Returns['arc200_increaseAllowance(address,uint256)bool'];
+    }> & Record<'arc200_decreaseAllowance(address,uint256)bool' | 'arc200_decreaseAllowance', {
+        argsObj: Arc200Args['obj']['arc200_decreaseAllowance(address,uint256)bool'];
+        argsTuple: Arc200Args['tuple']['arc200_decreaseAllowance(address,uint256)bool'];
+        /**
+         * Success
+         */
+        returns: Arc200Returns['arc200_decreaseAllowance(address,uint256)bool'];
     }> & Record<'arc200_allowance(address,address)uint256' | 'arc200_allowance', {
         argsObj: Arc200Args['obj']['arc200_allowance(address,address)uint256'];
         argsTuple: Arc200Args['tuple']['arc200_allowance(address,address)uint256'];
@@ -386,6 +424,28 @@ declare abstract class Arc200ParamsFactory {
      * @returns An `AppClientMethodCallParams` object for the call
      */
     static arc200Approve(params: CallParams$1<Arc200Args['obj']['arc200_approve(address,uint256)bool'] | Arc200Args['tuple']['arc200_approve(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_increaseAllowance(address,uint256)bool ABI method
+     *
+    * Increases the allowance of spender by value, avoiding the classic approve() front-running
+    race condition where an in-flight transferFrom can consume both the old and new allowance.
+  
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200IncreaseAllowance(params: CallParams$1<Arc200Args['obj']['arc200_increaseAllowance(address,uint256)bool'] | Arc200Args['tuple']['arc200_increaseAllowance(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_decreaseAllowance(address,uint256)bool ABI method
+     *
+    * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+    race condition where an in-flight transferFrom can consume both the old and new allowance.
+  
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200DecreaseAllowance(params: CallParams$1<Arc200Args['obj']['arc200_decreaseAllowance(address,uint256)bool'] | Arc200Args['tuple']['arc200_decreaseAllowance(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
     /**
      * Constructs a no op call for the arc200_allowance(address,address)uint256 ABI method
      *
@@ -811,6 +871,32 @@ declare class Arc200Client {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<AppCallMethodCall>;
         /**
+         * Makes a call to the Arc200 smart contract using the `arc200_increaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Increases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call params: Success
+         */
+        arc200IncreaseAllowance: (params: CallParams$1<Arc200Args["obj"]["arc200_increaseAllowance(address,uint256)bool"] | Arc200Args["tuple"]["arc200_increaseAllowance(address,uint256)bool"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<AppCallMethodCall>;
+        /**
+         * Makes a call to the Arc200 smart contract using the `arc200_decreaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call params: Success
+         */
+        arc200DecreaseAllowance: (params: CallParams$1<Arc200Args["obj"]["arc200_decreaseAllowance(address,uint256)bool"] | Arc200Args["tuple"]["arc200_decreaseAllowance(address,uint256)bool"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<AppCallMethodCall>;
+        /**
          * Makes a call to the Arc200 smart contract using the `arc200_allowance(address,address)uint256` ABI method.
          *
          * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
@@ -972,6 +1058,40 @@ declare class Arc200Client {
          * @returns The call transaction: Success
          */
         arc200Approve: (params: CallParams$1<Arc200Args["obj"]["arc200_approve(address,uint256)bool"] | Arc200Args["tuple"]["arc200_approve(address,uint256)bool"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            transactions: Transaction[];
+            methodCalls: Map<number, algosdk.ABIMethod>;
+            signers: Map<number, TransactionSigner>;
+        }>;
+        /**
+         * Makes a call to the Arc200 smart contract using the `arc200_increaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Increases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call transaction: Success
+         */
+        arc200IncreaseAllowance: (params: CallParams$1<Arc200Args["obj"]["arc200_increaseAllowance(address,uint256)bool"] | Arc200Args["tuple"]["arc200_increaseAllowance(address,uint256)bool"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            transactions: Transaction[];
+            methodCalls: Map<number, algosdk.ABIMethod>;
+            signers: Map<number, TransactionSigner>;
+        }>;
+        /**
+         * Makes a call to the Arc200 smart contract using the `arc200_decreaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call transaction: Success
+         */
+        arc200DecreaseAllowance: (params: CallParams$1<Arc200Args["obj"]["arc200_decreaseAllowance(address,uint256)bool"] | Arc200Args["tuple"]["arc200_decreaseAllowance(address,uint256)bool"]> & {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
             transactions: Transaction[];
@@ -1196,6 +1316,50 @@ declare class Arc200Client {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<{
             return: (undefined | Arc200Returns["arc200_approve(address,uint256)bool"]);
+            returns?: ABIReturn[] | undefined | undefined;
+            groupId: string;
+            txIds: string[];
+            confirmations: modelsv2.PendingTransactionResponse[];
+            transactions: Transaction[];
+            confirmation: modelsv2.PendingTransactionResponse;
+            transaction: Transaction;
+        }>;
+        /**
+         * Makes a call to the Arc200 smart contract using the `arc200_increaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Increases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call result: Success
+         */
+        arc200IncreaseAllowance: (params: CallParams$1<Arc200Args["obj"]["arc200_increaseAllowance(address,uint256)bool"] | Arc200Args["tuple"]["arc200_increaseAllowance(address,uint256)bool"]> & SendParams & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            return: (undefined | Arc200Returns["arc200_increaseAllowance(address,uint256)bool"]);
+            returns?: ABIReturn[] | undefined | undefined;
+            groupId: string;
+            txIds: string[];
+            confirmations: modelsv2.PendingTransactionResponse[];
+            transactions: Transaction[];
+            confirmation: modelsv2.PendingTransactionResponse;
+            transaction: Transaction;
+        }>;
+        /**
+         * Makes a call to the Arc200 smart contract using the `arc200_decreaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call result: Success
+         */
+        arc200DecreaseAllowance: (params: CallParams$1<Arc200Args["obj"]["arc200_decreaseAllowance(address,uint256)bool"] | Arc200Args["tuple"]["arc200_decreaseAllowance(address,uint256)bool"]> & SendParams & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            return: (undefined | Arc200Returns["arc200_decreaseAllowance(address,uint256)bool"]);
             returns?: ABIReturn[] | undefined | undefined;
             groupId: string;
             txIds: string[];
@@ -1457,6 +1621,30 @@ type Arc200Composer<TReturns extends [...any[]] = []> = {
      */
     arc200Approve(params?: CallParams$1<Arc200Args['obj']['arc200_approve(address,uint256)bool'] | Arc200Args['tuple']['arc200_approve(address,uint256)bool']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_approve(address,uint256)bool'] | undefined]>;
     /**
+     * Calls the arc200_increaseAllowance(address,uint256)bool ABI method.
+     *
+    * Increases the allowance of spender by value, avoiding the classic approve() front-running
+    race condition where an in-flight transferFrom can consume both the old and new allowance.
+  
+     *
+     * @param args The arguments for the contract call
+     * @param params Any additional parameters for the call
+     * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
+     */
+    arc200IncreaseAllowance(params?: CallParams$1<Arc200Args['obj']['arc200_increaseAllowance(address,uint256)bool'] | Arc200Args['tuple']['arc200_increaseAllowance(address,uint256)bool']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_increaseAllowance(address,uint256)bool'] | undefined]>;
+    /**
+     * Calls the arc200_decreaseAllowance(address,uint256)bool ABI method.
+     *
+    * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+    race condition where an in-flight transferFrom can consume both the old and new allowance.
+  
+     *
+     * @param args The arguments for the contract call
+     * @param params Any additional parameters for the call
+     * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
+     */
+    arc200DecreaseAllowance(params?: CallParams$1<Arc200Args['obj']['arc200_decreaseAllowance(address,uint256)bool'] | Arc200Args['tuple']['arc200_decreaseAllowance(address,uint256)bool']>): Arc200Composer<[...TReturns, Arc200Returns['arc200_decreaseAllowance(address,uint256)bool'] | undefined]>;
+    /**
      * Calls the arc200_allowance(address,address)uint256 ABI method.
      *
      * Returns the current allowance of the spender of the tokens of the owner
@@ -1640,6 +1828,26 @@ type Arc200AsaArgs = {
              */
             value: bigint | number;
         };
+        'arc200_increaseAllowance(address,uint256)bool': {
+            /**
+             * Who is allowed to take tokens on owner's behalf
+             */
+            spender: string;
+            /**
+             * Amount to add to the current allowance
+             */
+            value: bigint | number;
+        };
+        'arc200_decreaseAllowance(address,uint256)bool': {
+            /**
+             * Who is allowed to take tokens on owner's behalf
+             */
+            spender: string;
+            /**
+             * Amount to subtract from the current allowance
+             */
+            value: bigint | number;
+        };
         'arc200_exchange()(uint64,address)': Record<string, never>;
         'arc200_redeem(uint64)void': {
             amount: bigint | number;
@@ -1683,6 +1891,8 @@ type Arc200AsaArgs = {
         'arc200_transfer(address,uint256)bool': [to: string, value: bigint | number];
         'arc200_transferFrom(address,address,uint256)bool': [from: string, to: string, value: bigint | number];
         'arc200_approve(address,uint256)bool': [spender: string, value: bigint | number];
+        'arc200_increaseAllowance(address,uint256)bool': [spender: string, value: bigint | number];
+        'arc200_decreaseAllowance(address,uint256)bool': [spender: string, value: bigint | number];
         'arc200_exchange()(uint64,address)': [];
         'arc200_redeem(uint64)void': [amount: bigint | number];
         'deposit(uint64)uint256': [amount: bigint | number];
@@ -1705,6 +1915,8 @@ type Arc200AsaReturns = {
     'arc200_transfer(address,uint256)bool': boolean;
     'arc200_transferFrom(address,address,uint256)bool': boolean;
     'arc200_approve(address,uint256)bool': boolean;
+    'arc200_increaseAllowance(address,uint256)bool': boolean;
+    'arc200_decreaseAllowance(address,uint256)bool': boolean;
     'arc200_exchange()(uint64,address)': Arc200ExchangeInfo;
     'arc200_redeem(uint64)void': void;
     'deposit(uint64)uint256': bigint;
@@ -1780,6 +1992,20 @@ type Arc200AsaTypes = {
          * Success
          */
         returns: Arc200AsaReturns['arc200_approve(address,uint256)bool'];
+    }> & Record<'arc200_increaseAllowance(address,uint256)bool' | 'arc200_increaseAllowance', {
+        argsObj: Arc200AsaArgs['obj']['arc200_increaseAllowance(address,uint256)bool'];
+        argsTuple: Arc200AsaArgs['tuple']['arc200_increaseAllowance(address,uint256)bool'];
+        /**
+         * Success
+         */
+        returns: Arc200AsaReturns['arc200_increaseAllowance(address,uint256)bool'];
+    }> & Record<'arc200_decreaseAllowance(address,uint256)bool' | 'arc200_decreaseAllowance', {
+        argsObj: Arc200AsaArgs['obj']['arc200_decreaseAllowance(address,uint256)bool'];
+        argsTuple: Arc200AsaArgs['tuple']['arc200_decreaseAllowance(address,uint256)bool'];
+        /**
+         * Success
+         */
+        returns: Arc200AsaReturns['arc200_decreaseAllowance(address,uint256)bool'];
     }> & Record<'arc200_exchange()(uint64,address)' | 'arc200_exchange', {
         argsObj: Arc200AsaArgs['obj']['arc200_exchange()(uint64,address)'];
         argsTuple: Arc200AsaArgs['tuple']['arc200_exchange()(uint64,address)'];
@@ -1985,6 +2211,28 @@ declare abstract class Arc200AsaParamsFactory {
      */
     static arc200Approve(params: CallParams<Arc200AsaArgs['obj']['arc200_approve(address,uint256)bool'] | Arc200AsaArgs['tuple']['arc200_approve(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
     /**
+     * Constructs a no op call for the arc200_increaseAllowance(address,uint256)bool ABI method
+     *
+    * Increases the allowance of spender by value, avoiding the classic approve() front-running
+    race condition where an in-flight transferFrom can consume both the old and new allowance.
+  
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200IncreaseAllowance(params: CallParams<Arc200AsaArgs['obj']['arc200_increaseAllowance(address,uint256)bool'] | Arc200AsaArgs['tuple']['arc200_increaseAllowance(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
+     * Constructs a no op call for the arc200_decreaseAllowance(address,uint256)bool ABI method
+     *
+    * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+    race condition where an in-flight transferFrom can consume both the old and new allowance.
+  
+     *
+     * @param params Parameters for the call
+     * @returns An `AppClientMethodCallParams` object for the call
+     */
+    static arc200DecreaseAllowance(params: CallParams<Arc200AsaArgs['obj']['arc200_decreaseAllowance(address,uint256)bool'] | Arc200AsaArgs['tuple']['arc200_decreaseAllowance(address,uint256)bool']> & CallOnComplete): AppClientMethodCallParams & CallOnComplete;
+    /**
      * Constructs a no op call for the arc200_exchange()(uint64,address) ABI method
      *
     * arc200_exchange() → (uint64 exchange_asset, address sink)
@@ -2067,7 +2315,13 @@ declare abstract class Arc200AsaParamsFactory {
     /**
      * Constructs a no op call for the createBalanceBox(address)byte ABI method
      *
-     * wnnt200 method to create balance box for an address
+    * wnnt200 method to create balance box for an address.
+    
+    The caller MUST cover the box's minimum balance requirement with a payment transaction
+    immediately preceding this call in the group, to prevent unauthenticated callers from
+    forcing the app account to fund unlimited boxes for arbitrary addresses at no cost to
+    themselves.
+  
      *
      * @param params Parameters for the call
      * @returns An `AppClientMethodCallParams` object for the call
@@ -2498,6 +2752,32 @@ declare class Arc200AsaClient {
             onComplete?: OnApplicationComplete.NoOpOC;
         }) => Promise<AppCallMethodCall>;
         /**
+         * Makes a call to the Arc200_ASA smart contract using the `arc200_increaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Increases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call params: Success
+         */
+        arc200IncreaseAllowance: (params: CallParams<Arc200AsaArgs["obj"]["arc200_increaseAllowance(address,uint256)bool"] | Arc200AsaArgs["tuple"]["arc200_increaseAllowance(address,uint256)bool"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<AppCallMethodCall>;
+        /**
+         * Makes a call to the Arc200_ASA smart contract using the `arc200_decreaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call params: Success
+         */
+        arc200DecreaseAllowance: (params: CallParams<Arc200AsaArgs["obj"]["arc200_decreaseAllowance(address,uint256)bool"] | Arc200AsaArgs["tuple"]["arc200_decreaseAllowance(address,uint256)bool"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<AppCallMethodCall>;
+        /**
          * Makes a call to the Arc200_ASA smart contract using the `arc200_exchange()(uint64,address)` ABI method.
          *
          * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
@@ -2592,7 +2872,13 @@ declare class Arc200AsaClient {
         /**
          * Makes a call to the Arc200_ASA smart contract using the `createBalanceBox(address)byte` ABI method.
          *
-         * wnnt200 method to create balance box for an address
+        * wnnt200 method to create balance box for an address.
+        
+        The caller MUST cover the box's minimum balance requirement with a payment transaction
+        immediately preceding this call in the group, to prevent unauthenticated callers from
+        forcing the app account to fund unlimited boxes for arbitrary addresses at no cost to
+        themselves.
+    
          *
          * @param params The params for the smart contract call
          * @returns The call params: 1 if box was created. 0 if box exists
@@ -2769,6 +3055,40 @@ declare class Arc200AsaClient {
             signers: Map<number, TransactionSigner>;
         }>;
         /**
+         * Makes a call to the Arc200_ASA smart contract using the `arc200_increaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Increases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call transaction: Success
+         */
+        arc200IncreaseAllowance: (params: CallParams<Arc200AsaArgs["obj"]["arc200_increaseAllowance(address,uint256)bool"] | Arc200AsaArgs["tuple"]["arc200_increaseAllowance(address,uint256)bool"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            transactions: Transaction[];
+            methodCalls: Map<number, algosdk.ABIMethod>;
+            signers: Map<number, TransactionSigner>;
+        }>;
+        /**
+         * Makes a call to the Arc200_ASA smart contract using the `arc200_decreaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call transaction: Success
+         */
+        arc200DecreaseAllowance: (params: CallParams<Arc200AsaArgs["obj"]["arc200_decreaseAllowance(address,uint256)bool"] | Arc200AsaArgs["tuple"]["arc200_decreaseAllowance(address,uint256)bool"]> & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            transactions: Transaction[];
+            methodCalls: Map<number, algosdk.ABIMethod>;
+            signers: Map<number, TransactionSigner>;
+        }>;
+        /**
          * Makes a call to the Arc200_ASA smart contract using the `arc200_exchange()(uint64,address)` ABI method.
          *
          * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
@@ -2883,7 +3203,13 @@ declare class Arc200AsaClient {
         /**
          * Makes a call to the Arc200_ASA smart contract using the `createBalanceBox(address)byte` ABI method.
          *
-         * wnnt200 method to create balance box for an address
+        * wnnt200 method to create balance box for an address.
+        
+        The caller MUST cover the box's minimum balance requirement with a payment transaction
+        immediately preceding this call in the group, to prevent unauthenticated callers from
+        forcing the app account to fund unlimited boxes for arbitrary addresses at no cost to
+        themselves.
+    
          *
          * @param params The params for the smart contract call
          * @returns The call transaction: 1 if box was created. 0 if box exists
@@ -3122,6 +3448,50 @@ declare class Arc200AsaClient {
             transaction: Transaction;
         }>;
         /**
+         * Makes a call to the Arc200_ASA smart contract using the `arc200_increaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Increases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call result: Success
+         */
+        arc200IncreaseAllowance: (params: CallParams<Arc200AsaArgs["obj"]["arc200_increaseAllowance(address,uint256)bool"] | Arc200AsaArgs["tuple"]["arc200_increaseAllowance(address,uint256)bool"]> & SendParams & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            return: (undefined | Arc200AsaReturns["arc200_increaseAllowance(address,uint256)bool"]);
+            returns?: ABIReturn[] | undefined | undefined;
+            groupId: string;
+            txIds: string[];
+            confirmations: modelsv2.PendingTransactionResponse[];
+            transactions: Transaction[];
+            confirmation: modelsv2.PendingTransactionResponse;
+            transaction: Transaction;
+        }>;
+        /**
+         * Makes a call to the Arc200_ASA smart contract using the `arc200_decreaseAllowance(address,uint256)bool` ABI method.
+         *
+        * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+        race condition where an in-flight transferFrom can consume both the old and new allowance.
+    
+         *
+         * @param params The params for the smart contract call
+         * @returns The call result: Success
+         */
+        arc200DecreaseAllowance: (params: CallParams<Arc200AsaArgs["obj"]["arc200_decreaseAllowance(address,uint256)bool"] | Arc200AsaArgs["tuple"]["arc200_decreaseAllowance(address,uint256)bool"]> & SendParams & {
+            onComplete?: OnApplicationComplete.NoOpOC;
+        }) => Promise<{
+            return: (undefined | Arc200AsaReturns["arc200_decreaseAllowance(address,uint256)bool"]);
+            returns?: ABIReturn[] | undefined | undefined;
+            groupId: string;
+            txIds: string[];
+            confirmations: modelsv2.PendingTransactionResponse[];
+            transactions: Transaction[];
+            confirmation: modelsv2.PendingTransactionResponse;
+            transaction: Transaction;
+        }>;
+        /**
          * Makes a call to the Arc200_ASA smart contract using the `arc200_exchange()(uint64,address)` ABI method.
          *
          * This method is a readonly method; calling it with onComplete of NoOp will result in a simulated transaction rather than a real transaction.
@@ -3261,7 +3631,13 @@ declare class Arc200AsaClient {
         /**
          * Makes a call to the Arc200_ASA smart contract using the `createBalanceBox(address)byte` ABI method.
          *
-         * wnnt200 method to create balance box for an address
+        * wnnt200 method to create balance box for an address.
+        
+        The caller MUST cover the box's minimum balance requirement with a payment transaction
+        immediately preceding this call in the group, to prevent unauthenticated callers from
+        forcing the app account to fund unlimited boxes for arbitrary addresses at no cost to
+        themselves.
+    
          *
          * @param params The params for the smart contract call
          * @returns The call result: 1 if box was created. 0 if box exists
@@ -3555,6 +3931,30 @@ type Arc200AsaComposer<TReturns extends [...any[]] = []> = {
      */
     arc200Approve(params?: CallParams<Arc200AsaArgs['obj']['arc200_approve(address,uint256)bool'] | Arc200AsaArgs['tuple']['arc200_approve(address,uint256)bool']>): Arc200AsaComposer<[...TReturns, Arc200AsaReturns['arc200_approve(address,uint256)bool'] | undefined]>;
     /**
+     * Calls the arc200_increaseAllowance(address,uint256)bool ABI method.
+     *
+    * Increases the allowance of spender by value, avoiding the classic approve() front-running
+    race condition where an in-flight transferFrom can consume both the old and new allowance.
+  
+     *
+     * @param args The arguments for the contract call
+     * @param params Any additional parameters for the call
+     * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
+     */
+    arc200IncreaseAllowance(params?: CallParams<Arc200AsaArgs['obj']['arc200_increaseAllowance(address,uint256)bool'] | Arc200AsaArgs['tuple']['arc200_increaseAllowance(address,uint256)bool']>): Arc200AsaComposer<[...TReturns, Arc200AsaReturns['arc200_increaseAllowance(address,uint256)bool'] | undefined]>;
+    /**
+     * Calls the arc200_decreaseAllowance(address,uint256)bool ABI method.
+     *
+    * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+    race condition where an in-flight transferFrom can consume both the old and new allowance.
+  
+     *
+     * @param args The arguments for the contract call
+     * @param params Any additional parameters for the call
+     * @returns The typed transaction composer so you can fluently chain multiple calls or call execute to execute all queued up transactions
+     */
+    arc200DecreaseAllowance(params?: CallParams<Arc200AsaArgs['obj']['arc200_decreaseAllowance(address,uint256)bool'] | Arc200AsaArgs['tuple']['arc200_decreaseAllowance(address,uint256)bool']>): Arc200AsaComposer<[...TReturns, Arc200AsaReturns['arc200_decreaseAllowance(address,uint256)bool'] | undefined]>;
+    /**
      * Calls the arc200_exchange()(uint64,address) ABI method.
      *
     * arc200_exchange() → (uint64 exchange_asset, address sink)
@@ -3642,7 +4042,13 @@ type Arc200AsaComposer<TReturns extends [...any[]] = []> = {
     /**
      * Calls the createBalanceBox(address)byte ABI method.
      *
-     * wnnt200 method to create balance box for an address
+    * wnnt200 method to create balance box for an address.
+    
+    The caller MUST cover the box's minimum balance requirement with a payment transaction
+    immediately preceding this call in the group, to prevent unauthenticated callers from
+    forcing the app account to fund unlimited boxes for arbitrary addresses at no cost to
+    themselves.
+  
      *
      * @param args The arguments for the contract call
      * @param params Any additional parameters for the call

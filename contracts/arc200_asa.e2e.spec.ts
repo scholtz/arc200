@@ -1,9 +1,11 @@
 import { AlgorandClient, Config } from '@algorandfoundation/algokit-utils'
 import { registerDebugEventHandlers } from '@algorandfoundation/algokit-utils-debug'
 import { algorandFixture } from '@algorandfoundation/algokit-utils/testing'
+import { AlgoAmount } from '@algorandfoundation/algokit-utils/types/amount'
 import algosdk from 'algosdk'
 import { beforeAll, beforeEach, describe, expect, test } from 'vitest'
 import { getArc200ASAClient } from '../src'
+import { Arc200AsaFactory } from './artifacts/Arc200_ASAClient'
 
 describe('ARC200 ASA contract', () => {
   const localnet = algorandFixture()
@@ -15,6 +17,143 @@ describe('ARC200 ASA contract', () => {
     registerDebugEventHandlers()
   })
   beforeEach(localnet.newScope)
+
+  const deploy = async (account: algosdk.Address) => {
+    const factory = localnet.algorand.client.getTypedAppFactory(Arc200AsaFactory, {
+      defaultSender: account,
+    })
+
+    const { appClient } = await factory.deploy({
+      onUpdate: 'append',
+      onSchemaBreak: 'append',
+    })
+    await localnet.algorand.account.ensureFunded(appClient.appAddress, account, AlgoAmount.Algo(1))
+
+    await appClient.send.bootstrap({
+      args: {
+        decimals: 6,
+        name: new Uint8Array(Buffer.from('Test', 'ascii')),
+        symbol: new Uint8Array(Buffer.from('T', 'ascii')),
+        totalSupply: 1_000_000_000_000n,
+        asset: {
+          metadataHash: new Uint8Array(32),
+          url: new Uint8Array(Buffer.from('https://example.com/token.json', 'ascii')),
+        },
+      },
+      // bootstrap submits an inner assetConfig transaction with fee: 0, so the outer call's
+      // fee must be bumped to cover it via fee pooling.
+      extraFee: AlgoAmount.MicroAlgo(1_000),
+    })
+    const exchange = await appClient.arc200Exchange({ args: {} })
+    return { client: appClient, exchangeAsset: exchange.exchangeAsset }
+  }
+
+  test('withdraw + deposit round-trip preserves ARC200/ASA invariants', async () => {
+    const { testAccount } = localnet.context
+    const { client, exchangeAsset } = await deploy(testAccount.addr)
+
+    // Opt the creator into the newly-minted ASA before it can hold any units of it.
+    await localnet.algorand.send.assetTransfer({
+      sender: testAccount.addr,
+      receiver: testAccount.addr,
+      assetId: exchangeAsset,
+      amount: 0n,
+    })
+
+    const arc200BalanceBefore = await client.arc200BalanceOf({ args: { owner: algosdk.encodeAddress(testAccount.addr.publicKey) } })
+
+    // Unwrap 1000 ARC200 into 1000 units of the wrapped ASA.
+    const withdrawRet = await client.send.withdraw({ args: { amount: 1000n }, extraFee: AlgoAmount.MicroAlgo(1_000) })
+    expect(withdrawRet.return).toBe(1000n)
+
+    const asaBalance = await localnet.algorand.asset.getAccountInformation(testAccount.addr, exchangeAsset)
+    expect(asaBalance.balance).toBe(1000n)
+
+    const arc200BalanceAfterWithdraw = await client.arc200BalanceOf({
+      args: { owner: algosdk.encodeAddress(testAccount.addr.publicKey) },
+    })
+    expect(arc200BalanceAfterWithdraw).toBe(arc200BalanceBefore - 1000n)
+
+    // Wrap the ASA back into ARC200 via deposit (grouped: ASA transfer immediately before the call).
+    const assetTransferTxn = await localnet.algorand.createTransaction.assetTransfer({
+      sender: testAccount.addr,
+      receiver: client.appAddress,
+      assetId: exchangeAsset,
+      amount: 1000n,
+    })
+    const depositResult = await client.newGroup().addTransaction(assetTransferTxn).deposit({ args: { amount: 1000n } }).send()
+    expect(depositResult.returns[0]).toBe(1000n)
+
+    const arc200BalanceAfterDeposit = await client.arc200BalanceOf({
+      args: { owner: algosdk.encodeAddress(testAccount.addr.publicKey) },
+    })
+    expect(arc200BalanceAfterDeposit).toBe(arc200BalanceBefore)
+  })
+
+  test('deposit reverts when the requested amount exceeds the amount actually transferred', async () => {
+    const { testAccount } = localnet.context
+    const { client, exchangeAsset } = await deploy(testAccount.addr)
+
+    await localnet.algorand.send.assetTransfer({
+      sender: testAccount.addr,
+      receiver: testAccount.addr,
+      assetId: exchangeAsset,
+      amount: 0n,
+    })
+    await client.send.withdraw({ args: { amount: 1000n }, extraFee: AlgoAmount.MicroAlgo(1_000) })
+
+    const assetTransferTxn = await localnet.algorand.createTransaction.assetTransfer({
+      sender: testAccount.addr,
+      receiver: client.appAddress,
+      assetId: exchangeAsset,
+      amount: 100n,
+    })
+
+    await expect(
+      client.newGroup().addTransaction(assetTransferTxn).deposit({ args: { amount: 101n } }).send(),
+    ).rejects.toThrow(/amount transferred MUST be equal to or greater than the amount requested/)
+  })
+
+  test('deposit reverts when the preceding transaction is not an ASA transfer', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount.addr)
+
+    const paymentTxn = await localnet.algorand.createTransaction.payment({
+      sender: testAccount.addr,
+      receiver: client.appAddress,
+      amount: AlgoAmount.MicroAlgo(1_000),
+    })
+
+    await expect(
+      client.newGroup().addTransaction(paymentTxn).deposit({ args: { amount: 100n } }).send(),
+    ).rejects.toThrow(/Previous txn must be ASA transfer/)
+  })
+
+  test('createBalanceBox requires a grouped payment covering the box MBR (H-1 fix)', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount.addr)
+    const freshAccount = await localnet.context.generateAccount({ initialFunds: AlgoAmount.Algo(10000) })
+
+    await expect(client.send.createBalanceBox({ args: { owner: algosdk.encodeAddress(freshAccount.addr.publicKey) } })).rejects.toThrow(
+      /Must be preceded by a payment/,
+    )
+
+    const paymentTxn = await localnet.algorand.createTransaction.payment({
+      sender: testAccount.addr,
+      receiver: client.appAddress,
+      amount: AlgoAmount.MicroAlgo(28_500),
+    })
+    const result = await client
+      .newGroup()
+      .addTransaction(paymentTxn)
+      .createBalanceBox({ args: { owner: algosdk.encodeAddress(freshAccount.addr.publicKey) } })
+      .send()
+    expect(result.returns[0]).toBe(1)
+
+    // Box already exists now; no payment required, and the byte flag flips to 0.
+    const secondCall = await client.send.createBalanceBox({ args: { owner: algosdk.encodeAddress(freshAccount.addr.publicKey) } })
+    expect(secondCall.return).toBe(0)
+  })
 
   // test('decode name of 40153415 cbBTC', async () => {
   //   const algod = new algosdk.Algodv2('', 'https://mainnet-api.voi.nodely.dev', '')

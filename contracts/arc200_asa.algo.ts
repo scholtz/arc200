@@ -2,7 +2,6 @@ import {
   arc4,
   assert,
   BoxMap,
-  bytes,
   clone,
   Contract,
   emit,
@@ -13,6 +12,7 @@ import {
   op,
   TransactionType,
   Txn,
+  uint64,
 } from '@algorandfoundation/algorand-typescript'
 
 import {
@@ -54,6 +54,11 @@ class asaProps extends arc4.Struct<{
   metadataHash: StaticBytes<32>
   url: arc4.DynamicBytes
 }> {}
+
+// Box MBR for a `balances` entry: 2500 + 400 * (key bytes + value bytes)
+// key = 1-byte prefix 'b' + 32-byte Address = 33 bytes; value = 32-byte Uint256
+const BALANCE_BOX_MBR: uint64 = 2_500 + 400 * (33 + 32)
+
 /**
  * Smart Contract Token Base Interface
  */
@@ -102,6 +107,10 @@ export class Arc200_ASA extends Contract {
     assert(symbol.native.length > 0, 'Symbol of the asset must be longer or equal to 1 character')
     assert(symbol.native.length <= 8, 'Symbol of the asset must be shorter or equal to 8 characters')
     assert(!this.totalSupply.hasValue, 'This method can be called only once')
+    assert(
+      totalSupply.asBigUint() <= 2n ** 64n - 1n,
+      'totalSupply must fit in uint64 to be representable as the wrapped ASA total',
+    )
 
     this.name.value = name
     this.symbol.value = symbol
@@ -226,6 +235,38 @@ export class Arc200_ASA extends Contract {
     const owner = new Address(Txn.sender)
     return this._approve(owner, spender, value)
   }
+
+  /**
+   * Increases the allowance of spender by value, avoiding the classic approve() front-running
+   * race condition where an in-flight transferFrom can consume both the old and new allowance.
+   *
+   * @param spender Who is allowed to take tokens on owner's behalf
+   * @param value Amount to add to the current allowance
+   * @returns Success
+   */
+  @arc4.abimethod()
+  public arc200_increaseAllowance(spender: Address, value: arc4.Uint256): Bool {
+    const owner = new Address(Txn.sender)
+    const current = this._allowance(owner, spender)
+    return this._approve(owner, spender, new Uint256(current.asBigUint() + value.asBigUint()))
+  }
+
+  /**
+   * Decreases the allowance of spender by value, avoiding the classic approve() front-running
+   * race condition where an in-flight transferFrom can consume both the old and new allowance.
+   *
+   * @param spender Who is allowed to take tokens on owner's behalf
+   * @param value Amount to subtract from the current allowance
+   * @returns Success
+   */
+  @arc4.abimethod()
+  public arc200_decreaseAllowance(spender: Address, value: arc4.Uint256): Bool {
+    const owner = new Address(Txn.sender)
+    const current = this._allowance(owner, spender)
+    assert(current.asBigUint() >= value.asBigUint(), 'Decrease exceeds current allowance')
+    return this._approve(owner, spender, new Uint256(current.asBigUint() - value.asBigUint()))
+  }
+
   /**
    * arc200_exchange() → (uint64 exchange_asset, address sink)
    * Returns configuration parameters used by the exchange mechanism:
@@ -240,7 +281,7 @@ export class Arc200_ASA extends Contract {
   @arc4.abimethod({ readonly: true })
   public arc200_exchange(): arc200_exchangeInfo {
     return new arc200_exchangeInfo({
-      exchange_asset: this.assetId.value, //The ASA ID that the ARC200 token can be exchanged with.
+      exchange_asset: this.assetId.value, // The ASA ID that the ARC200 token can be exchanged with.
       sink: new Address(Global.currentApplicationAddress), // The address that holds ARC200 tokens for redemption operations.
     })
   }
@@ -262,23 +303,14 @@ export class Arc200_ASA extends Contract {
    */
   @arc4.abimethod()
   public arc200_redeem(amount: Uint64): void {
-    const prev = gtxn.Transaction(Txn.groupIndex - 1)
-    assert(prev.type === TransactionType.AssetTransfer, 'Previous txn must be ASA transfer')
-    const axfer = gtxn.AssetTransferTxn(Txn.groupIndex - 1)
-    assert(
-      axfer.assetAmount >= amount.asUint64(),
-      'The amount transferred MUST be equal to or greater than the amount requested',
-    )
-    assert(axfer.xferAsset.id === this.assetId.value.asUint64(), 'ASA ID must match configured exchange_asset')
-    assert(axfer.assetReceiver === Global.currentApplicationAddress, 'ASA must be sent to the sink address')
-    assert(axfer.sender === Txn.sender, 'ASA sender must match ARC200 redeemer')
-
+    const received = this._validateIncomingAxfer(amount)
     this._transfer(
       new Address(Global.currentApplicationAddress),
       new Address(Txn.sender),
-      new Uint256(axfer.assetAmount), // send the real amount which must be greater or equal to requested amount
+      received, // send the real amount which must be greater or equal to requested amount
     )
   }
+
   /**
    * wnnt200 for arc200_redeem
    *
@@ -287,24 +319,15 @@ export class Arc200_ASA extends Contract {
    */
   @arc4.abimethod()
   public deposit(amount: Uint64): arc4.Uint256 {
-    const prev = gtxn.Transaction(Txn.groupIndex - 1)
-    assert(prev.type === TransactionType.AssetTransfer, 'Previous txn must be ASA transfer')
-    const axfer = gtxn.AssetTransferTxn(Txn.groupIndex - 1)
-    assert(
-      axfer.assetAmount >= amount.asUint64(),
-      'The amount transferred MUST be equal to or greater than the amount requested',
-    )
-    assert(axfer.xferAsset.id === this.assetId.value.asUint64(), 'ASA ID must match configured exchange_asset')
-    assert(axfer.assetReceiver === Global.currentApplicationAddress, 'ASA must be sent to the sink address')
-    assert(axfer.sender === Txn.sender, 'ASA sender must match ARC200 redeemer')
-    const ret = new Uint256(axfer.assetAmount)
+    const received = this._validateIncomingAxfer(amount)
     this._transfer(
       new Address(Global.currentApplicationAddress),
       new Address(Txn.sender),
-      ret, // send the real amount which must be greater or equal to requested amount
+      received, // send the real amount which must be greater or equal to requested amount
     )
-    return ret
+    return received
   }
+
   /**
    * arc200_swapBack(uint64 amount) → void
    *
@@ -323,20 +346,9 @@ export class Arc200_ASA extends Contract {
    */
   @arc4.abimethod()
   public arc200_swapBack(amount: Uint64): void {
-    this._transfer(
-      new Address(Txn.sender),
-      new Address(Global.currentApplicationAddress),
-      new Uint256(amount.asBigUint()),
-    )
-    itxn
-      .assetTransfer({
-        assetReceiver: Txn.sender,
-        assetAmount: amount.asUint64(),
-        xferAsset: this.assetId.value.asUint64(),
-        fee: 0,
-      })
-      .submit()
+    this._releaseAsa(amount)
   }
+
   /**
    * wnnt200 for arc200_swapBack
    *
@@ -345,20 +357,17 @@ export class Arc200_ASA extends Contract {
    */
   @arc4.abimethod()
   public withdraw(amount: Uint64): arc4.Uint256 {
-    const ret = new Uint256(amount.asBigUint())
-    this._transfer(new Address(Txn.sender), new Address(Global.currentApplicationAddress), ret)
-    itxn
-      .assetTransfer({
-        assetReceiver: Txn.sender,
-        assetAmount: amount.asUint64(),
-        xferAsset: this.assetId.value.asUint64(),
-        fee: 0,
-      })
-      .submit()
-    return ret
+    this._releaseAsa(amount)
+    return new Uint256(amount.asBigUint())
   }
+
   /**
-   * wnnt200 method to create balance box for an address
+   * wnnt200 method to create balance box for an address.
+   *
+   * The caller MUST cover the box's minimum balance requirement with a payment transaction
+   * immediately preceding this call in the group, to prevent unauthenticated callers from
+   * forcing the app account to fund unlimited boxes for arbitrary addresses at no cost to
+   * themselves.
    *
    * @param owner Owner
    * @returns 1 if box was created. 0 if box exists
@@ -366,11 +375,17 @@ export class Arc200_ASA extends Contract {
   @arc4.abimethod()
   public createBalanceBox(owner: Address): arc4.Byte {
     if (!this.balances(owner).exists) {
+      assert(Txn.groupIndex > 0, 'Must be preceded by a payment covering the balance box MBR')
+      const pay = gtxn.PaymentTxn(Txn.groupIndex - 1)
+      assert(pay.sender === Txn.sender, 'Payment sender must match caller')
+      assert(pay.receiver === Global.currentApplicationAddress, 'Payment must be sent to the app account')
+      assert(pay.amount >= BALANCE_BOX_MBR, 'Payment must cover the balance box MBR')
       this.balances(owner).value = new Uint256(0)
       return new arc4.Byte(1)
     }
     return new arc4.Byte(0)
   }
+
   /**
    * Returns the current allowance of the spender of the tokens of the owner
    *
@@ -394,12 +409,58 @@ export class Arc200_ASA extends Contract {
     assert(sender_balance.asBigUint() >= amount.asBigUint(), 'Insufficient balance at the sender account')
 
     if (sender !== recipient) {
-      // if sender == recipent, do nothing, just issue event
+      assert(recipient !== new Address(Global.zeroAddress), 'Cannot transfer to the zero address')
+      if (!this.balances(recipient).exists) {
+        // Prevents an attacker with a zero balance from spamming box creation (and draining the
+        // app account's box MBR) via free, valueless transfers to arbitrary fresh addresses.
+        assert(amount.asBigUint() > 0n, 'A zero-value transfer cannot be used to create a new balance box')
+      }
       this.balances(sender).value = new Uint256(sender_balance.asBigUint() - amount.asBigUint())
       this.balances(recipient).value = new Uint256(recipient_balance.asBigUint() + amount.asBigUint())
     }
     emit(new arc200_Transfer({ from: sender, to: recipient, value: amount }))
     return new Bool(true)
+  }
+
+  /**
+   * Validates that the transaction immediately preceding this call in the group is a
+   * well-formed ASA deposit of at least `amount` of the configured exchange asset, sent by the
+   * caller to this app. Shared by arc200_redeem and deposit so the exchange-safety checks are
+   * maintained in exactly one place.
+   */
+  private _validateIncomingAxfer(amount: Uint64): Uint256 {
+    assert(Txn.groupIndex > 0, 'Must be preceded by an ASA transfer')
+    const prev = gtxn.Transaction(Txn.groupIndex - 1)
+    assert(prev.type === TransactionType.AssetTransfer, 'Previous txn must be ASA transfer')
+    const axfer = gtxn.AssetTransferTxn(Txn.groupIndex - 1)
+    assert(
+      axfer.assetAmount >= amount.asUint64(),
+      'The amount transferred MUST be equal to or greater than the amount requested',
+    )
+    assert(axfer.xferAsset.id === this.assetId.value.asUint64(), 'ASA ID must match configured exchange_asset')
+    assert(axfer.assetReceiver === Global.currentApplicationAddress, 'ASA must be sent to the sink address')
+    assert(axfer.sender === Txn.sender, 'ASA sender must match ARC200 redeemer')
+    return new Uint256(axfer.assetAmount) // the real amount received, which is >= amount requested
+  }
+
+  /**
+   * Moves `amount` ARC200 from the caller to the app, then releases the equivalent amount of
+   * the wrapped ASA back to the caller. Shared by arc200_swapBack and withdraw.
+   */
+  private _releaseAsa(amount: Uint64): void {
+    this._transfer(
+      new Address(Txn.sender),
+      new Address(Global.currentApplicationAddress),
+      new Uint256(amount.asBigUint()),
+    )
+    itxn
+      .assetTransfer({
+        assetReceiver: Txn.sender,
+        assetAmount: amount.asUint64(),
+        xferAsset: this.assetId.value.asUint64(),
+        fee: 0,
+      })
+      .submit()
   }
 
   private _approvalKey(owner: Address, spender: Address): StaticBytes<32> {

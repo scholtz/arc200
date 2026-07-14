@@ -69,6 +69,148 @@ describe('ARC200 contract', () => {
     })
     expect(balance).toBe(1000000n)
   })
+
+  test('arc200_transfer reverts on insufficient balance', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount)
+    const testAccount2 = await localnet.context.generateAccount({ initialFunds: AlgoAmount.Algo(10000) })
+    await expect(
+      client.send.arc200Transfer({
+        args: {
+          // testAccount2 has never received any tokens
+          to: algosdk.encodeAddress(testAccount.addr.publicKey),
+          value: 1n,
+        },
+        sender: testAccount2.addr,
+      }),
+    ).rejects.toThrow(/Insufficient balance/)
+  })
+
+  test('arc200_transfer rejects a zero-value transfer that would create a new balance box (H-1 fix)', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount)
+    const freshAccount = await localnet.context.generateAccount({ initialFunds: AlgoAmount.Algo(10000) })
+    await expect(
+      client.send.arc200Transfer({
+        args: {
+          to: algosdk.encodeAddress(freshAccount.addr.publicKey),
+          value: 0n,
+        },
+      }),
+    ).rejects.toThrow(/zero-value transfer/)
+  })
+
+  test('arc200_transfer rejects transfers to the zero address', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount)
+    await expect(
+      client.send.arc200Transfer({
+        args: {
+          to: algosdk.encodeAddress(new Uint8Array(32)),
+          value: 1n,
+        },
+      }),
+    ).rejects.toThrow(/zero address/)
+  })
+
+  test('arc200_approve + arc200_allowance + arc200_transferFrom happy path', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount)
+    const spender = await localnet.context.generateAccount({ initialFunds: AlgoAmount.Algo(10000) })
+    const recipient = await localnet.context.generateAccount({ initialFunds: AlgoAmount.Algo(10000) })
+
+    await client.send.arc200Approve({
+      args: {
+        spender: algosdk.encodeAddress(spender.addr.publicKey),
+        value: 1000n,
+      },
+    })
+    const allowance = await client.arc200Allowance({
+      args: {
+        owner: algosdk.encodeAddress(testAccount.addr.publicKey),
+        spender: algosdk.encodeAddress(spender.addr.publicKey),
+      },
+    })
+    expect(allowance).toBe(1000n)
+
+    const ret = await client.send.arc200TransferFrom({
+      args: {
+        from: algosdk.encodeAddress(testAccount.addr.publicKey),
+        to: algosdk.encodeAddress(recipient.addr.publicKey),
+        value: 400n,
+      },
+      sender: spender.addr,
+    })
+    expect(ret.return).toBe(true)
+
+    const remainingAllowance = await client.arc200Allowance({
+      args: {
+        owner: algosdk.encodeAddress(testAccount.addr.publicKey),
+        spender: algosdk.encodeAddress(spender.addr.publicKey),
+      },
+    })
+    expect(remainingAllowance).toBe(600n)
+
+    const recipientBalance = await client.arc200BalanceOf({
+      args: { owner: algosdk.encodeAddress(recipient.addr.publicKey) },
+    })
+    expect(recipientBalance).toBe(400n)
+  })
+
+  test('arc200_transferFrom reverts when spending more than approved', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount)
+    const spender = await localnet.context.generateAccount({ initialFunds: AlgoAmount.Algo(10000) })
+
+    await client.send.arc200Approve({
+      args: {
+        spender: algosdk.encodeAddress(spender.addr.publicKey),
+        value: 100n,
+      },
+    })
+
+    await expect(
+      client.send.arc200TransferFrom({
+        args: {
+          from: algosdk.encodeAddress(testAccount.addr.publicKey),
+          to: algosdk.encodeAddress(spender.addr.publicKey),
+          value: 101n,
+        },
+        sender: spender.addr,
+      }),
+    ).rejects.toThrow(/insufficient approval/)
+  })
+
+  test('arc200_increaseAllowance / arc200_decreaseAllowance avoid the approve() race (L-2 fix)', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount)
+    const spender = await localnet.context.generateAccount({ initialFunds: AlgoAmount.Algo(10000) })
+
+    await client.send.arc200Approve({
+      args: { spender: algosdk.encodeAddress(spender.addr.publicKey), value: 100n },
+    })
+    await client.send.arc200IncreaseAllowance({
+      args: { spender: algosdk.encodeAddress(spender.addr.publicKey), value: 50n },
+    })
+    let allowance = await client.arc200Allowance({
+      args: { owner: algosdk.encodeAddress(testAccount.addr.publicKey), spender: algosdk.encodeAddress(spender.addr.publicKey) },
+    })
+    expect(allowance).toBe(150n)
+
+    await client.send.arc200DecreaseAllowance({
+      args: { spender: algosdk.encodeAddress(spender.addr.publicKey), value: 60n },
+    })
+    allowance = await client.arc200Allowance({
+      args: { owner: algosdk.encodeAddress(testAccount.addr.publicKey), spender: algosdk.encodeAddress(spender.addr.publicKey) },
+    })
+    expect(allowance).toBe(90n)
+
+    await expect(
+      client.send.arc200DecreaseAllowance({
+        args: { spender: algosdk.encodeAddress(spender.addr.publicKey), value: 1000n },
+      }),
+    ).rejects.toThrow(/Decrease exceeds current allowance/)
+  })
   test('decode name of UNIT', async () => {
     const algod = new algosdk.Algodv2('', 'https://mainnet-api.voi.nodely.dev', '')
     const indexer = new algosdk.Indexer('', 'https://mainnet-idx.voi.nodely.dev', '')

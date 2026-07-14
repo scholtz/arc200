@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build-lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.10.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install AlgoKit
+        run: pipx install algokit
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit -p tsconfig.json
+
+      - name: Compile contracts
+        run: pnpm run build
+
+      - name: Fail if compiled artifacts differ from what's committed
+        run: |
+          git add -N contracts/artifacts
+          git diff --exit-code --minimal contracts/artifacts
+
+      - name: Start LocalNet
+        run: algokit localnet start
+
+      - name: Run tests
+        run: pnpm run test
+
+      - name: Build npm package
+        run: pnpm run build-package
+
+      - name: Verify published tarball contents
+        run: npm pack --dry-run
