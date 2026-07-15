@@ -41,9 +41,15 @@ jobs:
         run: pnpm run build
 
       - name: Fail if compiled artifacts differ from what's committed
+        # Generated *Client.ts files embed a source map whose comments carry source line
+        # numbers; algokit-client-generator has been observed to emit these non-reproducibly
+        # (off-by-one) across otherwise-identical toolchain runs, with no effect on the
+        # compiled TEAL or the ABI/ARC-56 spec. Excluding them keeps this gate meaningful
+        # (it still catches real drift in TEAL/ARC-56/puya.map output) without flaking on
+        # cosmetic source-map noise.
         run: |
           git add -N contracts/artifacts
-          git diff --exit-code --minimal contracts/artifacts
+          git diff --exit-code --minimal contracts/artifacts -- ':!contracts/artifacts/*Client.ts'
 
       - name: Start LocalNet
         run: algokit localnet start

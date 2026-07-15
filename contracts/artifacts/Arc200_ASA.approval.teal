@@ -1303,7 +1303,26 @@ _approve:
     concat
     dup
     sha256
-    // contracts/arc200_asa.algo.ts:478-482
+    // contracts/arc200_asa.algo.ts:89
+    // public approvals = BoxMap<StaticBytes<32>, ApprovalStruct>({ keyPrefix: 'a' })
+    pushbytes "a"
+    swap
+    concat
+    dup
+    // contracts/arc200_asa.algo.ts:478
+    // if (!this.approvals(key).exists) {
+    box_len
+    bury 1
+    bnz _approve_after_if_else@2
+    // contracts/arc200_asa.algo.ts:482
+    // assert(amount.asBigUint() > 0n, 'A zero-value approval cannot be used to create a new approval box')
+    frame_dig -1
+    pushbytes 0x
+    b>
+    assert // A zero-value approval cannot be used to create a new approval box
+
+_approve_after_if_else@2:
+    // contracts/arc200_asa.algo.ts:484-488
     // const approvalBox: ApprovalStruct = new ApprovalStruct({
     //   approvalAmount: amount,
     //   owner: owner,
@@ -1314,24 +1333,22 @@ _approve:
     concat
     frame_dig -2
     concat
-    // contracts/arc200_asa.algo.ts:89
-    // public approvals = BoxMap<StaticBytes<32>, ApprovalStruct>({ keyPrefix: 'a' })
-    pushbytes "a"
-    uncover 2
-    concat
-    // contracts/arc200_asa.algo.ts:483
+    // contracts/arc200_asa.algo.ts:489
     // this.approvals(key).value = clone(approvalBox)
+    frame_dig 1
     swap
     box_put
-    // contracts/arc200_asa.algo.ts:484
+    // contracts/arc200_asa.algo.ts:490
     // emit(new arc200_Approval({ owner: owner, spender: spender, value: amount }))
+    frame_dig 0
     frame_dig -1
     concat
     pushbytes 0x1969f865 // method "arc200_Approval(address,address,uint256)"
     swap
     concat
     log
-    // contracts/arc200_asa.algo.ts:485
+    // contracts/arc200_asa.algo.ts:491
     // return new Bool(true)
     pushbytes 0x80
+    frame_bury 0
     retsub

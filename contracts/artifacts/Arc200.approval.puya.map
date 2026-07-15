@@ -3,7 +3,7 @@
   "sources": [
     "../arc200.algo.ts"
   ],
-  "mappings": "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",
+  "mappings": "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",
   "op_pc_offset": 0,
   "pc_events": {
     "1": {
@@ -5149,12 +5149,11 @@
     "801": {
       "op": "dup",
       "defined_out": [
-        "tmp%0#0",
-        "tmp%0#0 (copy)"
+        "tmp%0#0"
       ],
       "stack_out": [
         "tmp%0#0",
-        "tmp%0#0 (copy)"
+        "tmp%0#0"
       ]
     },
     "802": {
@@ -5169,170 +5168,316 @@
       ]
     },
     "803": {
-      "op": "frame_dig -1",
+      "op": "pushbytes \"a\"",
       "defined_out": [
-        "amount#0 (copy)",
+        "\"a\"",
         "key#0",
         "tmp%0#0"
       ],
       "stack_out": [
         "tmp%0#0",
         "key#0",
-        "amount#0 (copy)"
+        "\"a\""
       ]
     },
-    "805": {
-      "op": "frame_dig -3",
+    "806": {
+      "op": "swap",
       "stack_out": [
         "tmp%0#0",
-        "key#0",
-        "amount#0 (copy)",
-        "owner#0 (copy)"
+        "\"a\"",
+        "key#0"
       ]
     },
     "807": {
       "op": "concat",
       "defined_out": [
-        "aggregate%head%1#0",
-        "key#0",
+        "box_prefixed_key%0#0",
         "tmp%0#0"
       ],
       "stack_out": [
         "tmp%0#0",
-        "key#0",
-        "aggregate%head%1#0"
+        "box_prefixed_key%0#0"
       ]
     },
     "808": {
-      "op": "frame_dig -2",
+      "op": "dup",
+      "defined_out": [
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
+      ],
       "stack_out": [
         "tmp%0#0",
-        "key#0",
+        "box_prefixed_key%0#0",
+        "box_prefixed_key%0#0"
+      ]
+    },
+    "809": {
+      "op": "box_len",
+      "defined_out": [
+        "_%0#0",
+        "box_prefixed_key%0#0",
+        "maybe_exists%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "_%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "810": {
+      "op": "bury 1",
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "812": {
+      "op": "bnz _approve_after_if_else@2",
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0"
+      ]
+    },
+    "815": {
+      "op": "frame_dig -1",
+      "defined_out": [
+        "amount#0 (copy)",
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "amount#0 (copy)"
+      ]
+    },
+    "817": {
+      "op": "pushbytes 0x",
+      "defined_out": [
+        "0x",
+        "amount#0 (copy)",
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "amount#0 (copy)",
+        "0x"
+      ]
+    },
+    "819": {
+      "op": "b>",
+      "defined_out": [
+        "box_prefixed_key%0#0",
+        "tmp%0#0",
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "tmp%2#0"
+      ]
+    },
+    "820": {
+      "error": "A zero-value approval cannot be used to create a new approval box",
+      "op": "assert // A zero-value approval cannot be used to create a new approval box",
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0"
+      ]
+    },
+    "821": {
+      "block": "_approve_after_if_else@2",
+      "stack_in": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0"
+      ],
+      "op": "frame_dig -1",
+      "defined_out": [
+        "amount#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "amount#0 (copy)"
+      ]
+    },
+    "823": {
+      "op": "frame_dig -3",
+      "defined_out": [
+        "amount#0 (copy)",
+        "owner#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "amount#0 (copy)",
+        "owner#0 (copy)"
+      ]
+    },
+    "825": {
+      "op": "concat",
+      "defined_out": [
+        "aggregate%head%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "aggregate%head%1#0"
+      ]
+    },
+    "826": {
+      "op": "frame_dig -2",
+      "defined_out": [
+        "aggregate%head%1#0",
+        "spender#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "aggregate%head%1#0",
         "spender#0 (copy)"
       ]
     },
-    "810": {
+    "828": {
       "op": "concat",
       "defined_out": [
-        "approvalBox#0",
-        "key#0",
-        "tmp%0#0"
+        "approvalBox#0"
       ],
       "stack_out": [
         "tmp%0#0",
-        "key#0",
+        "box_prefixed_key%0#0",
         "approvalBox#0"
       ]
     },
-    "811": {
-      "op": "pushbytes \"a\"",
+    "829": {
+      "op": "frame_dig 1",
       "defined_out": [
-        "\"a\"",
         "approvalBox#0",
-        "key#0",
-        "tmp%0#0"
+        "box_prefixed_key%0#0"
       ],
       "stack_out": [
         "tmp%0#0",
-        "key#0",
-        "approvalBox#0",
-        "\"a\""
-      ]
-    },
-    "814": {
-      "op": "uncover 2",
-      "stack_out": [
-        "tmp%0#0",
-        "approvalBox#0",
-        "\"a\"",
-        "key#0"
-      ]
-    },
-    "816": {
-      "op": "concat",
-      "defined_out": [
-        "approvalBox#0",
         "box_prefixed_key%0#0",
-        "tmp%0#0"
-      ],
-      "stack_out": [
-        "tmp%0#0",
         "approvalBox#0",
         "box_prefixed_key%0#0"
       ]
     },
-    "817": {
+    "831": {
       "op": "swap",
       "stack_out": [
         "tmp%0#0",
         "box_prefixed_key%0#0",
+        "box_prefixed_key%0#0",
         "approvalBox#0"
       ]
     },
-    "818": {
+    "832": {
       "op": "box_put",
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0"
+      ]
+    },
+    "833": {
+      "op": "frame_dig 0",
+      "defined_out": [
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "tmp%0#0"
       ]
     },
-    "819": {
+    "835": {
       "op": "frame_dig -1",
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "tmp%0#0",
         "amount#0 (copy)"
       ]
     },
-    "821": {
+    "837": {
       "op": "concat",
       "defined_out": [
-        "aggregate%head%5#0"
+        "aggregate%head%5#0",
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
       ],
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "aggregate%head%5#0"
       ]
     },
-    "822": {
+    "838": {
       "op": "pushbytes 0x1969f865 // method \"arc200_Approval(address,address,uint256)\"",
       "defined_out": [
         "Method(arc200_Approval(address,address,uint256))",
-        "aggregate%head%5#0"
+        "aggregate%head%5#0",
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
       ],
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "aggregate%head%5#0",
         "Method(arc200_Approval(address,address,uint256))"
       ]
     },
-    "828": {
+    "844": {
       "op": "swap",
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "Method(arc200_Approval(address,address,uint256))",
         "aggregate%head%5#0"
       ]
     },
-    "829": {
+    "845": {
       "op": "concat",
       "defined_out": [
-        "event%0#0"
+        "box_prefixed_key%0#0",
+        "event%0#0",
+        "tmp%0#0"
       ],
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "event%0#0"
       ]
     },
-    "830": {
+    "846": {
       "op": "log",
-      "stack_out": []
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0"
+      ]
     },
-    "831": {
+    "847": {
       "op": "pushbytes 0x80",
       "defined_out": [
-        "0x80"
+        "0x80",
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
       ],
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "0x80"
       ]
     },
-    "834": {
+    "850": {
+      "op": "frame_bury 0"
+    },
+    "852": {
       "retsub": true,
       "op": "retsub"
     }

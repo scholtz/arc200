@@ -3,7 +3,7 @@
   "sources": [
     "../arc200_asa.algo.ts"
   ],
-  "mappings": "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",
+  "mappings": "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",
   "op_pc_offset": 0,
   "pc_events": {
     "1": {
@@ -8833,12 +8833,11 @@
     "1260": {
       "op": "dup",
       "defined_out": [
-        "tmp%0#0",
-        "tmp%0#0 (copy)"
+        "tmp%0#0"
       ],
       "stack_out": [
         "tmp%0#0",
-        "tmp%0#0 (copy)"
+        "tmp%0#0"
       ]
     },
     "1261": {
@@ -8853,170 +8852,316 @@
       ]
     },
     "1262": {
-      "op": "frame_dig -1",
+      "op": "pushbytes \"a\"",
       "defined_out": [
-        "amount#0 (copy)",
+        "\"a\"",
         "key#0",
         "tmp%0#0"
       ],
       "stack_out": [
         "tmp%0#0",
         "key#0",
-        "amount#0 (copy)"
+        "\"a\""
       ]
     },
-    "1264": {
-      "op": "frame_dig -3",
+    "1265": {
+      "op": "swap",
       "stack_out": [
         "tmp%0#0",
-        "key#0",
-        "amount#0 (copy)",
-        "owner#0 (copy)"
+        "\"a\"",
+        "key#0"
       ]
     },
     "1266": {
       "op": "concat",
       "defined_out": [
-        "aggregate%head%1#0",
-        "key#0",
+        "box_prefixed_key%0#0",
         "tmp%0#0"
       ],
       "stack_out": [
         "tmp%0#0",
-        "key#0",
-        "aggregate%head%1#0"
+        "box_prefixed_key%0#0"
       ]
     },
     "1267": {
-      "op": "frame_dig -2",
+      "op": "dup",
+      "defined_out": [
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
+      ],
       "stack_out": [
         "tmp%0#0",
-        "key#0",
+        "box_prefixed_key%0#0",
+        "box_prefixed_key%0#0"
+      ]
+    },
+    "1268": {
+      "op": "box_len",
+      "defined_out": [
+        "_%0#0",
+        "box_prefixed_key%0#0",
+        "maybe_exists%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "_%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "1269": {
+      "op": "bury 1",
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "maybe_exists%0#0"
+      ]
+    },
+    "1271": {
+      "op": "bnz _approve_after_if_else@2",
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0"
+      ]
+    },
+    "1274": {
+      "op": "frame_dig -1",
+      "defined_out": [
+        "amount#0 (copy)",
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "amount#0 (copy)"
+      ]
+    },
+    "1276": {
+      "op": "pushbytes 0x",
+      "defined_out": [
+        "0x",
+        "amount#0 (copy)",
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "amount#0 (copy)",
+        "0x"
+      ]
+    },
+    "1278": {
+      "op": "b>",
+      "defined_out": [
+        "box_prefixed_key%0#0",
+        "tmp%0#0",
+        "tmp%2#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "tmp%2#0"
+      ]
+    },
+    "1279": {
+      "error": "A zero-value approval cannot be used to create a new approval box",
+      "op": "assert // A zero-value approval cannot be used to create a new approval box",
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0"
+      ]
+    },
+    "1280": {
+      "block": "_approve_after_if_else@2",
+      "stack_in": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0"
+      ],
+      "op": "frame_dig -1",
+      "defined_out": [
+        "amount#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "amount#0 (copy)"
+      ]
+    },
+    "1282": {
+      "op": "frame_dig -3",
+      "defined_out": [
+        "amount#0 (copy)",
+        "owner#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "amount#0 (copy)",
+        "owner#0 (copy)"
+      ]
+    },
+    "1284": {
+      "op": "concat",
+      "defined_out": [
+        "aggregate%head%1#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
+        "aggregate%head%1#0"
+      ]
+    },
+    "1285": {
+      "op": "frame_dig -2",
+      "defined_out": [
+        "aggregate%head%1#0",
+        "spender#0 (copy)"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "aggregate%head%1#0",
         "spender#0 (copy)"
       ]
     },
-    "1269": {
+    "1287": {
       "op": "concat",
       "defined_out": [
-        "approvalBox#0",
-        "key#0",
-        "tmp%0#0"
+        "approvalBox#0"
       ],
       "stack_out": [
         "tmp%0#0",
-        "key#0",
+        "box_prefixed_key%0#0",
         "approvalBox#0"
       ]
     },
-    "1270": {
-      "op": "pushbytes \"a\"",
+    "1288": {
+      "op": "frame_dig 1",
       "defined_out": [
-        "\"a\"",
         "approvalBox#0",
-        "key#0",
-        "tmp%0#0"
+        "box_prefixed_key%0#0"
       ],
       "stack_out": [
         "tmp%0#0",
-        "key#0",
-        "approvalBox#0",
-        "\"a\""
-      ]
-    },
-    "1273": {
-      "op": "uncover 2",
-      "stack_out": [
-        "tmp%0#0",
-        "approvalBox#0",
-        "\"a\"",
-        "key#0"
-      ]
-    },
-    "1275": {
-      "op": "concat",
-      "defined_out": [
-        "approvalBox#0",
         "box_prefixed_key%0#0",
-        "tmp%0#0"
-      ],
-      "stack_out": [
-        "tmp%0#0",
         "approvalBox#0",
         "box_prefixed_key%0#0"
       ]
     },
-    "1276": {
+    "1290": {
       "op": "swap",
       "stack_out": [
         "tmp%0#0",
         "box_prefixed_key%0#0",
+        "box_prefixed_key%0#0",
         "approvalBox#0"
       ]
     },
-    "1277": {
+    "1291": {
       "op": "box_put",
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0"
+      ]
+    },
+    "1292": {
+      "op": "frame_dig 0",
+      "defined_out": [
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
+      ],
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "tmp%0#0"
       ]
     },
-    "1278": {
+    "1294": {
       "op": "frame_dig -1",
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "tmp%0#0",
         "amount#0 (copy)"
       ]
     },
-    "1280": {
+    "1296": {
       "op": "concat",
       "defined_out": [
-        "aggregate%head%5#0"
+        "aggregate%head%5#0",
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
       ],
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "aggregate%head%5#0"
       ]
     },
-    "1281": {
+    "1297": {
       "op": "pushbytes 0x1969f865 // method \"arc200_Approval(address,address,uint256)\"",
       "defined_out": [
         "Method(arc200_Approval(address,address,uint256))",
-        "aggregate%head%5#0"
+        "aggregate%head%5#0",
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
       ],
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "aggregate%head%5#0",
         "Method(arc200_Approval(address,address,uint256))"
       ]
     },
-    "1287": {
+    "1303": {
       "op": "swap",
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "Method(arc200_Approval(address,address,uint256))",
         "aggregate%head%5#0"
       ]
     },
-    "1288": {
+    "1304": {
       "op": "concat",
       "defined_out": [
-        "event%0#0"
+        "box_prefixed_key%0#0",
+        "event%0#0",
+        "tmp%0#0"
       ],
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "event%0#0"
       ]
     },
-    "1289": {
+    "1305": {
       "op": "log",
-      "stack_out": []
+      "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0"
+      ]
     },
-    "1290": {
+    "1306": {
       "op": "pushbytes 0x80",
       "defined_out": [
-        "0x80"
+        "0x80",
+        "box_prefixed_key%0#0",
+        "tmp%0#0"
       ],
       "stack_out": [
+        "tmp%0#0",
+        "box_prefixed_key%0#0",
         "0x80"
       ]
     },
-    "1293": {
+    "1309": {
+      "op": "frame_bury 0"
+    },
+    "1311": {
       "retsub": true,
       "op": "retsub"
     }

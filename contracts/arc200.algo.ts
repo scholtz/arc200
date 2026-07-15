@@ -254,6 +254,12 @@ export class Arc200 extends Contract {
 
   private _approve(owner: Address, spender: Address, amount: Uint256): Bool {
     const key = this._approvalKey(owner, spender)
+    if (!this.approvals(key).exists) {
+      // Prevents an attacker with no balance or approval history from spamming box creation
+      // (and draining the app account's box MBR) via free, zero-value approvals to arbitrary
+      // fresh spender addresses. Mirrors the equivalent guard in _transfer.
+      assert(amount.asBigUint() > 0n, 'A zero-value approval cannot be used to create a new approval box')
+    }
     const approvalBox: ApprovalStruct = new ApprovalStruct({
       approvalAmount: amount,
       owner: owner,

@@ -155,6 +155,21 @@ describe('ARC200 ASA contract', () => {
     expect(secondCall.return).toBe(0)
   })
 
+  test('arc200_approve rejects a zero-value approval that would create a new approval box (H-1 fix)', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount.addr)
+    const freshSpender = await localnet.context.generateAccount({ initialFunds: AlgoAmount.Algo(10000) })
+
+    await expect(
+      client.send.arc200Approve({
+        args: {
+          spender: algosdk.encodeAddress(freshSpender.addr.publicKey),
+          value: 0n,
+        },
+      }),
+    ).rejects.toThrow(/zero-value approval/)
+  })
+
   // test('decode name of 40153415 cbBTC', async () => {
   //   const algod = new algosdk.Algodv2('', 'https://mainnet-api.voi.nodely.dev', '')
   //   const indexer = new algosdk.Indexer('', 'https://mainnet-idx.voi.nodely.dev', '')

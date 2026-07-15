@@ -181,6 +181,20 @@ describe('ARC200 contract', () => {
     ).rejects.toThrow(/insufficient approval/)
   })
 
+  test('arc200_approve rejects a zero-value approval that would create a new approval box (H-1 fix)', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount)
+    const freshSpender = await localnet.context.generateAccount({ initialFunds: AlgoAmount.Algo(10000) })
+    await expect(
+      client.send.arc200Approve({
+        args: {
+          spender: algosdk.encodeAddress(freshSpender.addr.publicKey),
+          value: 0n,
+        },
+      }),
+    ).rejects.toThrow(/zero-value approval/)
+  })
+
   test('arc200_increaseAllowance / arc200_decreaseAllowance avoid the approve() race (L-2 fix)', async () => {
     const { testAccount } = localnet.context
     const { client } = await deploy(testAccount)
