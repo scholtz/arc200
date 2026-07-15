@@ -218,8 +218,13 @@ export class Arc200_ASA extends Contract {
     const spender = new Address(Txn.sender)
     const spender_allowance = this._allowance(from, spender)
     assert(spender_allowance.asBigUint() >= value.asBigUint(), 'insufficient approval')
-    const new_spender_allowance = new Uint256(spender_allowance.asBigUint() - value.asBigUint())
-    this._approve(from, spender, new_spender_allowance)
+    if (value.asBigUint() > 0n) {
+      // A zero-value transferFrom needs no allowance change, so skip re-approving. This also
+      // avoids spuriously creating (or hitting the box-creation guard for) an approval box for
+      // a spender with no prior approval history on a no-op, zero-value call.
+      const new_spender_allowance = new Uint256(spender_allowance.asBigUint() - value.asBigUint())
+      this._approve(from, spender, new_spender_allowance)
+    }
     return this._transfer(from, to, value)
   }
 

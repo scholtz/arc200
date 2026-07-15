@@ -1,0 +1,90 @@
+name: Publish to npm
+
+# Triggered by publishing a GitHub Release (tag format vX.Y.Z, matching package.json's
+# "version"). This keeps publishing an explicit, auditable, human-triggered action rather than
+# an automatic side effect of every push to main.
+on:
+  release:
+    types: [published]
+
+# id-token: write enables npm provenance attestation (binds the published tarball to this exact
+# workflow run/commit, verifiable on npmjs.com) without needing any extra secret beyond the
+# publish token below.
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    # Configure an "npm-publish" GitHub Environment (Settings > Environments) with required
+    # reviewers and NPM_TOKEN as an environment secret, so publishing needs a human approval
+    # step and the token isn't readable by arbitrary workflows/PRs. See audit
+    # audits/2026-07-15-npm-package-audit-v2.md (L-2): use a scoped, rotated npm token here
+    # (npm granular access token, publish-only, restricted to this package), not a long-lived
+    # local one.
+    environment: npm-publish
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.10.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install AlgoKit
+        run: pipx install algokit
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify release tag matches package.json version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "::error::Release tag '$GITHUB_REF_NAME' does not match package.json version '$PKG_VERSION'"
+            exit 1
+          fi
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Typecheck
+        run: pnpm exec tsc --noEmit -p tsconfig.json
+
+      - name: Compile contracts
+        run: pnpm run build
+
+      - name: Fail if compiled artifacts differ from what's committed
+        run: |
+          git config diff.arc56client.textconv "$PWD/scripts/normalize-arc56-client.sh"
+          git config diff.arc56client.cachetextconv true
+          git add -N contracts/artifacts
+          git diff --exit-code --minimal -- contracts/artifacts
+
+      - name: Start LocalNet
+        run: algokit localnet start
+
+      - name: Run tests
+        run: pnpm run test
+
+      - name: Build npm package
+        run: pnpm run build-package
+
+      - name: Verify published tarball contents
+        run: npm pack --dry-run
+
+      - name: Publish to npm
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

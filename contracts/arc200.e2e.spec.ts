@@ -195,6 +195,26 @@ describe('ARC200 contract', () => {
     ).rejects.toThrow(/zero-value approval/)
   })
 
+  test('arc200_transferFrom of zero value succeeds as a no-op for a spender with no prior approval history (L-1 fix)', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount)
+    const strangerSpender = await localnet.context.generateAccount({ initialFunds: AlgoAmount.Algo(10000) })
+
+    // Self-transfer (from === to) so the recipient-balance-box guard doesn't confound this
+    // test with an unrelated assertion; this isolates the L-1 fix (internal re-approve skipped
+    // for a zero-value call, so a stranger spender with no approval box doesn't hit the
+    // zero-value-approval guard either).
+    const ret = await client.send.arc200TransferFrom({
+      args: {
+        from: algosdk.encodeAddress(testAccount.addr.publicKey),
+        to: algosdk.encodeAddress(testAccount.addr.publicKey),
+        value: 0n,
+      },
+      sender: strangerSpender.addr,
+    })
+    expect(ret.return).toBe(true)
+  })
+
   test('arc200_increaseAllowance / arc200_decreaseAllowance avoid the approve() race (L-2 fix)', async () => {
     const { testAccount } = localnet.context
     const { client } = await deploy(testAccount)

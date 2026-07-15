@@ -170,6 +170,26 @@ describe('ARC200 ASA contract', () => {
     ).rejects.toThrow(/zero-value approval/)
   })
 
+  test('arc200_transferFrom of zero value succeeds as a no-op for a spender with no prior approval history (L-1 fix)', async () => {
+    const { testAccount } = localnet.context
+    const { client } = await deploy(testAccount.addr)
+    const strangerSpender = await localnet.context.generateAccount({ initialFunds: AlgoAmount.Algo(10000) })
+
+    // Self-transfer (from === to) so the recipient-balance-box guard doesn't confound this
+    // test with an unrelated assertion; this isolates the L-1 fix (internal re-approve skipped
+    // for a zero-value call, so a stranger spender with no approval box doesn't hit the
+    // zero-value-approval guard either).
+    const ret = await client.send.arc200TransferFrom({
+      args: {
+        from: algosdk.encodeAddress(testAccount.addr.publicKey),
+        to: algosdk.encodeAddress(testAccount.addr.publicKey),
+        value: 0n,
+      },
+      sender: strangerSpender.addr,
+    })
+    expect(ret.return).toBe(true)
+  })
+
   // test('decode name of 40153415 cbBTC', async () => {
   //   const algod = new algosdk.Algodv2('', 'https://mainnet-api.voi.nodely.dev', '')
   //   const indexer = new algosdk.Indexer('', 'https://mainnet-idx.voi.nodely.dev', '')
